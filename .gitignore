@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.log
+*.pid
+
+# Virtual environments
+venv/
+.env/
+.env.*
+
+# Odoo runtime files
+.odoo/
+*.sqlite
+*.db
+*.dump
+*.bak
+*.swp
+*.lock
+
+# Odoo generated assets
+*.pot
+*.mo
+*.po~
+
+# IDE / OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Tests / coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Node / frontend (if any)
+node_modules/
