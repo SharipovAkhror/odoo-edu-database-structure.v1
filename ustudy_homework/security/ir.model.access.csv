@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_edu_homework,access_edu_homework,model_edu_homework,base.group_user,1,1,1,1
+access_edu_homework_mark,access_edu_homework_mark,model_edu_homework_mark,base.group_user,1,1,1,1
+access_edu_homework_submission_user,access_edu_homework_submission_user,model_edu_homework_submission,base.group_user,1,1,1,0
+
+access_edu_homework_submission_portal,access_edu_homework_submission_portal,model_edu_homework_submission,base.group_portal,1,1,1,0
+
+access_edu_homework_portal,access_edu_homework_portal,model_edu_homework,base.group_portal,1,0,0,0
+
+access_edu_homework_public,access_edu_homework_public,model_edu_homework,base.group_public,1,0,0,0

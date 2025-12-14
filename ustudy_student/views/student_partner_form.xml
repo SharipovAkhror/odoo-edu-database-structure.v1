@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Window action that opens student's courses -->
+    <record id="action_student_courses" model="ir.actions.act_window">
+        <field name="name">Kurslar</field>
+        <field name="res_model">slide.channel.partner</field>
+        <!-- tree -> list -->
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('partner_id', '=', active_id)]</field>
+        <field name="context">{'default_partner_id': active_id}</field>
+    </record>
+
+    <record id="view_student_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form.student</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="50"/>
+        <field name="arch" type="xml">
+
+            <!-- Replace first group -->
+            <xpath expr="//sheet/group[1]" position="replace">
+                <group>
+                    <group string="Personal Information">
+                        <field name="name" placeholder="Full name"/>
+                        <field name="birth_date" string="Tug'ulgan kuni" placeholder="Sanani belgilang"/>
+                        <field name="is_student" string="Talaba"/>
+                        <field name="email"/>
+                        <!-- <field name="phone"/> -->
+                    </group>
+
+                    <group string="Location">
+                        <field name="country_id"/>
+                        <field name="state_id" string="Viloyat"/>
+                        <field name="cc_region_id" string="Tuman"/>
+                        <field name="street"/>
+                    </group>
+                </group>
+            </xpath>
+
+            <!-- Remove Sales/Purchase tabs -->
+            <xpath expr="//page[.//field[@name='property_payment_term_id']]" position="replace"/>
+            <xpath expr="//page[.//field[@name='bank_ids']]" position="replace"/>
+
+            <xpath expr="//form/sheet" position="before">
+                <header>
+                    <button name="action_grant_portal_access"
+                            type="object"
+                            class="oe_stat_button my_green_button">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">⚡ Foydalanuvchi huquqi</span>
+                        </div>
+                    </button>
+
+                    <button name="%(student_password_wizard_action)d"
+                            type="action"
+                            class="oe_stat_button">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Password qo'yish</span>
+                        </div>
+                    </button>
+
+                    <div class="o_statusbar_status"/>
+                </header>
+            </xpath>
+
+            <!-- Add portal buttons after email (no attrs) -->
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="is_student" string="Talaba"/>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="replace">
+                <div class="oe_button_box" name="button_box">
+
+                    <button name="%(action_student_courses)d"
+                            type="action"
+                            class="oe_stat_button"
+                            icon="fa-book"
+                            invisible="total_courses == 0">
+
+                        <field name="total_courses"
+                            widget="statinfo"
+                            string="Kurs"/>
+                    </button>
+
+                    <!-- <button name="action_view_groups"
+                            type="object"
+                            class="oe_stat_button"
+                            invisible="not is_student or group_count == 0">
+                        <i class="fa fa-users" role="img" aria-label="Guruhlar"/>
+                        <field name="group_count"
+                            widget="statinfo"
+                            string="Guruhlar"/>
+                    </button> -->
+
+                </div>
+            </xpath>
+
+            <!-- Add tabs (no attrs) -->
+            <xpath expr="//notebook" position="inside">
+
+                <page string="Kurslari">
+                    <group>
+                        <group>
+                            <field name="total_courses" readonly="1" string="Barcha kurslar"/>
+                            <field name="avg_progress" readonly="1" string="O'rtacha progress"/>
+                            <field name="avg_mark" readonly="1" string="O'rtacha ball"/>
+                        </group>
+                    </group>
+
+                    <separator string="Kurslar"/>
+                    <field name="slide_channel_partner_ids" readonly="1"/>
+                </page>
+
+                <page string="Dokumentlar">
+                    <group string="Passport">
+                        <field name="passport_number" string="Passport raqami"/>
+                        <field name="passport_file" filename="passport_filename" string="Passport file"/>
+                    </group>
+                    <group string="Qo'shimcha Dokumentlar">
+                        <field name="extra_doc_name" string="Qo'shimcha dokument"/>
+                        <field name="extra_doc_file" filename="extra_doc_filename" string="Qo'shimcha dokument file"/>
+                    </group>
+                </page>
+
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

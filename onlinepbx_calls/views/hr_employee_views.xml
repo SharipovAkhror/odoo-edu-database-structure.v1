@@ -1,0 +1,15 @@
+<odoo>
+    <record id="view_employee_form_pbx_extension" model="ir.ui.view">
+        <field name="name">hr.employee.form.pbx.extension</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <!-- Place it near work_phone; adjust xpath if your view is different -->
+            <xpath expr="//sheet//group[1]" position="after">
+                <group>
+                    <field name="pbx_extension"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

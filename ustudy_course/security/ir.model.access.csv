@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ustudy_course_module,access_ustudy_course_module,model_ustudy_course_module,base.group_user,1,1,1,1
+access_ustudy_course_lesson,access_ustudy_course_lesson,model_ustudy_course_lesson,base.group_user,1,1,1,1

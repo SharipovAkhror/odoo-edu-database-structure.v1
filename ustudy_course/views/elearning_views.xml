@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Action for Modules (must come before views using it) -->
+    <record id="ustudy_action_course_module" model="ir.actions.act_window">
+        <field name="name">Modules</field>
+        <field name="res_model">ustudy.course.module</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Inherit main eLearning course form -->
+    <record id="ustudy_view_slide_channel_form" model="ir.ui.view">
+        <field name="name">ustudy.slide.channel.form</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_slides.view_slide_channel_form"/>
+        <field name="arch" type="xml">
+
+            <!-- 1) Hide Tags under Course Title -->
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- 2) Program tab: simple list of Modules -->
+            <!-- <xpath expr="//notebook" position="inside">
+                <page string="Program" name="ustudy_program">
+                    <group>
+                        <field name="ustudy_module_ids">
+                            <list editable="bottom">
+                                <field name="sequence"/>
+                                <field name="name"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+            </xpath> -->
+
+
+
+            <!-- 3) Smart button for Modules -->
+            <!-- <xpath expr="//sheet//div[@name='button_box']" position="inside">
+                <button type="action"
+                        name="%(ustudy_action_course_module)d"
+                        class="oe_stat_button">
+                    <field name="ustudy_module_count" widget="statinfo" string="Modules"/>
+                </button>
+            </xpath> -->
+
+        </field>
+    </record>
+
+
+    <!-- Standalone list/form for Modules -->
+    <record id="ustudy_view_module_tree" model="ir.ui.view">
+        <field name="name">ustudy.course.module.list</field>
+        <field name="model">ustudy.course.module</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="channel_id"/>
+                <field name="lesson_count"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="ustudy_view_module_form" model="ir.ui.view">
+        <field name="name">ustudy.course.module.form</field>
+        <field name="model">ustudy.course.module</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="channel_id"/>
+                        <field name="sequence"/>
+                    </group>
+                    <group string="Lessons">
+                        <field name="lesson_ids">
+                            <list editable="bottom">
+                                <field name="sequence"/>
+                                <field name="name"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Lesson list/form (optional standalone) -->
+    <record id="ustudy_view_lesson_tree" model="ir.ui.view">
+        <field name="name">ustudy.course.lesson.list</field>
+        <field name="model">ustudy.course.lesson</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="module_id"/>
+                <field name="channel_id"/>
+                <field name="video_id"/>
+                <field name="homework_id"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="ustudy_view_lesson_form" model="ir.ui.view">
+        <field name="name">ustudy.course.lesson.form</field>
+        <field name="model">ustudy.course.lesson</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="module_id"/>
+                        <field name="channel_id" readonly="1"/>
+                        <field name="sequence"/>
+                    </group>
+                    <group string="Content">
+                        <field name="video_id"/>
+                        <field name="file_ids" widget="many2many_tags"/>
+                        <field name="homework_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ustudy_view_slide_form_publish_buttons" model="ir.ui.view">
+        <field name="name">ustudy.slide.form.publish.buttons</field>
+        <field name="model">slide.slide</field>
+        <field name="inherit_id" ref="website_slides.view_slide_slide_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <!-- Visible only when NOT published -->
+                    <button name="action_publish_slide"
+                            type="object"
+                            string="Publish"
+                            class="btn btn-success"
+                            invisible="is_published"/>
+
+                    <!-- Visible only when IS published -->
+                    <button name="action_unpublish_slide"
+                            type="object"
+                            string="Unpublish"
+                            class="btn btn-danger"
+                            invisible="not is_published"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+
+
+</odoo>

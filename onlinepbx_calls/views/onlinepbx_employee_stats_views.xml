@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ====== LIST: Operatorlar statistikasi (faqat Management) ====== -->
+    <record id="view_employee_call_stats_list" model="ir.ui.view">
+        <field name="name">hr.employee.call.stats.list</field>
+        <field name="model">hr.employee</field>
+        <field name="arch" type="xml">
+            <list string="Operatorlar statistikasi" create="0" edit="0">
+                <field name="name" string="Operator" width="200"/>
+                <field name="pbx_extension" string="PBX Ext" width="100"/>
+                <field name="avg_call_score" string="O'rtacha ball" width="120"/>
+                <field name="rated_call_count" string="Baholangan qo'ng'iroqlar" width="150"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_employee_call_stats_form" model="ir.ui.view">
+        <field name="name">hr.employee.call.stats.form</field>
+        <field name="model">hr.employee</field>
+        <field name="arch" type="xml">
+            <form string="Operator statistikasi" create="0" edit="0">
+                <sheet>
+                    <group>
+                        <field name="name" string="Operator" readonly="1"/>
+                        <field name="pbx_extension" string="PBX Ext" readonly="1"/>
+                        <field name="avg_call_score" string="O'rtacha ball" readonly="1"/>
+                        <field name="rated_call_count"
+                               string="Baholangan qo'ng'iroqlar"
+                               readonly="1"/>
+                    </group>
+
+                    <!-- Operatorga tegishli qo'ng'iroqlar jadvali -->
+                    <group string="Qo'ng'iroqlar">
+                        <field name="call_ids">
+                            <list string="Operator qo'ng'iroqlari" create="0" edit="0">
+                                <field name="employee_id" string="Operator" readonly="1"/>
+                                <field name="start_time" string="Gaplashgan vaqti"/>
+                                <field name="direction" string="Kirish/Chiqish"/>
+                                <field name="duration_display" string="Davomiyligi"/>
+                                <field name="total_score" string="Ball"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_employee_call_stats" model="ir.actions.act_window">
+        <field name="name">Operatorlar statistikasi</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_employee_call_stats_list"/>
+        <!-- Faqat Sales bo'limi xodimlari -->
+        <field name="domain">[('department_id.name', '=', 'Sales')]</field>
+    </record>
+
+</odoo>

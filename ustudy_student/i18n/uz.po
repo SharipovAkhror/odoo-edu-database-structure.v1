@@ -1,0 +1,116 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * ustudy_student
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ustudy_student\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-29 00:00+0000\n"
+"PO-Revision-Date: 2025-11-29 00:00+0000\n"
+"Last-Translator: Ustudy\n"
+"Language-Team: Uzbek\n"
+"Language: uz_UZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. module: ustudy_student
+msgid "Administrator"
+msgstr "Administrator"
+
+#. module: ustudy_student
+msgid "Person"
+msgstr "Jismoniy shaxs"
+
+#. module: ustudy_student
+msgid "Company"
+msgstr "Kompaniya"
+
+#. module: ustudy_student
+msgid "Personal Information"
+msgstr "Shaxsiy ma'lumotlar"
+
+#. module: ustudy_student
+msgid "Name"
+msgstr "Ism"
+
+#. module: ustudy_student
+msgid "Is Student"
+msgstr "Talaba"
+
+#. module: ustudy_student
+msgid "Email"
+msgstr "Elektron pochta"
+
+#. module: ustudy_student
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: ustudy_student
+msgid "Location"
+msgstr "Manzil"
+
+#. module: ustudy_student
+msgid "Country"
+msgstr "Mamlakat"
+
+#. module: ustudy_student
+msgid "State"
+msgstr "Viloyat"
+
+#. module: ustudy_student
+msgid "City"
+msgstr "Tuman"
+
+#. module: ustudy_student
+msgid "Street"
+msgstr "Ko‘cha"
+
+#. module: ustudy_student
+msgid "Contacts"
+msgstr "Aloqalar"
+
+#. module: ustudy_student
+msgid "Add Contact"
+msgstr "Aloqa qo‘shish"
+
+#. module: ustudy_student
+msgid "Partner Assignment"
+msgstr "Hamkor biriktirish"
+
+#. module: ustudy_student
+msgid "Notes"
+msgstr "Eslatmalar"
+
+#. module: ustudy_student
+msgid "Courses"
+msgstr "Kurslar"
+
+#. module: ustudy_student
+msgid "Documents"
+msgstr "Hujjatlar"
+
+#. module: ustudy_student
+msgid "Set Portal Password"
+msgstr "Portal parolini o‘rnatish"
+
+#. module: ustudy_student
+msgid "Grant Portal Access"
+msgstr "Foydalanuvchi huquqini berish"
+
+#. module: ustudy_student
+msgid "Student"
+msgstr "Talaba"
+
+#. module: ustudy_student
+msgid "Message"
+msgstr "Xabar"
+
+#. module: ustudy_student
+msgid "Activity"
+msgstr "Faoliyat"
+
+#. module: ustudy_student
+msgid "Today"
+msgstr "Bugun"

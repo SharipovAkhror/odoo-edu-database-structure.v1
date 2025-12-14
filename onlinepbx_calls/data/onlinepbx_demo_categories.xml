@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="onlinepbx_category_politeness" model="onlinepbx.score.category">
+        <field name="name">Politeness</field>
+    </record>
+
+    <record id="onlinepbx_category_technical" model="onlinepbx.score.category">
+        <field name="name">Technical Knowledge</field>
+    </record>
+
+    <record id="onlinepbx_category_resolution" model="onlinepbx.score.category">
+        <field name="name">Problem Resolution</field>
+    </record>
+
+</odoo>

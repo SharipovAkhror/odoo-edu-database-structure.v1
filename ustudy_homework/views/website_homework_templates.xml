@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- ========================
+       Homeworks block on lesson page
+       ======================== -->
+  <template id="ustudy_slide_homeworks_panel"
+            inherit_id="website_slides.slide_content_detailed">
+
+    <xpath expr="//div[@class='mt-3 mb-3']" position="after">
+      <div class="mt-3 mb-3 o_wslides_homeworks">
+        <div class="row mb-4">
+          <span class="text-muted fw-bold col-4 col-md-3">Homeworks</span>
+          <div class="text-muted me-auto border-start ps-3 col-8 col-md-9">
+            <t t-set="published_homeworks"
+               t-value="slide.homework_ids.filtered(lambda h: h.is_published)"/>
+
+            <t t-if="published_homeworks">
+              <ul class="list-unstyled">
+                <t t-foreach="published_homeworks" t-as="hw">
+                  <li class="mb-2">
+                    <a t-att-href="'/homework/%s' % hw.id">
+                      <t t-esc="hw.name"/>
+                    </a>
+                    <div t-if="hw.due_date" class="small text-muted">
+                      Due: <t t-esc="hw.due_date"/>
+                    </div>
+                  </li>
+                </t>
+              </ul>
+            </t>
+            <t t-else="">
+              <span class="text-muted">No homeworks for this lesson.</span>
+            </t>
+          </div>
+        </div>
+      </div>
+    </xpath>
+  </template>
+
+  <!-- ========================
+       Single homework page
+       ======================== -->
+  <template id="homework_page_template">
+    <t t-call="website.layout">
+      <div class="container mt-4">
+
+        <div class="row">
+          <!-- LEFT: homework info -->
+          <div class="col-lg-8">
+            <div class="card mb-4">
+              <div class="card-body">
+                <h1 class="card-title h3 mb-3" t-esc="homework.name"/>
+
+                <div class="text-muted mb-3">
+                  <t t-if="homework.due_date">
+                    <span class="me-2">
+                      <i class="fa fa-clock-o"/> Due:
+                      <t t-esc="homework.due_date"/>
+                    </span>
+                  </t>
+                  <t t-if="homework.teacher_id">
+                    <span class="ms-2">
+                      <i class="fa fa-user"/> Teacher:
+                      <t t-esc="homework.teacher_id.name"/>
+                    </span>
+                  </t>
+                </div>
+
+                <div t-field="homework.description"/>
+
+                <t t-if="homework.attachment_ids">
+                  <h5 class="mt-4">Teacher Attachments</h5>
+                  <ul class="list-unstyled">
+                    <t t-foreach="homework.attachment_ids" t-as="a">
+                      <li class="mb-1">
+                        <i class="fa fa-paperclip me-1"/>
+                        <a t-att-href="'/web/content/%s?download=true' % a.id"
+                           t-esc="a.name"/>
+                      </li>
+                    </t>
+                  </ul>
+                </t>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: submission form + history -->
+          <div class="col-lg-4">
+            <div class="card mb-4">
+              <div class="card-header fw-bold">
+                Submit your homework
+              </div>
+              <div class="card-body">
+
+                <t t-if="request.env.user._is_public()">
+                  <p class="text-muted">
+                    Please <a href="/web/login">log in</a> to upload your homework.
+                  </p>
+                </t>
+                <t t-else="">
+                  <form t-att-action="'/homework/%d/submit' % homework.id"
+                        method="post"
+                        enctype="multipart/form-data">
+
+                    <!-- CSRF token -->
+                    <input type="hidden" name="csrf_token"
+                           t-att-value="request.csrf_token()"/>
+
+                    <div class="mb-3">
+                      <label class="form-label">Comment (optional)</label>
+                      <textarea name="comment" class="form-control"
+                                rows="3"
+                                placeholder="Write a short note to your teacher..."/>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label">Files</label>
+                      <input type="file" name="attachments" multiple="multiple"
+                             class="form-control"/>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                      <i class="fa fa-upload me-1"/> Submit Homework
+                    </button>
+                  </form>
+                </t>
+              </div>
+            </div>
+
+            <!-- submission history for current user -->
+            <t t-if="not request.env.user._is_public()">
+              <t t-set="submissions"
+                 t-value="homework.submission_ids.filtered(lambda s: s.user_id == request.env.user)"/>
+
+              <div class="card">
+                <div class="card-header fw-bold">
+                  Your submissions
+                </div>
+                <div class="card-body">
+                  <t t-if="submissions">
+                    <ul class="list-unstyled mb-0">
+                      <t t-foreach="submissions" t-as="sub">
+                        <li class="mb-3">
+                          <div class="small text-muted">
+                            <i class="fa fa-calendar me-1"/>
+                            <t t-esc="sub.submit_date"/>
+                          </div>
+
+                          <!-- Student comment -->
+                          <div t-if="sub.comment">
+                            <em t-esc="sub.comment"/>
+                          </div>
+
+                          <!-- Files -->
+                          <div t-if="sub.attachment_ids" class="mt-1">
+                            <t t-foreach="sub.attachment_ids" t-as="a">
+                              <div>
+                                <i class="fa fa-paperclip me-1"/>
+                                <a t-att-href="'/web/content/%s?download=true' % a.id"
+                                   t-esc="a.name"/>
+                              </div>
+                            </t>
+                          </div>
+
+                          <!-- Mark + teacher comment (from submission model) -->
+                          <div class="mt-2">
+                            <t t-if="sub.mark">
+                              <span class="badge bg-success">
+                                Mark: <t t-esc="sub.mark"/>
+                              </span>
+                            </t>
+                            <div t-if="sub.teacher_comment" class="text-muted mt-1">
+                              <strong>Teacher:</strong>
+                              <em t-esc="sub.teacher_comment"/>
+                            </div>
+                          </div>
+
+                          <hr/>
+                        </li>
+                      </t>
+                    </ul>
+                  </t>
+                  <t t-else="">
+                    <p class="text-muted mb-0">
+                      You have not submitted anything yet.
+                    </p>
+                  </t>
+                </div>
+              </div>
+            </t>
+          </div>
+        </div>
+
+      </div>
+    </t>
+  </template>
+
+  <!-- ========================
+       Mark on every lesson card
+       ======================== -->
+  <template id="ustudy_slide_card_mark"
+            inherit_id="website_slides.lesson_card">
+
+    <!-- Put the badge inside the card-footer flex row -->
+    <xpath expr="//div[contains(@class, 'card-footer')]//div[contains(@class, 'd-flex')]" position="inside">
+      <t t-set="my_mark" t-value="slide.get_my_homework_mark()"/>
+      <t t-if="my_mark">
+        <span class="badge bg-info ms-2">
+          Mark: <t t-esc="my_mark"/>
+        </span>
+      </t>
+    </xpath>
+  </template>
+
+</odoo>

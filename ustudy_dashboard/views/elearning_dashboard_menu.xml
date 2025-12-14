@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- App Root Menu – bu endi bevosita dashboardni ochadi -->
+        <menuitem
+            id="menu_elearning_dashboard_root"
+            name="Ustudy"
+            action="action_elearning_dashboard"
+            sequence="10"
+            groups="base.group_user"
+            web_icon="ustudy_dashboard,static/icon.png"
+        />
+
+        <!-- Pastdagi submenu endi KERAK EMAS. Istasang o‘chirib yubor. -->
+        <!--
+        <menuitem
+            id="menu_elearning_admin_dashboard"
+            name="Admin Dashboard"
+            parent="menu_elearning_dashboard_root"
+            action="action_elearning_dashboard"
+            sequence="1"
+            groups="base.group_user"
+        />
+        -->
+
+    </data>
+</odoo>

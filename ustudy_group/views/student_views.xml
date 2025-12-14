@@ -1,0 +1,65 @@
+<!-- ustudy_group/views/student_views.xml -->
+<odoo>
+    <!-- LIST VIEW OF STUDENTS -->
+    <record id="view_student_list" model="ir.ui.view">
+        <field name="name">res.partner.student.list</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list string="Students">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="total_courses"/>
+                <field name="avg_progress"/>
+                <field name="avg_mark"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- KANBAN VIEW OF STUDENTS -->
+    <record id="view_student_kanban" model="ir.ui.view">
+        <field name="name">res.partner.student.kanban</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="total_courses"/>
+                <field name="avg_progress"/>
+                <field name="avg_mark"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="o_kanban_record">
+                            <div class="o_kanban_image">
+                                <img t-att-src="kanban_image('res.partner', 'image_128', record.id.raw_value)"/>
+                            </div>
+                            <div class="o_kanban_details">
+                                <strong t-esc="record.name.value"/>
+                                <div t-if="record.email.value">
+                                    <span t-esc="record.email.value"/>
+                                </div>
+                                <div t-if="record.phone.value">
+                                    <span t-esc="record.phone.value"/>
+                                </div>
+                                <div>
+                                    Courses:
+                                    <span t-esc="record.total_courses.value"/>
+                                </div>
+                                <div>
+                                    Avg progress:
+                                    <span t-esc="record.avg_progress.value"/>%
+                                </div>
+                                <div>
+                                    Avg mark:
+                                    <span t-esc="record.avg_mark.value"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Settings: list view -->
+    <record id="view_onlinepbx_settings_list" model="ir.ui.view">
+        <field name="name">onlinepbx.settings.list</field>
+        <field name="model">onlinepbx.settings</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="token"/>
+                <field name="webhook_url"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Settings: form view (only ONCE) -->
+    <record id="view_onlinepbx_settings_form" model="ir.ui.view">
+        <field name="name">onlinepbx.settings.form</field>
+        <field name="model">onlinepbx.settings</field>
+        <field name="arch" type="xml">
+            <form string="OnlinePBX Settings">
+                <sheet>
+                    <group string="Webhook">
+                        <field name="name"/>
+                        <field name="token" readonly="0"/>
+                        <field name="webhook_url" readonly="1"/>
+                    </group>
+
+                    <group string="HTTP API">
+                        <field name="api_domain"/>
+                        <field name="api_key"/>
+                        <field name="cdr_path"/>
+                    </group>
+
+                    <group>
+                        <button name="action_sync_last_7_days"
+                                type="object"
+                                string="Sync Last 7 Days Calls"
+                                class="btn-primary"/>
+                    </group>
+
+                    <div class="o_form_label">
+                        Configure this URL in OnlinePBX Webhooks as POST (JSON or form).
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Settings action -->
+    <record id="action_onlinepbx_settings" model="ir.actions.act_window">
+        <field name="name">OnlinePBX Settings</field>
+        <field name="res_model">onlinepbx.settings</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- =========================================
+         E'tirozlar (Objections) configuration
+         ========================================= -->
+
+    <!-- Objection list view -->
+    <record id="view_onlinepbx_objection_list" model="ir.ui.view">
+        <field name="name">onlinepbx.objection.list</field>
+        <field name="model">onlinepbx.objection</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Objection form view -->
+    <record id="view_onlinepbx_objection_form" model="ir.ui.view">
+        <field name="name">onlinepbx.objection.form</field>
+        <field name="model">onlinepbx.objection</field>
+        <field name="arch" type="xml">
+            <form string="E'tiroz">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Objection action -->
+    <record id="action_onlinepbx_objections" model="ir.actions.act_window">
+        <field name="name">E'tirozlar</field>
+        <field name="res_model">onlinepbx.objection</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_onlinepbx_objection_list"/>
+    </record>
+
+</odoo>

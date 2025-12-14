@@ -1,0 +1,268 @@
+# Uzbek translations for OnlinePBX Calls
+msgid ""
+msgstr ""
+"Project-Id-Version: onlinepbx_calls\n"
+"POT-Creation-Date: 2025-01-01 00:00+0000\n"
+"PO-Revision-Date: 2025-01-01 00:00+0000\n"
+"Last-Translator: Ustudy\n"
+"Language-Team: Uzbek\n"
+"Language: uz_UZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# ---------- FIELDS ON onlinepbx.call ----------
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__name
+msgid "Call ID"
+msgstr "Qo‘ng‘iroq ID"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__start_time
+msgid "Date Time"
+msgstr "Vaqti"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__direction
+msgid "Type"
+msgstr "Turi"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__state
+msgid "Status"
+msgstr "Holati"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields.selection,name:onlinepbx_calls.selection__onlinepbx_call__direction__in
+msgid "Incoming"
+msgstr "Kirish"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields.selection,name:onlinepbx_calls.selection__onlinepbx_call__direction__out
+msgid "Outgoing"
+msgstr "Chiqish"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields.selection,name:onlinepbx_calls.selection__onlinepbx_call__direction__local
+msgid "Internal"
+msgstr "Ichki"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields.selection,name:onlinepbx_calls.selection__onlinepbx_call__state__answered
+msgid "Answered"
+msgstr "Javob berilgan"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields.selection,name:onlinepbx_calls.selection__onlinepbx_call__state__not_answered
+msgid "Not answered"
+msgstr "Javob berilmagan"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields.selection,name:onlinepbx_calls.selection__onlinepbx_call__state__missed
+msgid "Missed"
+msgstr "O‘tkazib yuborilgan"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__from_number
+msgid "From"
+msgstr "Kimdan"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__to_number
+msgid "To"
+msgstr "Kimga"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__external_number
+msgid "External Number"
+msgstr "Tashqi raqam"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__duration_display
+msgid "Talk Time"
+msgstr "Gaplashish vaqti"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__duration_seconds
+msgid "Talk Time (sec)"
+msgstr "Gaplashish vaqti (sek)"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__has_recording
+msgid "Has Recording"
+msgstr "Yozuv mavjud"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__employee_id
+msgid "Employee"
+msgstr "Xodim"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__employee_extension
+msgid "Employee Extension"
+msgstr "Xodimning ichki raqami"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__total_score
+msgid "Overall Score"
+msgstr "Umumiy baho"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__rating_ids
+msgid "Category Ratings"
+msgstr "Kategoriya bo‘yicha baholar"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__objection_ids
+msgid "Objections"
+msgstr "E'tirozlar"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__raw_payload
+msgid "Raw Payload"
+msgstr "Xom ma'lumot"
+
+# ---------- SCORE CATEGORY MODELS ----------
+
+#. module: onlinepbx_calls
+#: model:ir.model,name:onlinepbx_calls.model_onlinepbx_score_category
+msgid "OnlinePBX Score Category"
+msgstr "OnlinePBX baholash kategoriyasi"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_score_category__name
+msgid "Name"
+msgstr "Nomi"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_score_category__max_points
+msgid "Max Points"
+msgstr "Maksimal ball"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_score_category__active
+msgid "Active"
+msgstr "Faol"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_score_category__description
+msgid "Description"
+msgstr "Tavsif"
+
+#. module: onlinepbx_calls
+#: model:ir.model,name:onlinepbx_calls.model_onlinepbx_objection
+msgid "OnlinePBX Objection / Reason"
+msgstr "OnlinePBX e'tirozi / sababi"
+
+# ---------- VIEWS / ACTIONS ----------
+
+#. module: onlinepbx_calls
+#: model:ir.actions.act_window,name:onlinepbx_calls.action_onlinepbx_calls
+msgid "Call History"
+msgstr "Qo‘ng‘iroqlar tarixi"
+
+#. module: onlinepbx_calls
+#: model_terms:ir.ui.view,arch_db:onlinepbx_calls.view_onlinepbx_call_form
+msgid "Audio"
+msgstr "Audio"
+
+#. module: onlinepbx_calls
+#: model_terms:ir.ui.view,arch_db:onlinepbx_calls.view_onlinepbx_call_form
+msgid "Debug"
+msgstr "Texnik ma'lumot"
+
+#. module: onlinepbx_calls
+#: model_terms:ir.ui.view,arch_db:onlinepbx_calls.view_onlinepbx_call_form
+msgid "Duration"
+msgstr "Davomiyligi"
+
+#. module: onlinepbx_calls
+#: model_terms:ir.ui.view,arch_db:onlinepbx_calls.view_onlinepbx_call_form
+msgid "Category Scores"
+msgstr "Kategoriya baholari"
+
+#. module: onlinepbx_calls
+#: model_terms:ir.ui.view,arch_db:onlinepbx_calls.view_onlinepbx_call_form
+msgid "E'tirozlar"
+msgstr "E'tirozlar"
+
+#. module: onlinepbx_calls
+#: model_terms:ir.ui.view,arch_db:onlinepbx_calls.view_onlinepbx_call_form
+msgid "Overall"
+msgstr "Umumiy"
+
+# ---------- SETTINGS MODEL ----------
+
+#. module: onlinepbx_calls
+#: model:ir.model,name:onlinepbx_calls.model_onlinepbx_settings
+msgid "OnlinePBX Webhook & API Settings"
+msgstr "OnlinePBX Webhook va API sozlamalari"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_settings__name
+msgid "OnlinePBX Settings"
+msgstr "OnlinePBX sozlamalari"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_settings__token
+msgid "Webhook Token"
+msgstr "Webhook tokeni"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_settings__webhook_url
+msgid "Webhook URL"
+msgstr "Webhook URL"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_settings__api_domain
+msgid "API Domain"
+msgstr "API domeni"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_settings__api_key
+msgid "API Key (key_id:key)"
+msgstr "API kaliti (key_id:key)"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_settings__cdr_path
+msgid "CDR Endpoint Path"
+msgstr "CDR manzili"
+
+# ---------- PYTHON ERROR MESSAGES ----------
+
+#. module: onlinepbx_calls
+msgid "Score cannot be negative."
+msgstr "Baho manfiy bo‘lishi mumkin emas."
+
+#. module: onlinepbx_calls
+msgid "Score for '%s' cannot be greater than %d."
+msgstr "'%s' uchun baho %d dan katta bo‘lishi mumkin emas."
+
+
+# ---------- KPI / MEASURE FIELDS ----------
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__answered_count
+msgid "Answered Calls"
+msgstr "Javob berilgan qo‘ng‘iroqlar"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__missed_count
+msgid "Missed Calls"
+msgstr "O‘tkazib yuborilgan qo‘ng‘iroqlar"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__not_answered_count
+msgid "Not Answered Calls"
+msgstr "Javob berilmagan qo‘ng‘iroqlar"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__problem_count
+msgid "Problem Calls"
+msgstr "Muammoli qo‘ng‘iroqlar"
+
+#. module: onlinepbx_calls
+#: model:ir.model.fields,field_description:onlinepbx_calls.field_onlinepbx_call__recording_count
+msgid "Recorded Calls"
+msgstr "Yozuvli qo‘ng‘iroqlar"

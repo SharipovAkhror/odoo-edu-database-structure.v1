@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =========================================================
+         HOMEWORK: LIST + FORM
+    ========================================================== -->
+    <record id="view_edu_homework_list" model="ir.ui.view">
+        <field name="name">edu.homework.list</field>
+        <field name="model">edu.homework</field>
+        <field name="arch" type="xml">
+            <list string="Homeworks">
+                <field name="name"/>
+                <!-- <field name="channel_id"/> -->
+                <field name="teacher_id"/>
+                <field name="due_date"/>
+                <field name="submission_count"/>
+                <field name="mark_count"/>
+                <field name="is_published"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_edu_homework_form" model="ir.ui.view">
+        <field name="name">edu.homework.form</field>
+        <field name="model">edu.homework</field>
+        <field name="arch" type="xml">
+            <form string="Homework" edit="true">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="slide_id" options="{'no_create': True}"/>
+                        <!-- <field name="channel_id"/> -->
+                        <field name="teacher_id"/>
+                        <field name="due_date"/>
+                        <field name="is_published"/>
+                    </group>
+
+                    <notebook>
+                        <!-- Description -->
+                        <page string="Description">
+                            <field name="description"/>
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+
+                        <!-- Submissions with inline mark + comment -->
+                        <page string="Submissions">
+                            <group>
+                                <field name="submission_count" readonly="1"/>
+                            </group>
+                            <field name="submission_ids">
+                                <list editable="bottom">
+                                    <field name="student_id" readonly="1"/>
+                                    <field name="user_id" readonly="1"/>
+                                    <field name="submit_date" readonly="1"/>
+                                    <field name="state"/>
+                                    <field name="comment" readonly="1" string="Student Comment"/>
+                                    <field name="mark"/>
+                                    <field name="teacher_comment"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Marks summary -->
+                        <page string="Marks">
+                            <group>
+                                <div class="o_form_group">
+                                    <field name="mark_count" readonly="1"/>
+                                </div>
+                            </group>
+                            <field name="mark_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- =========================================================
+         MARKS: LIST + FORM
+    ========================================================== -->
+    <record id="view_edu_homework_mark_list" model="ir.ui.view">
+        <field name="name">edu.homework.mark.list</field>
+        <field name="model">edu.homework.mark</field>
+        <field name="arch" type="xml">
+            <list string="Homework Marks">
+                <field name="homework_id"/>
+                <field name="student_id"/>
+                <field name="teacher_id"/>
+                <field name="mark"/>
+                <field name="max_mark"/>
+                <field name="date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_edu_homework_mark_form" model="ir.ui.view">
+        <field name="name">edu.homework.mark.form</field>
+        <field name="model">edu.homework.mark</field>
+        <field name="arch" type="xml">
+            <form string="Mark">
+                <sheet>
+                    <group>
+                        <field name="homework_id"/>
+                        <field name="student_id"/>
+                        <field name="teacher_id"/>
+                        <field name="mark"/>
+                        <field name="max_mark"/>
+                        <field name="date"/>
+                        <field name="comment"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- =========================================================
+         SUBMISSIONS: TREE + SEARCH
+    ========================================================== -->
+    <record id="view_edu_homework_submission_tree" model="ir.ui.view">
+        <field name="name">edu.homework.submission.list</field>
+        <field name="model">edu.homework.submission</field>
+        <field name="arch" type="xml">
+            <list string="Submissions">
+                <field name="homework_id"/>
+                <field name="student_id"/>
+                <field name="user_id"/>
+                <field name="submit_date"/>
+                <field name="state"/>
+                <field name="mark"/>
+                <field name="teacher_comment"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search view (filters + default ones used by the action) -->
+    <record id="view_edu_homework_submission_search" model="ir.ui.view">
+        <field name="name">edu.homework.submission.search</field>
+        <field name="model">edu.homework.submission</field>
+        <field name="arch" type="xml">
+            <search string="Submissions">
+                <field name="homework_id"/>
+                <field name="student_id"/>
+
+                <!-- Filters -->
+                <filter name="not_graded"
+                        string="Baholanmagan"
+                        domain="[('state','=','submitted'),('homework_id.teacher_id.user_id','=',uid)]"/>
+
+                <filter name="my_students"
+                        string="My Students"
+                        domain="[('homework_id.teacher_id.user_id','=',uid)]"/>
+
+                <filter name="graded"
+                        string="Baholangan"
+                        domain="[('state','=','graded')]"/>
+
+                <separator/>
+
+                <!-- Group By -->
+                <filter name="group_homework"
+                        string="Homework"
+                        context="{'group_by':'homework_id'}"/>
+                <filter name="group_student"
+                        string="Student"
+                        context="{'group_by':'student_id'}"/>
+                <filter name="group_state"
+                        string="Status"
+                        context="{'group_by':'state'}"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,56 @@
+# /opt/education/custom-addons/ustudy_student/models/edu_course.py
+from odoo import fields, models, api
+
+
+class EduCourse(models.Model):
+    _name = "edu.course"
+    _description = "Course"
+
+    name = fields.Char(string="Course Name", required=True, translate=True)
+    code = fields.Char(string="Code")
+    description = fields.Text(string="Description", translate=True)
+
+    teacher_id = fields.Many2one("res.users", string="Teacher")
+
+    list_price = fields.Float(string="Price")
+    currency_id = fields.Many2one(
+        "res.currency",
+        string="Currency",
+        default=lambda self: self.env.company.currency_id.id,
+    )
+
+    is_published = fields.Boolean(string="Published", default=True)
+
+    # eLearning bilan bog'lanish
+    slide_channel_id = fields.Many2one(
+        "slide.channel",
+        string="eLearning Course",
+        ondelete="cascade",
+    )
+
+    enrollment_ids = fields.One2many(
+        "edu.enrollment",
+        "course_id",
+        string="Enrollments",
+    )
+    student_count = fields.Integer(
+        string="Student Count",
+        compute="_compute_student_count",
+        store=False,
+    )
+
+    def _compute_student_count(self):
+        for course in self:
+            course.student_count = len(course.enrollment_ids)
+
+    @api.model
+    def get_or_create_from_channel(self, channel):
+        """slide.channel’dan mos edu.course topadi, bo‘lmasa yaratadi."""
+        course = self.search([("slide_channel_id", "=", channel.id)], limit=1)
+        if not course:
+            course = self.create({
+                "name": channel.name,
+                "slide_channel_id": channel.id,
+                "is_published": channel.is_published,
+            })
+        return course

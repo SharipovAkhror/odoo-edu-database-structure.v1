@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Main menu -->
+    <menuitem id="menu_onlinepbx_root"
+              name="OnlinePBX"
+              web_icon="onlinepbx_calls,static/icon.png"
+              sequence="10"/>
+
+    <!-- Calls -->
+    <menuitem id="menu_onlinepbx_calls"
+              name="Qo'ng'iroqlar tarixi"
+              parent="menu_onlinepbx_root"
+              action="action_onlinepbx_calls"
+              sequence="10"/>
+
+    <!-- YANGI: Operatorlar statistikasi -->
+    <menuitem id="menu_onlinepbx_employee_stats"
+              name="Operatorlar statistikasi"
+              parent="menu_onlinepbx_root"
+              action="action_employee_call_stats"
+              sequence="20"/>
+
+    <!-- Configuration -->
+    <menuitem id="menu_onlinepbx_config"
+              name="Sozlamalar"
+              parent="menu_onlinepbx_root"
+              sequence="90"/>
+
+    <menuitem id="menu_onlinepbx_settings"
+              name="OnlinePBX Sozlamasi"
+              parent="menu_onlinepbx_config"
+              action="action_onlinepbx_settings"
+              sequence="10"/>
+
+    <menuitem id="menu_onlinepbx_categories"
+              name="Baholar Kategoriyasi"
+              parent="menu_onlinepbx_config"
+              action="action_onlinepbx_categories"
+              sequence="20"/>
+
+    <!-- E'tirozlar -->
+    <menuitem id="menu_onlinepbx_objections"
+              name="E'tirozlar"
+              parent="menu_onlinepbx_config"
+              action="action_onlinepbx_objections"
+              sequence="30"/>
+
+</odoo>

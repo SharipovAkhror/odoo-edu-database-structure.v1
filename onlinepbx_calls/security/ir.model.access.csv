@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_onlinepbx_call,access_onlinepbx_call,model_onlinepbx_call,base.group_user,1,1,1,1
+access_onlinepbx_score_category,access_onlinepbx_score_category,model_onlinepbx_score_category,base.group_user,1,1,1,1
+access_onlinepbx_call_rating,access_onlinepbx_call_rating,model_onlinepbx_call_rating,base.group_user,1,1,1,1
+access_onlinepbx_settings,access_onlinepbx_settings,model_onlinepbx_settings,base.group_system,1,1,1,1
+access_onlinepbx_objection,access_onlinepbx_objection,model_onlinepbx_objection,base.group_user,1,1,1,1

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===================== LIST VIEW ===================== -->
+    <record id="view_onlinepbx_call_list" model="ir.ui.view">
+        <field name="name">onlinepbx.call.list</field>
+        <field name="model">onlinepbx.call</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="start_time"/>
+                <field name="direction"/>
+
+                <field name="state"
+                    widget="badge"
+                    decoration-success="state == 'answered'"
+                    decoration-danger="state in ('missed', 'not_answered')"/>
+
+                <field name="from_number"/>
+                <field name="to_number"/>
+                <field name="external_number"/>
+                <field name="employee_id"/>
+                <field name="duration_display"/>
+                <field name="total_score"/>
+                <field name="has_recording"/>
+            </list>
+        </field>
+    </record>
+
+
+    <!-- ===================== FORM VIEW ===================== -->
+    <record id="view_onlinepbx_call_form" model="ir.ui.view">
+        <field name="name">onlinepbx.call.form</field>
+        <field name="model">onlinepbx.call</field>
+        <field name="arch" type="xml">
+            <form string="Call History">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="start_time"/>
+                            <field name="direction"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="from_number"/>
+                            <field name="to_number"/>
+                            <field name="external_number"/>
+                            <field name="employee_id"/>
+                        </group>
+                    </group>
+
+                    <group string="Duration">
+                        <field name="duration_seconds" readonly="1"/>
+                        <field name="duration_display" readonly="1"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Audio">
+                            <group>
+                                <field name="has_recording"/>
+                            </group>
+                            <group>
+                                <field name="audio_embed" nolabel="1"/>
+                            </group>
+
+                            <group string="Overall">
+                                <field name="total_score"/>
+                            </group>
+
+                            <group string="Category Scores">
+                                <field name="rating_ids">
+                                    <list editable="bottom">
+                                        <field name="category_id" readonly="1"/>
+                                        <field name="max_points" readonly="1"/>
+                                        <field name="points"/>
+                                        <field name="note"/>
+                                    </list>
+                                </field>
+                            </group>
+
+                            <group string="E'tirozlar">
+                                <field name="objection_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+
+                        <page string="Debug">
+                            <field name="raw_payload" nolabel="1" widget="text"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ===================== SEARCH VIEW ===================== -->
+    <record id="view_onlinepbx_call_search" model="ir.ui.view">
+        <field name="name">onlinepbx.call.search</field>
+        <field name="model">onlinepbx.call</field>
+        <field name="arch" type="xml">
+            <search string="Qongiroqlar qidiruvi">
+                <field name="numbers_all" string="Raqam"/>
+
+                <field name="employee_id" string="Xodim"/>
+                <field name="direction" string="Turi"/>
+                <field name="state" string="Holati"/>
+                <field name="has_recording" string="Yozuv bor"/>
+                <field name="objection_ids" string="E'tirozlar"/>
+
+                <filter name="has_objection"
+                        string="E'tirozlar bor"
+                        domain="[('objection_ids', '!=', False)]"/>
+
+                <!-- Direction filters -->
+                <filter name="incoming" string="Kirish" domain="[('direction', '=', 'in')]"/>
+                <filter name="outgoing" string="Chiqish" domain="[('direction', '=', 'out')]"/>
+                <filter name="local" string="Ichki" domain="[('direction', '=', 'local')]"/>
+
+                <!-- Status filters -->
+                <filter name="answered" string="Javob berilgan" domain="[('state', '=', 'answered')]"/>
+                <filter name="missed" string="Otkazib yuborilgan" domain="[('state', '=', 'missed')]"/>
+                <filter name="not_answered" string="Javob berilmagan" domain="[('state', '=', 'not_answered')]"/>
+            </search>
+        </field>
+    </record>
+
+
+
+    <!-- ===================== GRAPH VIEW ===================== -->
+    <record id="view_onlinepbx_call_graph" model="ir.ui.view">
+        <field name="name">onlinepbx.call.graph</field>
+        <field name="model">onlinepbx.call</field>
+        <field name="arch" type="xml">
+            <graph string="Call Statistics" type="bar">
+                <!-- 1. Ortacha uchun: total_score va call_count -->
+                <field name="total_score" type="measure"/>
+                <field name="call_count" type="measure"/>
+
+                <!-- mavjud KPI lar -->
+                <field name="duration_seconds" type="measure"/>
+                <field name="answered_count" type="measure"/>
+                <field name="missed_count" type="measure"/>
+                <field name="not_answered_count" type="measure"/>
+                <field name="problem_count" type="measure"/>
+                <field name="recording_count" type="measure"/>
+
+                <!-- 3. Eng ko‘p e’tirozlar, 4–5. xodim/e’tirozlar bo‘yicha -->
+                <field name="employee_id" type="row"/>
+                <field name="objection_ids" type="row"/>
+                <field name="direction" type="col"/>
+                <field name="state" type="col"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- ===================== PIVOT VIEW ===================== -->
+    <record id="view_onlinepbx_call_pivot" model="ir.ui.view">
+        <field name="name">onlinepbx.call.pivot</field>
+        <field name="model">onlinepbx.call</field>
+        <field name="arch" type="xml">
+            <pivot string="Call Pivot">
+                <field name="duration_seconds" type="measure"/>
+                <field name="employee_id" type="row"/>
+                <field name="direction" type="col"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_onlinepbx_call_rating_graph" model="ir.ui.view">
+        <field name="name">onlinepbx.call.rating.graph</field>
+        <field name="model">onlinepbx.call.rating</field>
+        <field name="arch" type="xml">
+            <graph string="Category Scores" type="bar">
+                <!-- 2. Har bir kategoriya, ballar -->
+                <field name="points" type="measure"/>
+                <field name="category_id" type="row"/>
+                <!-- 4. Har bir xodim bo‘yicha kategoriya -->
+                <field name="employee_id" type="col"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_onlinepbx_call_rating_pivot" model="ir.ui.view">
+        <field name="name">onlinepbx.call.rating.pivot</field>
+        <field name="model">onlinepbx.call.rating</field>
+        <field name="arch" type="xml">
+            <pivot string="Category Scores Pivot">
+                <field name="points" type="measure"/>
+                <field name="category_id" type="row"/>
+                <field name="employee_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_onlinepbx_call_ratings" model="ir.actions.act_window">
+        <field name="name">Category Scores</field>
+        <field name="res_model">onlinepbx.call.rating</field>
+        <field name="view_mode">graph,pivot,list,form</field>
+    </record>
+
+
+    <!-- ===================== ACTION: CALLS ===================== -->
+    <record id="action_onlinepbx_calls" model="ir.actions.act_window">
+        <field name="name">Call History</field>
+        <field name="res_model">onlinepbx.call</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+    </record>
+
+    <!-- ===================== SCORE CATEGORY LIST/FORM ===================== -->
+    <record id="view_onlinepbx_category_list" model="ir.ui.view">
+        <field name="name">onlinepbx.score.category.list</field>
+        <field name="model">onlinepbx.score.category</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="max_points"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_onlinepbx_category_form" model="ir.ui.view">
+        <field name="name">onlinepbx.score.category.form</field>
+        <field name="model">onlinepbx.score.category</field>
+        <field name="arch" type="xml">
+            <form string="Score Category">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="max_points"/>
+                        <field name="active"/>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_onlinepbx_categories" model="ir.actions.act_window">
+        <field name="name">Score Categories</field>
+        <field name="res_model">onlinepbx.score.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

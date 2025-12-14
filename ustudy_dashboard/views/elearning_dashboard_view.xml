@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Window Action avval -->
+        <record id="action_elearning_dashboard" model="ir.actions.act_window">
+            <field name="name">eLearning Dashboard</field>
+            <field name="res_model">elearning.dashboard</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+            <field name="context">{'form_view_ref': 'ustudy_dashboard.view_elearning_dashboard_form'}</field>
+        </record>
+
+        <!-- Keyin form view -->
+        <record id="view_elearning_dashboard_form" model="ir.ui.view">
+            <field name="name">elearning.dashboard.form</field>
+            <field name="model">elearning.dashboard</field>
+            <field name="arch" type="xml">
+                <form string="eLearning Dashboard" class="dashboard-form" create="0" edit="0" style="position: relative;">
+                    <style>
+                        .o_control_panel {
+                            border-bottom: 0;
+                            padding-top: 0;
+                            padding-right: 0;
+                            padding-bottom: 0;
+                            padding-left: 0;
+                            visibility: hidden;
+                        }
+                        .o_form_nosheet {
+                            padding-top: 0;
+                        }
+                    </style>
+                    <div class="o_form_view_container" style="width: 95%; margin: auto;">
+                        <div class="row align-items-center mt-3 mb-2">
+                            <div class="col-md-6 col-sm-12 text-start">
+                                <h1 class="my-0">eLearning Admin Dashboard</h1>
+                            </div>
+                            <div class="col-md-6 col-sm-12 d-flex justify-content-end">
+                                <!-- endi bu yerda reference ishlaydi, chunki action allaqachon bor -->
+                                <button name="%(action_elearning_dashboard)d"
+                                        type="action"
+                                        string="Refresh"
+                                        class="btn btn-sm btn-secondary"
+                                        style="min-width: 120px;"/>
+                            </div>
+                        </div>
+
+                        <field name="dashboard_data" readonly="1" nolabel="1" widget="elearning_dashboard"/>
+                        <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

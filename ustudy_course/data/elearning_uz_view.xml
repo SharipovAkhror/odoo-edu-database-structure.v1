@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- eLearning: kurslar kanban (slide.channel) uchun tarjimalar -->
+        <!-- View id: website_slides.view_slide_channel_kanban -->
+
+        <!-- Tugma: View course -->
+        <record id="tr_slide_channel_view_course_uz" model="ir.translation">
+            <field name="name">website_slides.view_slide_channel_kanban,arch_db</field>
+            <field name="lang">uz_UZ</field>
+            <field name="type">view</field>
+            <field name="src">View course</field>
+            <field name="value">Kursni ko'rish</field>
+        </record>
+
+        <!-- Statlar ostidagi yozuvlar -->
+        <record id="tr_slide_channel_views_uz" model="ir.translation">
+            <field name="name">website_slides.view_slide_channel_kanban,arch_db</field>
+            <field name="lang">uz_UZ</field>
+            <field name="type">view</field>
+            <field name="src">Views</field>
+            <field name="value">Ko'rishlar</field>
+        </record>
+
+        <record id="tr_slide_channel_contents_uz" model="ir.translation">
+            <field name="name">website_slides.view_slide_channel_kanban,arch_db</field>
+            <field name="lang">uz_UZ</field>
+            <field name="type">view</field>
+            <field name="src">Contents</field>
+            <field name="value">Darslar</field>
+        </record>
+
+        <record id="tr_slide_channel_duration_uz" model="ir.translation">
+            <field name="name">website_slides.view_slide_channel_kanban,arch_db</field>
+            <field name="lang">uz_UZ</field>
+            <field name="type">view</field>
+            <field name="src">Duration</field>
+            <field name="value">Davomiyligi</field>
+        </record>
+
+        <record id="tr_slide_channel_invited_uz" model="ir.translation">
+            <field name="name">website_slides.view_slide_channel_kanban,arch_db</field>
+            <field name="lang">uz_UZ</field>
+            <field name="type">view</field>
+            <field name="src">Invited</field>
+            <field name="value">Taklif qilingan</field>
+        </record>
+
+        <record id="tr_slide_channel_ongoing_uz" model="ir.translation">
+            <field name="name">website_slides.view_slide_channel_kanban,arch_db</field>
+            <field name="lang">uz_UZ</field>
+            <field name="type">view</field>
+            <field name="src">Ongoing</field>
+            <field name="value">Davom etayotgan</field>
+        </record>
+
+        <record id="tr_slide_channel_finished_uz" model="ir.translation">
+            <field name="name">website_slides.view_slide_channel_kanban,arch_db</field>
+            <field name="lang">uz_UZ</field>
+            <field name="type">view</field>
+            <field name="src">Finished</field>
+            <field name="value">Tugallangan</field>
+        </record>
+
+        <record id="tr_slide_channel_total_uz" model="ir.translation">
+            <field name="name">website_slides.view_slide_channel_kanban,arch_db</field>
+            <field name="lang">uz_UZ</field>
+            <field name="type">view</field>
+            <field name="src">Total</field>
+            <field name="value">Jami</field>
+        </record>
+
+        <!-- Level teg-lari -->
+        <record id="tr_slide_channel_intermediate_uz" model="ir.translation">
+            <field name="name">website_slides.view_slide_channel_kanban,arch_db</field>
+            <field name="lang">uz_UZ</field>
+            <field name="type">view</field>
+            <field name="src">Intermediate</field>
+            <field name="value">O'rta</field>
+        </record>
+
+        <record id="tr_slide_channel_beginner_uz" model="ir.translation">
+            <field name="name">website_slides.view_slide_channel_kanban,arch_db</field>
+            <field name="lang">uz_UZ</field>
+            <field name="type">view</field>
+            <field name="src">Beginner</field>
+            <field name="value">Boshlang'ich</field>
+        </record>
+
+    </data>
+</odoo>

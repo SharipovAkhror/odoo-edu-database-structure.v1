@@ -1,0 +1,38 @@
+<!-- ustudy_group/views/menu.xml -->
+<odoo>
+    <!-- ACTIONS -->
+
+    <record id="action_edu_group_list" model="ir.actions.act_window">
+        <field name="name">Groups</field>
+        <field name="res_model">edu.group</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_student_list" model="ir.actions.act_window">
+        <field name="name">Students</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_student','=',True)]</field>
+        <field name="context">{'default_is_student': True}</field>
+    </record>
+
+    <!-- MENUS -->
+
+    <!-- Root menu for Education -->
+    <menuitem id="menu_edu_root"
+            name="Guruhlar"
+            sequence="10"
+            web_icon="ustudy_group,static/group.png"/>
+
+    <!-- Groups menu -->
+    <menuitem id="menu_edu_groups"
+              name="Grouplar"
+              parent="menu_edu_root"
+              action="action_edu_group_list"/>
+
+    <!-- Students menu -->
+    <menuitem id="menu_students"
+              name="Talabalar"
+              parent="menu_edu_root"
+              action="action_student_list"/>
+</odoo>

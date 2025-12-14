@@ -1,0 +1,56 @@
+<!-- ustudy_group/views/edu_group_views.xml -->
+<odoo>
+    <!-- GROUP LIST VIEW -->
+    <record id="view_edu_group_list" model="ir.ui.view">
+        <field name="name">edu.group.list</field>
+        <field name="model">edu.group</field>
+        <field name="arch" type="xml">
+            <list string="Groups">
+                <field name="name"/>
+                <field name="course_id"/>
+                <field name="teacher_id"/>
+                <field name="student_count"/>
+                <field name="state"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- GROUP FORM VIEW -->
+    <record id="view_edu_group_form" model="ir.ui.view">
+        <field name="name">edu.group.form</field>
+        <field name="model">edu.group</field>
+        <field name="arch" type="xml">
+            <form string="Group">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="course_id"/>
+                        <field name="teacher_id"/>
+                        <field name="state"/>
+                    </group>
+                    <group>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="student_count" readonly="1"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Students">
+                            <field name="student_line_ids">
+                                <list editable="bottom" string="Students">
+                                    <field name="student_id"/>
+                                    <field name="state"/>
+                                    <field name="total_courses"/>
+                                    <field name="avg_progress"/>
+                                    <field name="avg_mark"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
