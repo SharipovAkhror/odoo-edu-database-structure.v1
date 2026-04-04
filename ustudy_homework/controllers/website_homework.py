@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 import base64
+import json
 
 from odoo import http
 from odoo.http import request
@@ -18,7 +20,15 @@ class WebsiteEduHomework(http.Controller):
         }
         return request.render('ustudy_homework.homework_page_template', values)
 
-    @http.route(['/homework/slide/<int:slide_id>/json'], type='json', auth='public', website=True)
+    # ✅ FIXED: type='http' so normal GET works (no 415)
+    @http.route(
+        ['/homework/slide/<int:slide_id>/json'],
+        type='http',
+        auth='public',
+        website=True,
+        csrf=False,
+        sitemap=False,
+    )
     def slide_homeworks_json(self, slide_id, **kw):
         hw_objs = request.env['edu.homework'].sudo().search([
             ('slide_id', '=', slide_id),
@@ -33,11 +43,21 @@ class WebsiteEduHomework(http.Controller):
             'url': f"{base_url}/homework/{hw.id}",
         } for hw in hw_objs]
 
-        return result
+        return request.make_response(
+            json.dumps(result),
+            headers=[
+                ('Content-Type', 'application/json; charset=utf-8'),
+                ('Cache-Control', 'no-store'),
+            ],
+        )
 
     @http.route(
         ['/homework/<int:homework_id>/submit'],
-        type='http', auth='user', website=True, methods=['POST']
+        type='http',
+        auth='user',
+        website=True,
+        methods=['POST'],
+        csrf=True,
     )
     def homework_submit(self, homework_id, **post):
         hw = request.env['edu.homework'].sudo().browse(homework_id)

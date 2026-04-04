@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_home_finance"
+              inherit_id="portal.portal_my_home"
+              name="Portal My Finance Menu">
+
+        <xpath expr="//div[contains(@class,'o_portal_my_home')]//div[contains(@class,'row')][1]"
+               position="inside">
+
+            <div class="col-12 col-md-6 mb-3">
+                <a t-attf-href="/my/finance"
+                   class="d-flex align-items-center p-3 border rounded text-decoration-none shadow-sm bg-white">
+
+                    <div class="me-3">
+                        <i class="fa fa-money fa-2x text-primary"/>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1 fw-bold">Mening Hisobotlarim</h5>
+                        <p class="mb-0 text-muted small">
+                            Daromad va xarajatlarni ko‘rish
+                        </p>
+                    </div>
+
+                </a>
+            </div>
+
+        </xpath>
+
+    </template>
+
+</odoo>

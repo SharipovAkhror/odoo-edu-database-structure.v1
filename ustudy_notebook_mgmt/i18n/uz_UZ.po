@@ -1,0 +1,106 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ustudy_notebook_mgmt
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 18.0\n"
+"Language: uz_UZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.actions.act_window,name:ustudy_notebook_mgmt.action_edu_notebook
+msgid "Notebooks"
+msgstr "Noutbuklar"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.actions.act_window,name:ustudy_notebook_mgmt.action_edu_notebook_borrow
+msgid "Borrowing"
+msgstr "Ijaraga berish"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model,name:ustudy_notebook_mgmt.model_edu_notebook
+msgid "Education Notebook (Laptop)"
+msgstr "Taʼlim noutbuki"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model,name:ustudy_notebook_mgmt.model_edu_notebook_borrow
+msgid "Notebook Borrowing"
+msgstr "Noutbuk ijarasi"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model.fields,field_description:ustudy_notebook_mgmt.field_edu_notebook__name
+msgid "Notebook Number"
+msgstr "Noutbuk raqami"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model.fields,field_description:ustudy_notebook_mgmt.field_edu_notebook__serial_number
+msgid "Serial Number"
+msgstr "Seriya raqami"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model.fields,field_description:ustudy_notebook_mgmt.field_edu_notebook__model_name
+msgid "Model Name"
+msgstr "Model nomi"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model.fields,field_description:ustudy_notebook_mgmt.field_edu_notebook__cpu
+msgid "CPU"
+msgstr "Protsessor"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model.fields,field_description:ustudy_notebook_mgmt.field_edu_notebook__ram
+msgid "OZU (RAM)"
+msgstr "Operativ xotira (RAM)"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model.fields,field_description:ustudy_notebook_mgmt.field_edu_notebook__ssd
+msgid "SSD"
+msgstr "Doimiy xotira (SSD)"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model.fields,field_description:ustudy_notebook_mgmt.field_edu_notebook__date_created
+msgid "Date Created"
+msgstr "Yaratilgan sana"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model.fields,field_description:ustudy_notebook_mgmt.field_edu_notebook__daily_price
+msgid "Daily Price"
+msgstr "Kunlik narx"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model.fields,field_description:ustudy_notebook_mgmt.field_edu_notebook__last_user_id
+msgid "Last User"
+msgstr "Oxirgi foydalanuvchi"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model.fields.selection,name:ustudy_notebook_mgmt.selection__edu_notebook_borrow__state__draft
+msgid "Draft"
+msgstr "Qoralama"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model.fields.selection,name:ustudy_notebook_mgmt.selection__edu_notebook_borrow__state__active
+msgid "Borrowed"
+msgstr "Berildi"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model.fields.selection,name:ustudy_notebook_mgmt.selection__edu_notebook_borrow__state__returned
+msgid "Returned"
+msgstr "Qaytarildi"
+
+#. module: ustudy_notebook_mgmt
+#: model:ir.model.fields.selection,name:ustudy_notebook_mgmt.selection__edu_notebook_borrow__state__cancelled
+msgid "Cancelled"
+msgstr "Bekor qilindi"
+
+#. module: ustudy_notebook_mgmt
+#: model_terms:ir.ui.view,arch_db:ustudy_notebook_mgmt.view_edu_notebook_form
+msgid "Current Status"
+msgstr "Joriy holat"
+
+#. module: ustudy_notebook_mgmt
+#: model_terms:ir.ui.view,arch_db:ustudy_notebook_mgmt.view_edu_notebook_form
+msgid "Borrowings"
+msgstr " - Ijaralar"

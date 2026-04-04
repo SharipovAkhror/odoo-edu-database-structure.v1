@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- STUDENT LIST (tree/list) -->
+    <record id="view_student_partner_list" model="ir.ui.view">
+        <field name="name">res.partner.list.student</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list string="Talabalar" create="1" edit="1" delete="0">
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="state_id" string="Viloyat"/>
+                <field name="cc_region_id" string="Tuman"/>
+                <field name="total_courses" string="Kurslar"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- STUDENT KANBAN -->
+    <record id="view_student_partner_kanban" model="ir.ui.view">
+        <field name="name">res.partner.kanban.student</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="state_id"/>
+                <field name="cc_region_id"/>
+                <field name="group_names"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card">
+                            <div class="o_kanban_record_top">
+                                <strong><field name="name"/></strong>
+                            </div>
+
+                            <div class="mt8">
+                                <div t-if="record.phone.raw_value">
+                                    <i class="fa fa-phone me-1"/> <field name="phone"/>
+                                </div>
+                                <div t-if="record.email.raw_value">
+                                    <i class="fa fa-envelope me-1"/> <field name="email"/>
+                                </div>
+
+                                <!-- GROUP NAME -->
+                                <div t-if="record.group_names.raw_value" class="mt8">
+                                    <i class="fa fa-users me-1"/> <t t-esc="record.group_names.raw_value"/>
+                                </div>
+
+                                <div class="mt8 text-muted">
+                                    <span t-if="record.state_id.raw_value"><field name="state_id"/></span>
+                                    <span t-if="record.cc_region_id.raw_value"> • <field name="cc_region_id"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+</odoo>

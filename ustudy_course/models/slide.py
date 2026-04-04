@@ -50,3 +50,51 @@ class Slide(models.Model):
                 vals["website_published"] = False
             if vals:
                 slides_to_unpublish.write(vals)
+
+
+    def get_my_homework_status(self):
+        """Return latest submission state for this slide for current user (submitted/graded/failed) or False."""
+        self.ensure_one()
+        user = self.env.user
+        if user._is_public():
+            return False
+
+        Submission = self.env["edu.homework.submission"].sudo()
+        last_sub = Submission.search([
+            ("homework_id.slide_id", "=", self.id),
+            ("user_id", "=", user.id),
+        ], order="submit_date desc, id desc", limit=1)
+
+        return last_sub.state if last_sub else False
+
+
+    @api.depends('question_ids', 'website_published', 'channel_id.is_member')
+    def _compute_mark_complete_actions(self):
+        super()._compute_mark_complete_actions()
+        user = self.env.user
+        if user._is_public():
+            return
+        for slide in self:
+            # Find lesson this slide belongs to
+            lesson = self.env['ustudy.course.lesson'].sudo().search([
+                '|', '|',
+                ('video_id', '=', slide.id),
+                ('file_ids', 'in', [slide.id]),
+                ('homework_id', '=', slide.id),
+            ], limit=1)
+            if not lesson or not lesson.homework_id:
+                continue
+            # Find edu.homework linked to lesson's homework slide
+            homework = self.env['edu.homework'].sudo().search([
+                ('slide_id', '=', lesson.homework_id.id)
+            ], limit=1)
+            if not homework:
+                continue
+            # Check if user has a graded submission
+            submission = self.env['edu.homework.submission'].sudo().search([
+                ('homework_id', '=', homework.id),
+                ('user_id', '=', user.id),
+                ('state', '=', 'graded'),
+            ], limit=1)
+            if not submission:
+                slide.can_self_mark_completed = False

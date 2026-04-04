@@ -1,0 +1,15 @@
+/* Hide the entire sidebar */
+.o_wslides_lesson_aside {
+    display: none !important;
+}
+
+/* Make main content full width */
+.o_wslides_lesson_main {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+.o_wslides_lesson_main.col-lg-9 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}

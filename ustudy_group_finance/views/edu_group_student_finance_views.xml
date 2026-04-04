@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_cc_finance_student_module_list" model="ir.ui.view">
+        <field name="name">cc.finance.student.module.list</field>
+        <field name="model">cc.finance</field>
+        <field name="arch" type="xml">
+            <list string="Student Payments" sample="1">
+                <field name="date"/>
+                <field name="name"/>
+
+                <field name="group_id" readonly="1"/>
+                <field name="module_id" readonly="1"/>
+
+                <field name="amount" widget="monetary"/>
+
+                <field name="payment_status" widget="badge"
+                    decoration-success="payment_status == 'paid'"
+                    decoration-warning="payment_status == 'partial'"
+                    decoration-danger="payment_status == 'overdue'"
+                    decoration-info="payment_status == 'not_started'"/>
+
+                <field name="student_status" widget="badge"
+                    decoration-success="student_status == 'active'"
+                    decoration-info="student_status == 'completed'"
+                    decoration-warning="student_status == 'frozen'"
+                    decoration-danger="student_status == 'cancelled'"/>
+
+                <field name="state" widget="badge"
+                    decoration-info="state == 'draft'"
+                    decoration-success="state == 'confirmed'"
+                    decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+
+
+    <!-- ========================================================= -->
+    <!-- ACTION: Student Payments -->
+    <!-- ========================================================= -->
+    <record id="action_cc_finance_student_module_payments" model="ir.actions.act_window">
+        <field name="name">Student Payments</field>
+        <field name="res_model">cc.finance</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_cc_finance_student_module_list"/>
+        <field name="domain">[('partner_id', '!=', False)]</field>
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- GROUP STUDENT FORM: SMART BUTTON -->
+    <!-- ========================================================= -->
+    <record id="view_partner_form_finance_button" model="ir.ui.view">
+        <field name="name">res.partner.form.finance.button</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="ustudy_student.view_student_partner_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+
+                <button name="action_view_partner_finances"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-money"
+                        invisible="not is_student or finance_count == 0">
+
+                    <field name="finance_count"
+                           widget="statinfo"
+                           string="Payments"/>
+                </button>
+
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

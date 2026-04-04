@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Override slide embed template (normal view) -->
+    <template id="slide_embed_video_override" 
+              inherit_id="website_slides.slide_embed"
+              name="UStudy Custom Video Player">
+        
+        <xpath expr="//t[@t-if='slide.slide_type == \"video\"']" position="replace">
+            <t t-if="slide.slide_type == 'video'">
+                
+                <t t-if="slide.use_uploaded_video and slide.video_file_url">
+                    <div class="embed-responsive embed-responsive-16by9 mb-3">
+                        <video class="embed-responsive-item ustudy-no-download-video" 
+                               controls="controls" 
+                               controlsList="nodownload"
+                               preload="auto"
+                               t-att-src="slide.video_file_url"
+                               oncontextmenu="return false;"
+                               style="width: 100%; height: 100%; object-fit: contain; background: #000;">
+                            <source t-att-src="slide.video_file_url" type="video/mp4"/>
+                        </video>
+                    </div>
+                </t>
+                
+                <t t-else="">
+                    <div class="embed-responsive embed-responsive-16by9 mb-3">
+                        <t t-if="slide.embed_code" t-out="slide.embed_code"/>
+                    </div>
+                </t>
+                
+            </t>
+        </xpath>
+
+    </template>
+
+    <!-- Override fullscreen with JavaScript fallback -->
+    <template id="slide_fullscreen_js_override" 
+              inherit_id="website_slides.slide_fullscreen">
+        
+        <xpath expr="//head" position="inside">
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Check if we're on fullscreen and have uploaded video
+                    var fsContainer = document.querySelector('.o_wslides_fs_content');
+                    if (!fsContainer) return;
+                    
+                    var slideData = document.querySelector('[data-slide-id]');
+                    if (!slideData) return;
+                    
+                    var useUpload = slideData.getAttribute('data-use-upload');
+                    var videoUrl = slideData.getAttribute('data-video-url');
+                    
+                    if (useUpload === 'True' &amp;&amp; videoUrl) {
+                        var videoContainer = fsContainer.querySelector('.embed-responsive');
+                        if (videoContainer) {
+                            videoContainer.innerHTML = 
+                                '&lt;video class="embed-responsive-item ustudy-no-download-video" ' +
+                                'controls controlsList="nodownload" autoplay ' +
+                                'oncontextmenu="return false;" ' +
+                                'style="width:100%;height:100vh;object-fit:contain;background:#000;"&gt;' +
+                                    '&lt;source src="' + videoUrl + '" type="video/mp4"/&gt;' +
+                                '&lt;/video&gt;';
+                        }
+                    }
+                });
+            </script>
+        </xpath>
+        
+        <xpath expr="//body" position="attributes">
+            <attribute name="t-att-data-slide-id">slide.id</attribute>
+            <attribute name="t-att-data-use-upload">slide.use_uploaded_video</attribute>
+            <attribute name="t-att-data-video-url">slide.video_file_url if slide.use_uploaded_video else ''</attribute>
+        </xpath>
+
+    </template>
+
+</odoo>

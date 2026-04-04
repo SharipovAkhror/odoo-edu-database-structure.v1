@@ -1,0 +1,88 @@
+/* ================================
+   UStudy Video Player Protection
+   (UI-level only, browser-safe)
+   ================================ */
+
+/* Base video styling */
+video.ustudy-no-download-video {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    object-fit: contain;
+    outline: none;
+}
+
+/* Disable right-click selection behavior (JS handles actual prevention) */
+video.ustudy-no-download-video {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Hide download button (Chrome / Edge) */
+video.ustudy-no-download-video::-webkit-media-controls-download-button {
+    display: none !important;
+}
+
+/* Hide overflow menu that may contain download */
+video.ustudy-no-download-video::-webkit-media-controls-overflow-button {
+    display: none !important;
+}
+
+/* Keep controls visible but prevent overflow glitches */
+video.ustudy-no-download-video::-webkit-media-controls-enclosure {
+    overflow: hidden !important;
+}
+
+/* Firefox: reduce download exposure (cannot fully hide) */
+video.ustudy-no-download-video::-moz-media-controls {
+    display: block;
+}
+
+/* Prevent dragging the video element */
+video.ustudy-no-download-video {
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+
+/* Fullscreen compatibility */
+video.ustudy-no-download-video:fullscreen {
+    background: #000;
+}
+
+/* iOS / Safari fixes */
+video.ustudy-no-download-video::-webkit-media-controls {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* Make the lesson content full width */
+.o_wslides_lesson_main .container,
+.o_wslides_lesson_main .container-fluid {
+  max-width: 100% !important;
+}
+
+/* Ensure the video wrapper stretches */
+.o_wslides_lesson_main .ratio,
+.o_wslides_lesson_main video {
+  width: 100% !important;
+}
+
+/* 1) Make the main slide content container full width on lesson page */
+body:has(.o_wslides_lesson_main) #wrapwrap main .container {
+  max-width: 100% !important;
+}
+
+/* 2) Give the page a little left/right breathing room */
+body:has(.o_wslides_lesson_main) #wrapwrap main .container {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+/* 3) Let the video wrapper stretch */
+body:has(.o_wslides_lesson_main) .ratio,
+body:has(.o_wslides_lesson_main) .embed-responsive-item,
+body:has(.o_wslides_lesson_main) video {
+  width: 100% !important;
+}
+
+a.o_wslides_fs_share { display: none !important; }

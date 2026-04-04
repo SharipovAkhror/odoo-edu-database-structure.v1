@@ -1,38 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="ustudy_lesson_card_lock" inherit_id="website_slides.lesson_card">
-        <!-- IMAGE -->
-        <xpath expr="//div[contains(@class,'card w-100 o_wslides_lesson_card')]/a[1]" position="replace">
-        <a t-if="slide.can_access_for(request.env.user)"
-            style="height:150px"
-            t-att-href="slug(slide)">
-            <div class="o_wslides_background_image h-100" t-field="slide.image_1920"/>
-        </a>
+  <!-- Remove sidebar from lesson page -->
+  <template id="ustudy_remove_entire_sidebar"
+            inherit_id="website_slides.lesson_main">
 
-        <div t-else=""
-            style="height:150px"
-            class="o_wslides_background_image h-100 position-relative">
-            <div t-field="slide.image_1920"/>
-            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-dark bg-opacity-50 text-white">
-            <i class="fa fa-lock fa-2x mb-2"/>
-            <span t-esc="_('Submit previous homework to unlock')"/>
-            </div>
-        </div>
-        </xpath>
+    <xpath expr="//aside[hasclass('o_wslides_lesson_aside')]" position="replace"/>
 
-        <!-- TITLE -->
-        <xpath expr="//a[@class='card-title h5 o_wslides_desc_truncate_2']" position="replace">
-        <a t-if="slide.can_access_for(request.env.user)"
-            class="card-title h5 o_wslides_desc_truncate_2"
-            t-att-href="slug(slide)">
-            <t t-esc="slide.name"/>
-        </a>
-        <span t-else=""
-                class="card-title h5 o_wslides_desc_truncate_2 text-muted">
-            <t t-esc="slide.name"/> (<t t-esc="_('locked')"/>)
-        </span>
-        </xpath>
-    </template>
+    <xpath expr="//div[hasclass('o_wslides_lesson_main')]" position="attributes">
+      <attribute name="class">o_wslides_lesson_main col-lg-12</attribute>
+    </xpath>
+
+  </template>
 
 </odoo>

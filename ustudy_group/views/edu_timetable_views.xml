@@ -1,0 +1,164 @@
+<!-- ustudy_group/views/edu_timetable_views.xml -->
+<odoo>
+    <!-- TIMETABLE CALENDAR VIEW -->
+    <record id="view_edu_timetable_calendar" model="ir.ui.view">
+        <field name="name">edu.timetable.calendar</field>
+        <field name="model">edu.timetable</field>
+        <field name="arch" type="xml">
+            <calendar string="Timetable Calendar" 
+                      date_start="start_datetime" 
+                      date_stop="end_datetime"
+                      color="group_id"
+                      event_open_popup="true"
+                      quick_create="false"
+                      mode="week">
+                <field name="group_id"/>
+                <field name="room_id"/>
+                <field name="teacher_id"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- TIMETABLE LIST VIEW -->
+    <record id="view_edu_timetable_list" model="ir.ui.view">
+        <field name="name">edu.timetable.list</field>
+        <field name="model">edu.timetable</field>
+        <field name="arch" type="xml">
+            <list string="Timetable"
+                  decoration-success="state == 'completed'"
+                  decoration-info="state == 'scheduled'"
+                  decoration-warning="state == 'in_progress'"
+                  decoration-muted="state == 'cancelled'">
+                <field name="lesson_sequence" string="No." readonly="1"/>
+                <field name="name"/>
+                <field name="group_id"/>
+                <field name="course_id"/>
+                <field name="teacher_id" widget="many2one_avatar_user"/>
+                <field name="weekday_id"/>
+                <field name="room_id"/>
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+                <field name="duration" widget="float_time"/>
+                <field name="student_count"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'completed'"
+                       decoration-info="state == 'scheduled'"
+                       decoration-warning="state == 'in_progress'"
+                       decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- TIMETABLE FORM VIEW -->
+    <record id="view_edu_timetable_form" model="ir.ui.view">
+        <field name="name">edu.timetable.form</field>
+        <field name="model">edu.timetable</field>
+        <field name="arch" type="xml">
+            <form string="Timetable Entry">
+                <header>
+                    <button name="action_mark_in_progress" 
+                            string="Start Lesson" 
+                            type="object" 
+                            class="btn-primary"
+                            invisible="state != 'scheduled'"/>
+                    <button name="action_mark_completed" 
+                            string="Complete" 
+                            type="object" 
+                            class="btn-success"
+                            invisible="state not in ['scheduled', 'in_progress']"/>
+                    <button name="action_cancel" 
+                            string="Cancel" 
+                            type="object" 
+                            class="btn-secondary"
+                            invisible="state in ['completed', 'cancelled']"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="scheduled,in_progress,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Group Information">
+                            <field name="group_id" options="{'no_create': True}"/>
+                            <field name="course_id" readonly="1"/>
+                            <field name="teacher_id" widget="many2one_avatar_user" readonly="1"/>
+                            <field name="student_count"/>
+                        </group>
+                        
+                        <group string="Schedule Details">
+                            <field name="weekday_id"/>
+                            <field name="room_id" options="{'no_create': True}"/>
+                            <field name="start_datetime"/>
+                            <field name="end_datetime"/>
+                            <field name="duration" widget="float_time"/>
+                        </group>
+                    </group>
+
+                    <group string="Lesson Content">
+                        <field name="slide_channel_id" invisible="1"/>
+                        <field name="slide_id" 
+                            required="1"
+                            options="{'no_create': True, 'no_open': True}"
+                            placeholder="Select a lesson from the course..."/>
+                    </group>
+
+                    <group string="Additional Information">
+                        <field name="notes" placeholder="Add any notes about this lesson..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- TIMETABLE SEARCH VIEW -->
+    <record id="view_edu_timetable_search" model="ir.ui.view">
+        <field name="name">edu.timetable.search</field>
+        <field name="model">edu.timetable</field>
+        <field name="arch" type="xml">
+            <search string="Search Timetable">
+                <field name="name"/>
+                <field name="group_id"/>
+                <field name="room_id"/>
+                <field name="weekday_id"/>
+
+                <filter string="Scheduled From Today" name="scheduled_from_today"
+                        domain="[('state','=','scheduled'), ('start_date','&gt;=', context_today())]"/>
+
+                <!-- optional: keep these if you want -->
+                <separator/>
+                <filter string="Scheduled (All)" name="scheduled"
+                        domain="[('state','=','scheduled')]"/>
+                <filter string="From Today (All states)" name="from_today"
+                        domain="[('start_date','&gt;=', context_today())]"/>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- TIMETABLE ACTION -->
+    <record id="action_edu_timetable" model="ir.actions.act_window">
+        <field name="name">Timetable</field>
+        <field name="res_model">edu.timetable</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="domain">[('group_active','=',True)]</field>
+        <field name="search_view_id" ref="view_edu_timetable_search"/>
+
+        <field name="context">{'search_default_scheduled_from_today': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first timetable entry
+            </p>
+            <p>
+                Schedule lessons for your groups. You can also use the "Generate Timetable" 
+                button on the group form to automatically create timetable entries.
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

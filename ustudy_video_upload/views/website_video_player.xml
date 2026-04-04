@@ -1,0 +1,77 @@
+<odoo>
+    <!-- Normal lesson page (you already have this) -->
+    <template id="ustudy_video_player_inherit"
+                inherit_id="website_slides.slide_content_detailed"
+                name="UStudy Uploaded Video Player">
+        <xpath expr="//div[@t-if=&quot;slide.slide_category == 'video'&quot;]" position="replace">
+        <div t-if="slide.slide_category == 'video'" class="ratio ratio-16x9 embed-responsive-item mb8">
+            <t t-if="slide.use_uploaded_video and slide.video_file_url">
+            <video class="w-100 h-100 ustudy-no-download-video"
+                    controls="controls"
+                    preload="metadata"
+                    playsinline="playsinline"
+                    controlsList="nodownload"
+                    oncontextmenu="return false;"
+                    t-att-src="slide.video_file_url"
+                    style="background:#000; object-fit:contain;">
+            </video>
+            </t>
+            <t t-else="">
+            <t t-out="slide.embed_code"/>
+            </t>
+        </div>
+        </xpath>
+    </template>
+
+    <!-- ✅ Fullscreen page (this is what you're missing) -->
+    <template id="ustudy_video_player_fullscreen_inherit"
+                inherit_id="website_slides.slide_fullscreen"
+                name="UStudy Uploaded Video Player (Fullscreen)">
+
+        <xpath expr="//div[contains(concat(' ', normalize-space(@class), ' '), ' o_wslides_fs_content ')]"
+            position="replace">
+
+        <div class="o_wslides_fs_content align-items-stretch justify-content-center d-flex flex-grow-1 order-2">
+
+            <!-- Use both checks (some builds use slide_type instead of slide_category) -->
+            <t t-if="slide and (slide.slide_type == 'video' or slide.slide_category == 'video')">
+
+            <t t-if="slide.use_uploaded_video and slide.video_file_url">
+                <div class="ratio ratio-16x9 w-100">
+                <video class="w-100 h-100 ustudy-no-download-video"
+                        controls="controls"
+                        preload="metadata"
+                        playsinline="playsinline"
+                        controlsList="nodownload"
+                        oncontextmenu="return false;"
+                        t-att-src="slide.video_file_url"
+                        style="background:#000; object-fit:contain;">
+                </video>
+                </div>
+            </t>
+
+            <t t-else="">
+                <t t-out="slide.embed_code"/>
+            </t>
+
+            </t>
+
+            <!-- non-video: keep empty (Odoo JS renders pdf/quiz/etc) -->
+        </div>
+
+        </xpath>
+    </template>
+
+    <template id="ustudy_hide_share_button"
+                inherit_id="website_slides.slide_content_detailed"
+                name="UStudy: Hide Share Button">
+
+        <!-- safest: remove any link with the share classes -->
+        <xpath expr="//a[contains(concat(' ', normalize-space(@class), ' '), ' o_wslides_share ') 
+                    or contains(concat(' ', normalize-space(@class), ' '), ' o_wslides_lesson_share ')
+                    or contains(concat(' ', normalize-space(@class), ' '), ' o_wslides_share_button ')
+                    or contains(concat(' ', normalize-space(@class), ' '), ' o_wslides_fs_share ')]"
+            position="replace"/>
+
+    </template>
+</odoo>

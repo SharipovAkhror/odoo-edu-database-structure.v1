@@ -11,6 +11,11 @@
         "security/ir.model.access.csv",
         "views/elearning_views.xml",
     ],
+    "assets": {
+        "web.assets_frontend": [
+            "ustudy_course/static/src/js/slides_course_slides_list.js",
+        ],
+    },
     "installable": True,
     "application": False,
 }

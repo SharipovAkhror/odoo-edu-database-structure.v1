@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Camera Wizard Form View -->
+    <record id="view_camera_wizard_form" model="ir.ui.view">
+        <field name="name">edu.camera.wizard.form</field>
+        <field name="model">edu.camera.wizard</field>
+        <field name="arch" type="xml">
+            <form js_class="camera_wizard_form">
+                <field name="timetable_id" invisible="1"/>
+                <field name="teacher_image" invisible="1"/>
+                
+                <group>
+                    <div class="camera_widget_container" style="text-align: center; padding: 20px;">
+                        <video id="camera_video" autoplay="autoplay" 
+                               style="width: 100%; max-width: 640px; border: 2px solid #ccc; border-radius: 8px; display: none;"></video>
+                        <canvas id="camera_canvas" style="display: none;"></canvas>
+                        <div id="preview_image" style="display: none; margin-top: 10px;">
+                            <img id="captured_photo" style="width: 100%; max-width: 640px; border: 2px solid #4CAF50; border-radius: 8px;" alt="Captured"/>
+                        </div>
+                        <div id="camera_placeholder" style="width: 100%; max-width: 640px; height: 480px; border: 2px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #f5f5f5;">
+                            <span style="color: #999; font-size: 16px;">Click "Open Camera" to start</span>
+                        </div>
+                    </div>
+                </group>
+                
+                <footer>
+                    <button string="Open Camera" 
+                            type="object" 
+                            class="btn-primary" 
+                            id="btn_start_camera"/>
+                    <button string="Capture Photo" 
+                            type="object" 
+                            class="btn-success" 
+                            id="btn_capture_photo" 
+                            style="display: none;"/>
+                    <button string="Retake" 
+                            type="object" 
+                            class="btn-warning" 
+                            id="btn_retake" 
+                            style="display: none;"/>
+                    <button name="action_capture_and_start" 
+                            string="Start Attendance" 
+                            type="object" 
+                            class="btn-primary oe_highlight" 
+                            id="btn_start_attendance" 
+                            style="display: none;"/>
+                    <button string="Cancel" 
+                            special="cancel" 
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

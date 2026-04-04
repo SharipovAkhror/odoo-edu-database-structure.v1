@@ -2,3 +2,6 @@ from . import edu_homework
 from . import edu_homework_mark
 from . import slide_inherit
 from . import edu_homework_submission
+from . import res_partner
+from . import edu_timetable
+from . import edu_student_lesson_report

@@ -21,7 +21,6 @@ class EduHomework(models.Model):
     attachment_ids = fields.Many2many("ir.attachment", string="Attachments")
     due_date = fields.Date(string="Due Date")
 
-    # now points to Employee
     teacher_id = fields.Many2one(
         "hr.employee",
         string="Teacher",
@@ -35,6 +34,53 @@ class EduHomework(models.Model):
 
     submission_ids = fields.One2many("edu.homework.submission", "homework_id", string="Submissions")
     submission_count = fields.Integer(string="Submissions", compute="_compute_submission_count")
+    
+    pass_mark = fields.Float(string="Pass Ball", default=60.0)
+
+    # Student portal fields
+    current_user_submission_id = fields.Many2one(
+        "edu.homework.submission",
+        string="My Submission",
+        compute="_compute_current_user_submission",
+        store=False,
+    )
+    current_user_status = fields.Selection(
+        [
+            ("not_submitted", "In Progress"),
+            ("submitted", "Submitted"),
+            ("graded", "Passed"),
+            ("failed", "Failed"),
+        ],
+        string="Status",
+        compute="_compute_current_user_submission",
+        store=False,
+    )
+    current_user_mark = fields.Float(
+        string="My Mark",
+        compute="_compute_current_user_submission",
+        store=False,
+    )
+
+    @api.depends_context("uid")
+    def _compute_current_user_submission(self):
+        """Compute current user's submission status and mark"""
+        for rec in self:
+            user = self.env.user
+            partner = user.partner_id
+            
+            submission = self.env["edu.homework.submission"].search([
+                ("homework_id", "=", rec.id),
+                ("student_id", "=", partner.id),
+            ], limit=1)
+            
+            if submission:
+                rec.current_user_submission_id = submission.id
+                rec.current_user_status = submission.state
+                rec.current_user_mark = submission.mark
+            else:
+                rec.current_user_submission_id = False
+                rec.current_user_status = "not_submitted"
+                rec.current_user_mark = 0.0
 
     @api.depends("submission_ids")
     def _compute_submission_count(self):
@@ -53,7 +99,6 @@ class EduHomework(models.Model):
 
         default_slide_id = self.env.context.get('default_slide_id')
 
-        # set channel from slide
         for vals in vals_list:
             slide_id = vals.get('slide_id') or default_slide_id
             if slide_id and not vals.get('channel_id'):
@@ -63,15 +108,17 @@ class EduHomework(models.Model):
 
         records = super(EduHomework, self).create(vals_list)
 
-        # fallback teacher from edu.group (teacher is a res.users there)
         for rec in records:
+            if rec.channel_id:
+                if not rec.pass_mark or rec.pass_mark == 60.0:
+                    rec.pass_mark = rec.channel_id.homework_pass_mark or 60.0
+            
             if not rec.teacher_id and rec.channel_id:
                 group = self.env["edu.group"].search([
                     ("course_id", "=", rec.channel_id.id),
                     ("teacher_id", "!=", False)
                 ], limit=1)
                 if group and group.teacher_id:
-                    # map user -> employee
                     employee = self.env["hr.employee"].search(
                         [("user_id", "=", group.teacher_id.id)],
                         limit=1,
@@ -82,7 +129,6 @@ class EduHomework(models.Model):
         return records
 
     def write(self, vals):
-        # set channel from slide when slide changes
         if 'slide_id' in vals and vals.get('slide_id') and not vals.get('channel_id'):
             slide = self.env['slide.slide'].browse(vals.get('slide_id'))
             if slide and slide.channel_id:
@@ -90,7 +136,6 @@ class EduHomework(models.Model):
 
         res = super().write(vals)
 
-        # same fallback teacher logic on write
         for rec in self.filtered(lambda r: not r.teacher_id and r.channel_id):
             group = self.env["edu.group"].search([
                 ("course_id", "=", rec.channel_id.id),

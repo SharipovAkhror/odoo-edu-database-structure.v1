@@ -1,19 +1,96 @@
-<!-- ustudy_group/views/edu_group_views.xml -->
+<!-- ustudy_group/views/edu_group_views.xml - UPDATED FOR MODULE PAYMENT SYSTEM -->
 <odoo>
     <!-- GROUP LIST VIEW -->
     <record id="view_edu_group_list" model="ir.ui.view">
         <field name="name">edu.group.list</field>
         <field name="model">edu.group</field>
         <field name="arch" type="xml">
-            <list string="Groups">
-                <field name="name"/>
+            <list string="Groups" sample="1" js_class="group_dashboard_list">
+                <field name="name" decoration-bf="1"/>
                 <field name="course_id"/>
-                <field name="teacher_id"/>
+                <field name="teacher_id" widget="many2one_avatar_user"/>
                 <field name="student_count"/>
-                <field name="state"/>
+                <field name="lesson_room" optional="hide"/>
+                <field name="company_id" optional="hide"/>
+                <field name="state" widget="badge" 
+                    decoration-success="state == 'running'"
+                    decoration-info="state == 'draft'"
+                    decoration-muted="state == 'done'"
+                    decoration-danger="state == 'cancelled'"/>
                 <field name="start_date"/>
                 <field name="end_date"/>
             </list>
+        </field>
+    </record>
+
+
+    <!-- STUDENT LINE LIST VIEW (standalone) -->
+    <record id="view_edu_group_student_list" model="ir.ui.view">
+        <field name="name">edu.group.student.list</field>
+        <field name="model">edu.group.student</field>
+        <field name="arch" type="xml">
+            <list string="Students"
+                decoration-success="state == 'active' and payment_status == 'paid'" 
+                decoration-info="state == 'completed'" 
+                decoration-warning="payment_status in ['partial', 'overdue']" 
+                decoration-danger="state == 'frozen'"
+                decoration-muted="state == 'cancelled'">
+                
+                <field name="student_id" widget="many2one_avatar"/>
+                
+                <field name="group_id" optional="hide"/>
+                
+                <field name="state" 
+                    widget="badge"
+                    decoration-success="state == 'active'" 
+                    decoration-info="state == 'completed'" 
+                    decoration-warning="state == 'frozen'" 
+                    decoration-danger="state == 'cancelled'"/>
+                
+                <field name="current_module_id" optional="show"/>
+                <field name="lessons_in_current_module" optional="show"/>
+                
+                <field name="payment_status" 
+                    widget="badge"
+                    decoration-success="payment_status == 'paid'"
+                    decoration-warning="payment_status == 'partial'"
+                    decoration-danger="payment_status == 'overdue'"
+                    decoration-info="payment_status == 'not_started'"/>
+                
+                <field name="current_module_payment_amount" widget="monetary" optional="hide"/>
+                <field name="module_price" widget="monetary" optional="hide"/>
+                <field name="current_module_paid" widget="boolean_toggle" optional="hide"/>
+                <field name="total_courses" optional="hide"/>
+                
+                <button name="action_register_module_payment" 
+                        type="object" 
+                        string="Pay" 
+                        icon="fa-money"
+                        class="btn-primary"
+                        invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="view_edu_student_lesson_report_timeline" model="ir.ui.view">
+        <field name="name">edu.student.lesson.report.timeline</field>
+        <field name="model">edu.group.student.lesson.report</field>
+        <field name="arch" type="xml">
+            <timeline
+                date_start="start_datetime"
+                date_stop="end_datetime"
+                default_group_by="student_id"
+                mode="week"
+                event_open_popup="true"
+                colors="
+                    #21b799: attendance_status == 'present';
+                    #e04f4f: attendance_status == 'absent';
+                    #1f9eba: attendance_status == 'not_started'
+                "
+            >
+                <field name="display_name"/>
+            </timeline>
         </field>
     </record>
 
@@ -23,34 +100,325 @@
         <field name="model">edu.group</field>
         <field name="arch" type="xml">
             <form string="Group">
+                <header>
+                    <!-- State Management Buttons -->
+                    <button name="action_start" 
+                            string="Start Course" 
+                            type="object" 
+                            class="oe_highlight"
+                            invisible="state == 'running'"
+                            groups="base.group_user"/>
+                    
+                    <button name="action_complete" 
+                            string="Mark as Done" 
+                            type="object"
+                            invisible="state != 'running'"
+                            groups="base.group_user"/>
+                    
+                    <button name="action_generate_or_regenerate_timetable"
+                            string="Generate Timetable"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state not in ['draft', 'running']"
+                            groups="base.group_user"/>
+                    
+                    <field name="state" widget="statusbar" clickable="True" statusbar_visible="draft,running,done"/>
+                </header>
+                
                 <sheet>
+                    <!-- Smart Buttons -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_students" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-users">
+                            <field name="student_count" widget="statinfo" string="Students"/>
+                        </button>
+                        
+                        <button name="action_view_lessons" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-book">
+                            <field name="course_count" widget="statinfo" string="Lessons"/>
+                        </button>
+                        
+                        <button name="action_view_timetable" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-calendar">
+                            <field name="timetable_count" widget="statinfo" string="Timetable"/>
+                        </button>
+
+                        <button name="action_view_group_homeworks"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-tasks">
+                            <field name="homework_timetable_count" widget="statinfo" string="Topshiriqlar"/>
+                        </button>
+
+                        <button name="action_view_group_attendance_timeline"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-clock-o">
+                            <field name="attendance_count" widget="statinfo" string="Davomat"/>
+                        </button>
+
+                    </div>
+
+                    
+                    
+                    <!-- Title -->
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <field name="timetable_count" invisible="1"/>
+                    
+                    <div class="oe_title">
+                        <label for="name" string="Group Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Python P14" required="1"/>
+                        </h1>
+                    </div>
+                    
+                    <!-- Main Information -->
                     <group>
-                        <field name="name"/>
-                        <field name="course_id"/>
-                        <field name="teacher_id"/>
-                        <field name="state"/>
-                    </group>
-                    <group>
-                        <field name="start_date"/>
-                        <field name="end_date"/>
-                        <field name="student_count" readonly="1"/>
+                        <group string="Course Information">
+                            <field name="course_id" 
+                                   options="{'no_create': True}"
+                                   required="1"/>
+                            <field name="slide_channel_id" readonly="1"/>
+                            <field name="teacher_id" 
+                                   widget="many2one_avatar_user"/>
+                            <field name="lesson_room"
+                                   options="{'no_create': True}"/>
+                            <field name="group_color" widget="color_picker"/>
+                        </group>
+                        
+                        <group string="Schedule">
+                            <label for="start_date" string="Duration"/>
+                            <div class="o_row">
+                                <field name="start_date" class="oe_inline" nolabel="1" required="1"/>
+                                <span class="mx-2">•</span>
+                                <field name="lesson_count" class="oe_inline" nolabel="1" placeholder="Lessons"/>
+                                <span class="mx-2 oe_read_only">→</span>
+                                <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                                <field name="end_date" class="oe_inline" nolabel="1" readonly="1"/>
+                            </div> 
+                            
+                            <label for="lesson_start" string="Lesson Time"/>
+                            <div class="o_row">
+                                <field name="lesson_start" 
+                                    widget="float_time"
+                                    class="oe_inline" 
+                                    nolabel="1"
+                                    required="1"/>
+                                <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                                <span class="mx-2 oe_read_only">→</span>
+                                <field name="lesson_end" 
+                                    widget="float_time"
+                                    class="oe_inline" 
+                                    nolabel="1"
+                                    required="1"/>
+                            </div>
+                            <field name="lesson_days" 
+                                   widget="many2many_tags"
+                                   options="{'color_field': 'sequence', 'no_create': True}"
+                                   placeholder="Select lesson days..."/>
+                        </group>
                     </group>
 
+                    <!-- Notebook -->
                     <notebook>
-                        <page string="Students">
+                        <!-- Students Tab - UPDATED FOR MODULE PAYMENT -->
+                        <page string="Students" name="students">
                             <field name="student_line_ids">
-                                <list editable="bottom" string="Students">
-                                    <field name="student_id"/>
-                                    <field name="state"/>
-                                    <field name="total_courses"/>
-                                    <field name="avg_progress"/>
-                                    <field name="avg_mark"/>
+                                <list editable="bottom" string="Students"
+                                      decoration-success="state == 'active' and payment_status == 'paid'" 
+                                      decoration-info="state == 'completed'" 
+                                      decoration-warning="payment_status in ['partial', 'overdue']" 
+                                      decoration-danger="state == 'frozen'"
+                                      decoration-muted="state == 'cancelled'">
+                                    
+                                    <field name="student_id" 
+                                           widget="many2one_avatar"
+                                           domain="[('is_student', '=', True)]"/>
+                                    
+                                    <field name="state" 
+                                           widget="badge"
+                                           decoration-success="state == 'active'" 
+                                           decoration-info="state == 'completed'" 
+                                           decoration-warning="state == 'frozen'" 
+                                           decoration-danger="state == 'cancelled'"/>
+                                    
+                                    <!-- MODULE PAYMENT FIELDS -->
+                                    <field name="current_module_id" optional="show"/>
+                                    <field name="lessons_in_current_module" optional="show"/>
+
+                                    <field name="paid_amount_total" widget="monetary"/>
+                                    <field name="paid_lessons_count"/>
+                                    <field name="attended_lessons_count"/>
+                                    
+                                    <field name="payment_status" 
+                                           widget="badge"
+                                           decoration-success="payment_status == 'paid'"
+                                           decoration-warning="payment_status == 'partial'"
+                                           decoration-danger="payment_status == 'overdue'"
+                                           decoration-info="payment_status == 'not_started'"/>
+                                    
+                                    <field name="current_module_payment_amount" 
+                                           widget="monetary" 
+                                           optional="hide"/>
+                                    
+                                    <field name="module_price" 
+                                           widget="monetary" 
+                                           optional="hide"/>
+                                    
+                                    <field name="current_module_paid" 
+                                           widget="boolean_toggle"
+                                           optional="hide"/>
+                                    
+                                    <field name="total_courses" optional="hide"/>
+                                    
+                                    <!-- Payment Button -->
+                                    <button name="action_register_module_payment" 
+                                            type="object" 
+                                            string="Pay" 
+                                            icon="fa-money"
+                                            class="btn-primary"
+                                            invisible="1"/>
                                 </list>
                             </field>
                         </page>
+                        
+                        <!-- Notes/Description Tab -->
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Add any additional notes or description for this group..."/>
+                        </page>
                     </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- STUDENT LINE FORM VIEW (opened from group) -->
+    <record id="view_edu_group_student_form" model="ir.ui.view">
+        <field name="name">edu.group.student.form</field>
+        <field name="model">edu.group.student</field>
+        <field name="arch" type="xml">
+            <form string="Group Student">
+                <header>
+                    <button name="action_register_module_payment" 
+                            string="Register Module Payment" 
+                            type="object" 
+                            class="btn-primary"
+                            invisible="1"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="active,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_student_finance"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-money">
+                            <field name="finance_count" widget="statinfo" string="Payments"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group string="Student Information">
+                            <field name="student_id" 
+                                   options="{'no_create': True}"/>
+                            <field name="student_name" readonly="1"/>
+                            <field name="group_id" 
+                                   options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Module Progress">
+                            <field name="current_module_id" readonly="1"/>
+                            <field name="lessons_in_current_module" readonly="1"/>
+                            <field name="payment_status" 
+                                   decoration-danger="payment_status == 'overdue'" 
+                                   decoration-warning="payment_status == 'partial'"
+                                   decoration-success="payment_status == 'paid'"
+                                   widget="badge"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Payment Information">
+                            <label for="current_module_payment_amount"/>
+                            <div class="o_row">
+                                <field name="current_module_payment_amount" 
+                                       widget="monetary" 
+                                       readonly="1"
+                                       nolabel="1"/>
+                                <span> / </span>
+                                <field name="module_price" 
+                                       widget="monetary" 
+                                       readonly="1"
+                                       nolabel="1"/>
+                            </div>
+                            <field name="current_module_paid" readonly="1"/>
+                        </group>
+                    </group>
                 </sheet>
             </form>
         </field>
     </record>
+
+    <!-- GROUP SEARCH VIEW -->
+    <record id="view_edu_group_search" model="ir.ui.view">
+        <field name="name">edu.group.search</field>
+        <field name="model">edu.group</field>
+        <field name="arch" type="xml">
+            <search string="Guruhlarni qidirish">
+
+                <!-- Search fields -->
+                <field name="name" string="Guruh nomi"/>
+                <field name="teacher_id" string="O'qituvchi"/>
+                <field name="course_id" string="Kurs"/>
+                <field name="lesson_days" string="Hafta kuni"/>
+
+                <!-- Status filters -->
+                <separator/>
+                <filter string="Faol" name="state_running"
+                        domain="[('state', '=', 'running')]"/>
+                <filter string="Qoralama" name="state_draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Tugallangan" name="state_done"
+                        domain="[('state', '=', 'done')]"/>
+                <filter string="Bekor qilingan" name="state_cancelled"
+                        domain="[('state', '=', 'cancelled')]"/>
+
+                <!-- Group By -->
+                <!-- <separator/>
+                <group expand="0" string="Guruhlash">
+                    <filter string="O'qituvchi" name="group_by_teacher"
+                            context="{'group_by': 'teacher_id'}"/>
+                    <filter string="Holat" name="group_by_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Kurs" name="group_by_course"
+                            context="{'group_by': 'course_id'}"/>
+                </group> -->
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_edu_group" model="ir.actions.act_window">
+        <field name="name">Groups</field>
+        <field name="res_model">edu.group</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_edu_group_search"/>
+        <field name="context">{'search_default_state_running': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first student group
+            </p>
+            <p>
+                Groups are used to organize students by course, schedule lessons,
+                and track their progress.
+            </p>
+        </field>
+    </record>
+
 </odoo>

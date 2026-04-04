@@ -1,0 +1,43 @@
+/* Notebook kanban: compact like Contacts */
+.o_notebook_kanban .o_res_partner_kanban_record {
+  width: 380px;                 /* same feel as contacts */
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.o_notebook_kanban .o_kanban_record_top {
+  padding: 10px !important;
+}
+
+.o_notebook_kanban .o_res_partner_kanban_left {
+  width: 82px;
+  min-width: 82px;
+  height: 82px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.o_notebook_kanban .o_res_partner_kanban_left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.o_notebook_kanban .o_kanban_record_title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.o_notebook_kanban .o_kanban_record_subtitle {
+  margin: 6px 0 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+
+.o_notebook_kanban .o_kanban_record_subtitle li {
+  line-height: 1.35;
+  margin: 2px 0;
+}

@@ -153,6 +153,15 @@
         </field>
     </record>
 
-
+    <template id="slide_sidebar_done_button_disabled" inherit_id="website_slides.slide_sidebar_done_button">
+        <xpath expr="//div[hasclass('o_wslides_sidebar_done_button')]" position="replace">
+            <div t-if="is_member" class="o_wslides_sidebar_done_button align-self-start">
+                <button class="o_wslides_button_complete o_wslides_button_uncompleted btn btn-sm border-0" disabled="1">
+                    <i t-if="slide_completed" class="o_wslides_slide_completed fa fa-check fa-fw text-success fa-lg" t-att-data-slide-id="slide.id"/>
+                    <i t-else="" t-attf-class="fa #{uncompleted_icon} fa-fw fa-lg" t-att-data-slide-id="slide.id"/>
+                </button>
+            </div>
+        </xpath>
+    </template>
 
 </odoo>

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_slide_slide_public,slide.slide.public,website_slides.model_slide_slide,base.group_public,1,0,0,0
+access_slide_slide_user,slide.slide.user,website_slides.model_slide_slide,base.group_user,1,0,0,0
+access_slide_slide_officer,slide.slide.officer,website_slides.model_slide_slide,website_slides.group_website_slides_officer,1,1,1,1
+access_slide_slide_manager,slide.slide.manager,website_slides.model_slide_slide,website_slides.group_website_slides_manager,1,1,1,1

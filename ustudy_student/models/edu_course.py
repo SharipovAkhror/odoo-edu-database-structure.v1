@@ -21,11 +21,18 @@ class EduCourse(models.Model):
 
     is_published = fields.Boolean(string="Published", default=True)
 
-    # eLearning bilan bog'lanish
     slide_channel_id = fields.Many2one(
         "slide.channel",
         string="eLearning Course",
         ondelete="cascade",
+    )
+    
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        default=lambda self: self.env.company,
+        required=True,
+        index=True
     )
 
     enrollment_ids = fields.One2many(
@@ -45,7 +52,6 @@ class EduCourse(models.Model):
 
     @api.model
     def get_or_create_from_channel(self, channel):
-        """slide.channel’dan mos edu.course topadi, bo‘lmasa yaratadi."""
         course = self.search([("slide_channel_id", "=", channel.id)], limit=1)
         if not course:
             course = self.create({
@@ -54,3 +60,12 @@ class EduCourse(models.Model):
                 "is_published": channel.is_published,
             })
         return course
+
+    def unlink(self):
+        # Delete all enrollments before deleting the course
+        enrollments = self.env['edu.enrollment'].search([
+            ('course_id', 'in', self.ids)
+        ])
+        if enrollments:
+            enrollments.unlink()
+        return super(EduCourse, self).unlink()

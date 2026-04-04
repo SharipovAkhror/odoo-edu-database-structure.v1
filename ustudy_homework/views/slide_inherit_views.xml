@@ -3,18 +3,21 @@
 
   <!-- 1) Server action (first) - will open a new edu.homework form pre-filled with slide and course -->
   <record id="action_create_homework" model="ir.actions.server">
-    <field name="name">Create Homework from Slide</field>
-    <field name="model_id" ref="website_slides.model_slide_slide"/>
-    <field name="state">code</field>
-    <field name="code">
-      action = {
-        'type': 'ir.actions.act_window',
-        'res_model': 'edu.homework',
-        'view_mode': 'form',
-        'target': 'new',
-        'context': dict(env.context, default_slide_id=record.id, default_course_id=record.channel_id.course_id.id),
-      }
-    </field>
+      <field name="name">Create Homework from Slide</field>
+      <field name="model_id" ref="website_slides.model_slide_slide"/>
+      <field name="state">code</field>
+      <field name="code">
+          action = {
+              'type': 'ir.actions.act_window',
+              'res_model': 'edu.homework',
+              'view_mode': 'form',
+              'target': 'new',
+              'context': dict(env.context,
+                  default_slide_id=record.id,
+                  default_channel_id=record.channel_id.id
+              ),
+          }
+      </field>
   </record>
 
   <!-- 2) Inherit the slide form (use the view id you confirmed earlier) -->
@@ -26,10 +29,10 @@
       <xpath expr="//sheet/notebook" position="inside">
         <page string="Homeworks">
           <group>
-            <button name="%(ustudy_homework.action_edu_homework_list)d"
-                    type="action"
-                    string="Open All Homeworks"
-                    class="oe_highlight"/>
+            <button name="%(ustudy_homework.action_create_homework)d"
+                type="action"
+                string="Create Homework"
+                class="oe_highlight"/>
             <!-- <button name="%(ustudy_homework.action_create_homework)d"
                     type="action"
                     string="Create Homework"

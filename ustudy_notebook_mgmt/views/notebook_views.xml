@@ -1,0 +1,133 @@
+<!-- views/notebook_views.xml -->
+<odoo>
+
+  <!-- LIST -->
+  <record id="view_edu_notebook_list" model="ir.ui.view">
+    <field name="name">edu.notebook.list</field>
+    <field name="model">edu.notebook</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="serial_number"/>
+        <field name="model_name"/>
+        <field name="borrow_status" widget="badge" string="Ijaraga holati"
+            decoration-success="borrow_status == 'available'"
+            decoration-danger="borrow_status == 'borrowed'"/>
+        <field name="current_student_id" string="Talaba"/>
+        <field name="current_start_datetime" string="Boshlanish Vaqti"/>
+        <field name="current_return_datetime" string="Tugash Vaqti"/>
+      </list>
+    </field>
+  </record>
+
+    <record id="view_edu_notebook_kanban" model="ir.ui.view">
+    <field name="name">edu.notebook.kanban</field>
+    <field name="model">edu.notebook</field>
+    <field name="arch" type="xml">
+        <kanban class="o_kanban_view o_notebook_kanban" create="1">
+        <field name="name"/>
+        <field name="serial_number"/>
+        <field name="cpu"/>
+        <field name="ram"/>
+        <field name="date_created"/>
+        <field name="image_1920"/>
+
+        <templates>
+            <t t-name="card">
+            <div class="o_kanban_record o_res_partner_kanban_record oe_kanban_global_click">
+
+                <div class="o_kanban_record_top">
+                <!-- left image -->
+                <div class="o_res_partner_kanban_left">
+                    <field name="image_1920" widget="image"
+                        options="{'preview_image':'image_128'}"/>
+                </div>
+
+                <!-- right details -->
+                <div class="o_res_partner_kanban_details">
+                    <div class="o_kanban_record_title">
+                    <t t-esc="record.serial_number.value"/>
+                    </div>
+
+                    <ul class="o_kanban_record_subtitle">
+                    <li>CPU: <t t-esc="record.cpu.value or '-'"/></li>
+                    <li>RAM: <t t-esc="record.ram.value or '-'"/></li>
+                    <li>Date: <t t-esc="record.date_created.value or '-'"/></li>
+                    </ul>
+                </div>
+                </div>
+
+            </div>
+            </t>
+        </templates>
+        </kanban>
+    </field>
+    </record>
+
+
+
+  <!-- FORM -->
+  <record id="view_edu_notebook_form" model="ir.ui.view">
+    <field name="name">edu.notebook.form</field>
+    <field name="model">edu.notebook</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_open_borrows" type="object" class="oe_stat_button" icon="fa-exchange"
+                  modifiers="{'invisible': [['borrow_count','=',0]]}">
+            <field name="borrow_count" widget="statinfo" string="  Borrowings"/>
+          </button>
+        </header>
+
+        <sheet>
+          <!-- fields used by modifiers MUST be present -->
+          <field name="is_borrowed" invisible="1"/>
+          <field name="borrow_count" invisible="1"/>
+
+          <group>
+            <group>
+                <field name="serial_number" readonly="1"/>
+                <field name="name"/>
+                <field name="model_name"/>
+                <field name="date_created"/>
+                <field name="daily_price"/>
+                <field name="last_user_id" readonly="1"/>
+            </group>
+            <group>
+                <field name="image_1920" string="Picture"
+                    widget="image"
+                    class="oe_avatar"
+                    options="{'preview_image': 'image_1920'}"/>
+                <field name="cpu"/>
+                <field name="ram"/>
+                <field name="ssd"/>
+            </group>
+          </group>
+
+          <!-- ✅ ribbon ONLY when borrowed -->
+          <!-- <widget name="web_ribbon" title="Borrowed" bg_color="bg-warning"
+                  modifiers="{'invisible': [['is_borrowed','=',False]]}"/> -->
+
+          <!-- ✅ show status ONLY when borrowed -->
+          <group string="Current Status" class="mt16"
+                 modifiers="{'invisible': [['is_borrowed','=',False]]}">
+            <field name="current_student_id" readonly="1" string="Talaba"/>
+            <field name="current_start_datetime" readonly="1" string="Boshlanish Vaqti"/>
+            <field name="current_return_datetime" readonly="1" string="Tugash Vaqti"/>
+          </group>
+
+        </sheet>
+
+        <chatter/>
+      </form>
+    </field>
+  </record>
+
+  <!-- ACTION -->
+  <record id="action_edu_notebook" model="ir.actions.act_window">
+    <field name="name">Notebooks</field>
+    <field name="res_model">edu.notebook</field>
+    <field name="view_mode">list,kanban,form</field>
+  </record>
+
+</odoo>

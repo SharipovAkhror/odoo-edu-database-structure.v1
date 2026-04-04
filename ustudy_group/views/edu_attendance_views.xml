@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Attendance Line List View -->
+    <record id="view_edu_attendance_line_list" model="ir.ui.view">
+        <field name="name">edu.attendance.line.list</field>
+        <field name="model">edu.attendance.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="student_id" readonly="1"/>
+                <field name="student_name"/>
+                <field name="status" widget="badge" decoration-success="status == 'present'" decoration-danger="status == 'absent'"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+
+
+    <!-- Attendance Timeline View (OCA web_timeline) -->
+    <record id="view_edu_attendance_timeline" model="ir.ui.view">
+        <field name="name">edu.attendance.timeline</field>
+        <field name="model">edu.attendance</field>
+        <field name="arch" type="xml">
+            <timeline
+                date_start="attendance_date"
+                date_stop="attendance_date"
+                string="Attendance Timeline"
+                default_group_by="teacher_id"
+                event_open_popup="true"
+                colors="#21b799:state == 'confirmed';#e04f4f:state == 'draft'"
+            >
+                <field name="name"/>
+                <field name="teacher_id"/>
+                <field name="group_id"/>
+                <field name="state"/>
+                <field name="attendance_date"/>
+            </timeline>
+        </field>
+    </record>
+
+    <record id="view_edu_attendance_line_timeline" model="ir.ui.view">
+        <field name="name">edu.attendance.line.timeline</field>
+        <field name="model">edu.attendance.line</field>
+        <field name="arch" type="xml">
+            <timeline
+                date_start="attendance_start_datetime"
+                date_stop="attendance_end_datetime"
+                string="Davomat Jadvali"
+                default_group_by="student_id"
+                event_open_popup="true"
+                colors="#21b799:status=='present';#e04f4f:status=='absent'"
+            >
+                <field name="student_id"/>
+                <field name="student_name"/>
+                <field name="status"/>
+                <field name="group_id"/>
+                <field name="attendance_start_datetime"/>
+                <field name="attendance_end_datetime"/>
+            </timeline>
+        </field>
+    </record>
+
+    <!-- Attendance Form View - UPDATED FOR MODULE PAYMENT -->
+    <record id="view_edu_attendance_form" model="ir.ui.view">
+        <field name="name">edu.attendance.form</field>
+        <field name="model">edu.attendance</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_mark_all_present" 
+                            string="Mark All Present" 
+                            type="object" 
+                            class="btn-success"
+                            invisible="state == 'confirmed'"/>
+                    <button name="action_mark_all_absent" 
+                            string="Mark All Absent" 
+                            type="object" 
+                            class="btn-danger"
+                            invisible="state == 'confirmed'"/>
+                    <button name="action_confirm" 
+                            string="Confirm Attendance" 
+                            type="object" 
+                            class="oe_highlight" 
+                            invisible="state == 'confirmed'"/>
+                    <button name="action_reset_to_draft" 
+                            string="Reset to Draft" 
+                            type="object" 
+                            invisible="state == 'draft'"
+                            groups="base.group_system"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="timetable_id" readonly="1"/>
+                            <field name="group_id" readonly="1"/>
+                            <field name="teacher_id" readonly="1"/>
+                            <field name="attendance_date" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="total_students"/>
+                            <field name="present_count"/>
+                            <field name="absent_count"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Teacher Photos Section -->
+                    <group string="Teacher Photos">
+                        <group string="Start Photo">
+                            <field name="teacher_start_image" widget="image" options="{'size': [200, 200]}" class="oe_avatar"/>
+                            <field name="teacher_start_image_filename" invisible="1"/>
+                        </group>
+                        <group string="End Photo">
+                            <field name="teacher_end_image" widget="image" options="{'size': [200, 200]}" class="oe_avatar"/>
+                            <field name="teacher_end_image_filename" invisible="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Student Attendance">
+                            <field name="attendance_line_ids" widget="one2many" readonly="state == 'confirmed'">
+                                <list editable="bottom">
+                                    <field name="student_id" readonly="1" widget="many2one_avatar"/>
+                                    <field name="student_name"/>
+                                    <field name="status" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="student_payment_status" widget="badge"
+                                           decoration-success="student_payment_status == 'paid'"
+                                           decoration-warning="student_payment_status == 'partial'"
+                                           decoration-danger="student_payment_status in ('overdue', 'not_started')"
+                                           readonly="1" optional="show"/>
+                                    <field name="notes" placeholder="Add notes..."/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes" placeholder="Add any notes about this attendance session..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Attendance List View -->
+    <record id="view_edu_attendance_list" model="ir.ui.view">
+        <field name="name">edu.attendance.list</field>
+        <field name="model">edu.attendance</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="group_id"/>
+                <field name="teacher_id" widget="many2one_avatar_user"/>
+                <field name="attendance_date"/>
+                <field name="total_students"/>
+                <field name="present_count"/>
+                <field name="absent_count"/>
+                <field name="state" widget="badge" decoration-success="state == 'confirmed'" decoration-info="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Attendance Search View -->
+    <record id="view_edu_attendance_search" model="ir.ui.view">
+        <field name="name">edu.attendance.search</field>
+        <field name="model">edu.attendance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="group_id"/>
+                <field name="teacher_id"/>
+                <field name="attendance_date"/>
+                
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                
+                <separator/>
+                <filter string="Today" name="today" 
+                        domain="[('attendance_date', '=', context_today())]"/>
+                <filter string="This Week" name="this_week"
+                        domain="[('attendance_date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d')),
+                                 ('attendance_date', '&lt;=', (context_today() + datetime.timedelta(days=6-context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Month" name="this_month"
+                        domain="[('attendance_date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
+                
+                <!-- <group expand="0" string="Group By">
+                    <filter string="Group" name="group_by_group" context="{'group_by': 'group_id'}"/>
+                    <filter string="Teacher" name="group_by_teacher" context="{'group_by': 'teacher_id'}"/>
+                    <filter string="Date" name="group_by_date" context="{'group_by': 'attendance_date'}"/>
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'state'}"/>
+                </group> -->
+            </search>
+        </field>
+    </record>
+
+    <!-- Attendance Action -->
+    <record id="action_edu_attendance" model="ir.actions.act_window">
+        <field name="name">Attendance</field>
+        <field name="res_model">edu.attendance</field>
+        <field name="view_mode">list,form,timeline</field>
+        <field name="context">{'search_default_this_month': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No attendance records yet
+            </p>
+            <p>
+                Attendance records are created when teachers start a lesson from the timetable.
+            </p>
+        </field>
+    </record>
+
+    <!-- Add to Timetable Form View -->
+    <record id="view_edu_timetable_form_attendance" model="ir.ui.view">
+        <field name="name">edu.timetable.form.attendance</field>
+        <field name="model">edu.timetable</field>
+        <field name="inherit_id" ref="ustudy_group.view_edu_timetable_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_start_attendance" 
+                        string="Start Attendance" 
+                        type="object" 
+                        class="btn-primary"
+                        invisible="has_attendance or state in ['scheduled','completed', 'cancelled']"/>
+                <button name="action_view_attendance" 
+                        string="View Attendance" 
+                        type="object" 
+                        class="btn-info"
+                        invisible="not has_attendance"/>
+            </xpath>
+            
+            <!-- Add attendance fields for computed values -->
+            <xpath expr="//sheet" position="before">
+                <field name="has_attendance" invisible="1"/>
+                <field name="attendance_count" invisible="1"/>
+                <field name="has_confirmed_attendance" invisible="1"/>
+                <field name="confirmed_attendance_line_ids" invisible="1"/>
+            </xpath>
+
+            <!-- Add attendance group at the end of sheet -->
+            <xpath expr="//sheet" position="inside">
+                <!-- <group name="attendance_group" string="Davomat Yozuvlari" invisible="not has_attendance">
+                    <field name="attendance_ids" nolabel="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="attendance_date"/>
+                            <field name="total_students" string="Jami talabalar"/>
+                            <field name="present_count" string="Kelgan"/>
+                            <field name="absent_count" string="Kelmadi"/>
+                            <field name="state" widget="badge"
+                                   decoration-success="state == 'confirmed'"
+                                   decoration-info="state == 'draft'"/>
+                        </list>
+                    </field>
+                </group> -->
+                <div invisible="not has_confirmed_attendance" class="o_field_widget o_field_one2many">
+                    <separator string="Talaba Davomatlari"/>
+                    <field name="confirmed_attendance_line_ids" nolabel="1">
+                        <list>
+                            <field name="student_id" widget="many2one_avatar" readonly="1"/>
+                            <field name="student_name" string="Talaba ismi" readonly="1"/>
+                            <field name="status" widget="badge"
+                                   decoration-success="status == 'present'"
+                                   decoration-danger="status == 'absent'"
+                                   readonly="1"/>
+                            <field name="notes" readonly="1"/>
+                        </list>
+                    </field>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Camera Wizard Views -->
+    <record id="view_edu_camera_wizard_form" model="ir.ui.view">
+        <field name="name">edu.camera.wizard.form</field>
+        <field name="model">edu.camera.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Capture Teacher Start Photo">
+                <sheet>
+                    <group>
+                        <field name="timetable_id" invisible="1"/>
+                        <field name="teacher_image" widget="image" class="oe_avatar"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_capture_and_start" 
+                            string="Capture &amp; Start Attendance" 
+                            type="object" 
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_edu_camera_end_wizard_form" model="ir.ui.view">
+        <field name="name">edu.camera.end.wizard.form</field>
+        <field name="model">edu.camera.end.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Capture Teacher End Photo">
+                <sheet>
+                    <group>
+                        <field name="attendance_id" invisible="1"/>
+                        <field name="teacher_image" widget="image" class="oe_avatar"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_capture_and_confirm" 
+                            string="Capture &amp; Confirm Attendance" 
+                            type="object" 
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_edu_attendance"
+              name="Davomat"
+              parent="ustudy_group.menu_edu_root"
+              action="action_edu_attendance"
+              sequence="20"/>
+
+</odoo>

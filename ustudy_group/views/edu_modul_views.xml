@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ========================= -->
+    <!-- MODULE LIST VIEW -->
+    <!-- ========================= -->
+    <record id="view_edu_module_list" model="ir.ui.view">
+        <field name="name">edu.module.list</field>
+        <field name="model">edu.module</field>
+        <field name="arch" type="xml">
+            <list string="Modules">
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+
+    <!-- ========================= -->
+    <!-- MODULE FORM VIEW -->
+    <!-- ========================= -->
+    <record id="view_edu_module_form" model="ir.ui.view">
+        <field name="name">edu.module.form</field>
+        <field name="model">edu.module</field>
+        <field name="arch" type="xml">
+            <form string="Module">
+                <sheet>
+                    <group>
+                        <field name="name" required="1"/>
+                        <field name="sequence"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- ========================= -->
+    <!-- MODULE ACTION -->
+    <!-- ========================= -->
+    <record id="action_edu_module" model="ir.actions.act_window">
+        <field name="name">Modules</field>
+        <field name="res_model">edu.module</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first module
+            </p>
+            <p>
+                Modules are used for student payments and module progress tracking.
+            </p>
+        </field>
+    </record>
+</odoo>

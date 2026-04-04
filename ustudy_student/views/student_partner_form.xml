@@ -38,9 +38,23 @@
                 </group>
             </xpath>
 
-            <!-- Remove Sales/Purchase tabs -->
-            <xpath expr="//page[.//field[@name='property_payment_term_id']]" position="replace"/>
-            <xpath expr="//page[.//field[@name='bank_ids']]" position="replace"/>
+            <!-- Hide instead of removing -->
+            <!-- <xpath expr="//field[@name='property_payment_term_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='bank_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath> -->
+
+            <xpath expr="//page[@name='sales_purchases']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- <xpath expr="//page[@name='contact_addresses']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath> -->
+
 
             <xpath expr="//form/sheet" position="before">
                 <header>
@@ -60,7 +74,7 @@
                         </div>
                     </button>
 
-                    <div class="o_statusbar_status"/>
+                    <field name="status" widget="statusbar" statusbar_visible="active,frozen,graduated"/>
                 </header>
             </xpath>
 
@@ -81,6 +95,16 @@
                         <field name="total_courses"
                             widget="statinfo"
                             string="Kurs"/>
+                    </button>
+
+                    <button name="action_view_student_timetable"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-calendar"
+                            invisible="not is_student or timetable_count == 0">
+                        <field name="timetable_count"
+                            widget="statinfo"
+                            string="Dars jadvali"/>
                     </button>
 
                     <!-- <button name="action_view_groups"

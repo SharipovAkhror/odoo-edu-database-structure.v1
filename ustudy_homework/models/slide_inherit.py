@@ -2,6 +2,9 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
+import logging
+_logger = logging.getLogger(__name__)
+
 class SlideSlide(models.Model):
     _inherit = "slide.slide"
 
@@ -28,34 +31,50 @@ class SlideSlide(models.Model):
         ], order="submit_date desc", limit=1)
 
         return sub.mark if sub else False
-
+    
+    
+    def is_locked_for(self, user):
+        self.ensure_one()
+        return not self.can_access_for(user)
+    
     def can_access_for(self, user):
-        """Return True if this slide is accessible for given user."""
         self.ensure_one()
 
-        # Let admins / managers in always
+        # Always allow officers
         if user.has_group('website_slides.group_website_slides_officer'):
             return True
 
-        # First slide in channel? always open
+        # Public users: keep accessible (change to False if you want lock for public too)
+        if user._is_public():
+            return True
+
+        # ALWAYS define prev_slide
         prev_slide = self.env['slide.slide'].sudo().search([
             ('channel_id', '=', self.channel_id.id),
             ('sequence', '<', self.sequence),
+            ('website_published', '=', True),
         ], order="sequence desc, id desc", limit=1)
 
+        # First slide
         if not prev_slide:
             return True
 
-        # If previous slide has no published homework → open
-        published_homeworks = prev_slide.homework_ids.filtered(lambda h: h.is_published)
-        if not published_homeworks:
-            return True
+        # Homeworks of previous slide
+        published_homeworks = self.env['edu.homework'].sudo().search([
+            ('slide_id', '=', prev_slide.id),
+            ('is_published', '=', True),
+        ])
 
-        # Check if user has any submission for those homeworks
-        Submission = self.env['edu.homework.submission'].sudo()
-        sub = Submission.search([
+        # STRICT (recommended for “turn by turn”):
+        # if previous slide has no homework => lock next slide
+        if not published_homeworks:
+            return False
+
+        # Must have at least one graded submission for previous slide homeworks
+        passed = self.env['edu.homework.submission'].sudo().search_count([
             ('homework_id', 'in', published_homeworks.ids),
             ('user_id', '=', user.id),
-        ], limit=1)
+            ('state', '=', 'graded'),
+        ]) > 0
 
-        return bool(sub)
+        return passed

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <record id="payment_method_cash" model="cc.payment.method">
+            <field name="name">Cash</field>
+            <field name="code">cash</field>
+            <field name="sequence">1</field>
+        </record>
+        
+        <record id="payment_method_bank" model="cc.payment.method">
+            <field name="name">Bank Transfer</field>
+            <field name="code">bank</field>
+            <field name="sequence">2</field>
+        </record>
+        
+        <record id="payment_method_card" model="cc.payment.method">
+            <field name="name">Card</field>
+            <field name="code">card</field>
+            <field name="sequence">3</field>
+        </record>
+        
+        <record id="payment_method_online" model="cc.payment.method">
+            <field name="name">Online Payment</field>
+            <field name="code">online</field>
+            <field name="sequence">4</field>
+        </record>
+        
+    </data>
+</odoo>

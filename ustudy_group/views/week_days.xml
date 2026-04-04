@@ -1,0 +1,42 @@
+<!-- ustudy_group/data/edu_weekday_data.xml -->
+<odoo>
+    <data noupdate="1">
+        <!-- Weekdays with sequence matching Python's weekday() method -->
+        <!-- Monday = 0, Sunday = 6 in Python, but we use 1-7 for user-friendly display -->
+        
+        <record id="weekday_monday" model="edu.weekday">
+            <field name="name">Dushanba</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="weekday_tuesday" model="edu.weekday">
+            <field name="name">Seshanba</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="weekday_wednesday" model="edu.weekday">
+            <field name="name">Chorshanba</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="weekday_thursday" model="edu.weekday">
+            <field name="name">Payshanba</field>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="weekday_friday" model="edu.weekday">
+            <field name="name">Juma</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="weekday_saturday" model="edu.weekday">
+            <field name="name">Shanba</field>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="weekday_sunday" model="edu.weekday">
+            <field name="name">Yakshanba</field>
+            <field name="sequence">7</field>
+        </record>
+    </data>
+</odoo>

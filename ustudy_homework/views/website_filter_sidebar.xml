@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Remove entire sidebar -->
+  <template id="ustudy_remove_entire_sidebar"
+            inherit_id="website_slides.slide_content_detailed">
+
+    <xpath expr="//div[hasclass('o_wslides_lesson_aside')]" position="replace"/>
+
+  </template>
+
+  <!-- Make main content full width -->
+  <template id="ustudy_make_main_fullwidth"
+            inherit_id="website_slides.slide_content_detailed">
+
+    <xpath expr="//div[hasclass('o_wslides_lesson_main')]" position="attributes">
+      <attribute name="class" add="col-lg-12" remove="col-lg-9"/>
+    </xpath>
+
+  </template>
+
+</odoo>

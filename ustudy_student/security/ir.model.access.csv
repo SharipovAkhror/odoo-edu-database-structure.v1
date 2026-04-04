@@ -4,6 +4,7 @@ access_edu_enrollment_user,access_edu_enrollment_user,model_edu_enrollment,base.
 access_edu_course_portal,access_edu_course_portal,model_edu_course,ustudy_student.group_student_portal,1,0,0,0
 access_edu_enrollment_portal,access_edu_enrollment_portal,model_edu_enrollment,ustudy_student.group_student_portal,1,0,0,0
 access_res_partner_student,access_res_partner_student,base.model_res_partner,ustudy_student.group_student_portal,1,0,0,0
+access_res_partner_user,access_res_partner_user,base.model_res_partner,base.group_user,1,1,1,1
 access_student_password_wizard,access_student_password_wizard,model_student_password_wizard,,1,1,1,0
 access_cc_region_user,access_cc_region_user,model_cc_region,base.group_user,1,1,1,1
 access_cc_region_portal,access_cc_region_portal,model_cc_region,ustudy_student.group_student_portal,1,0,0,0

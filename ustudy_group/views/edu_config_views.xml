@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Configuration Form View -->
+    <record id="view_edu_config_form" model="ir.ui.view">
+        <field name="name">edu.config.form</field>
+        <field name="model">edu.config</field>
+        <field name="arch" type="xml">
+            <form string="Education Configuration">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Education Center Configuration</h1>
+                        <p class="text-muted">Configure module-based payment settings</p>
+                    </div>
+                    
+                    <group>
+                        <group string="Module Settings" name="module_settings">
+                            <label for="lessons_per_module"/>
+                            <div class="o_row">
+                                <field name="lessons_per_module" class="oe_inline"/>
+                                <span class="text-muted">lessons per module</span>
+                            </div>
+                            
+                            <label for="module_price"/>
+                            <div class="o_row">
+                                <field name="module_price" 
+                                       widget="monetary" 
+                                       options="{'currency_field': 'currency_id'}"
+                                       class="oe_inline"/>
+                                <field name="currency_id" invisible="1"/>
+                            </div>
+                        </group>
+                        
+                        <group string="Payment Deadlines" name="payment_deadlines">
+                            <label for="partial_payment_lesson"/>
+                            <div class="o_row">
+                                <span class="text-muted">Warning at lesson</span>
+                                <field name="partial_payment_lesson" class="oe_inline"/>
+                            </div>
+                            
+                            <label for="full_payment_lesson"/>
+                            <div class="o_row">
+                                <span class="text-muted">Freeze at lesson</span>
+                                <field name="full_payment_lesson" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Information" name="info">
+                            <group>
+                                <group string="How Module Payment Works">
+                                    <div class="alert alert-info" role="alert">
+                                        <h4>Module-Based Payment System</h4>
+                                        <ul>
+                                            <li>Students pay upfront for each module (e.g., 12 lessons = 2,000,000)</li>
+                                            <li>After completing a module, they must pay for the next module</li>
+                                            <li>No per-lesson deductions from students</li>
+                                            <li>Teachers receive percentage-based payment per lesson</li>
+                                        </ul>
+                                    </div>
+                                </group>
+                                
+                                <group string="Payment Enforcement">
+                                    <div class="alert alert-warning" role="alert">
+                                        <h4>Automatic Freeze Logic</h4>
+                                        <ul>
+                                            <li><strong>Lesson 3 (default):</strong> Warning if no payment registered</li>
+                                            <li><strong>Lesson 5 (default):</strong> Student automatically frozen if not paid</li>
+                                            <li><strong>After lesson 12:</strong> Student moves to next module, must pay to continue</li>
+                                        </ul>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Example Calculations" name="examples">
+                            <group>
+                                <group string="Student Payment">
+                                    <div>
+                                        <p><strong>Module 1:</strong> Student pays 2,000,000 upfront</p>
+                                        <p>This covers 12 lessons</p>
+                                        <p>Payment recorded as <span class="badge badge-success">INCOME</span></p>
+                                    </div>
+                                </group>
+                                
+                                <group string="Teacher Payment (Per Lesson)">
+                                    <div>
+                                        <p><strong>Per Lesson Value:</strong></p>
+                                        <p>2,000,000 / 12 = 166,666.67 per student</p>
+                                        <p></p>
+                                        <p><strong>Teacher Payment (30%):</strong></p>
+                                        <p>166,666.67 × 5 students × 30% = 250,000</p>
+                                        <p>Payment recorded as <span class="badge badge-danger">EXPENSE</span></p>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Settings" name="settings">
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Configuration Action -->
+    <record id="action_edu_config_server" model="ir.actions.server">
+        <field name="name">Education Configuration</field>
+        <field name="model_id" ref="model_edu_config"/>
+        <field name="state">code</field>
+        <field name="code">action = env['edu.config'].action_open_config()</field>
+    </record>
+
+    <!-- Menu Item under Settings -->
+    <menuitem 
+        id="menu_edu_config"
+        name="Sozlamalar"
+        parent="ustudy_group.menu_edu_root"
+        action="action_edu_config_server"
+        sequence="100"
+        groups="base.group_system"/>
+
+</odoo>

@@ -1,0 +1,6 @@
+[submodule "oca_web"]
+	path = oca_web
+	url = https://github.com/OCA/web.git
+[submodule "web"]
+	path = web
+	url = https://github.com/OCA/web.git

@@ -22,8 +22,37 @@
                     <a t-att-href="'/homework/%s' % hw.id">
                       <t t-esc="hw.name"/>
                     </a>
-                    <div t-if="hw.due_date" class="small text-muted">
-                      Due: <t t-esc="hw.due_date"/>
+
+                    <t t-if="not request.env.user._is_public()">
+                      <t t-set="hw_subs"
+                         t-value="hw.submission_ids.filtered(lambda s: s.user_id == request.env.user).sorted(lambda s: s.submit_date or s.create_date, reverse=True)"/>
+                      <t t-if="hw_subs">
+                        <t t-set="hw_last" t-value="hw_subs[0]"/>
+                        <t t-if="hw_last.state == 'graded'">
+                          <span class="badge bg-success ms-2">Passed</span>
+                          <t t-if="hw_last.mark is not False and hw_last.mark is not None">
+                            <span class="badge bg-info ms-1">Mark: <t t-esc="hw_last.mark"/></span>
+                          </t>
+                        </t>
+                        <t t-elif="hw_last.state == 'failed'">
+                          <span class="badge bg-danger ms-2">Failed</span>
+                          <t t-if="hw_last.mark is not False and hw_last.mark is not None">
+                            <span class="badge bg-info ms-1">Mark: <t t-esc="hw_last.mark"/></span>
+                          </t>
+                        </t>
+                        <t t-elif="hw_last.state == 'submitted'">
+                          <span class="badge bg-secondary ms-2">Submitted</span>
+                        </t>
+                      </t>
+                    </t>
+
+                    <div class="small text-muted">
+                      <t t-if="hw.due_date">
+                        <span>Due: <t t-esc="hw.due_date"/></span>
+                      </t>
+                      <t t-if="hw.pass_mark is not False and hw.pass_mark is not None">
+                        <span class="ms-2">Pass: <t t-esc="hw.pass_mark"/></span>
+                      </t>
                     </div>
                   </li>
                 </t>
@@ -43,173 +72,501 @@
        ======================== -->
   <template id="homework_page_template">
     <t t-call="website.layout">
-      <div class="container mt-4">
 
-        <div class="row">
-          <!-- LEFT: homework info -->
-          <div class="col-lg-8">
-            <div class="card mb-4">
-              <div class="card-body">
-                <h1 class="card-title h3 mb-3" t-esc="homework.name"/>
+      <style>
+        /* ── Reset &amp; base ── */
+        .hw-page { max-width: 780px; margin: 0 auto; padding: 24px 16px 64px; }
 
-                <div class="text-muted mb-3">
-                  <t t-if="homework.due_date">
-                    <span class="me-2">
-                      <i class="fa fa-clock-o"/> Due:
-                      <t t-esc="homework.due_date"/>
-                    </span>
-                  </t>
-                  <t t-if="homework.teacher_id">
-                    <span class="ms-2">
-                      <i class="fa fa-user"/> Teacher:
-                      <t t-esc="homework.teacher_id.name"/>
-                    </span>
-                  </t>
-                </div>
+        /* ── Header card ── */
+        .hw-header {
+          background: #fff;
+          border: 1px solid #e8e8e8;
+          border-radius: 16px;
+          padding: 28px 24px 20px;
+          margin-bottom: 20px;
+        }
+        .hw-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #111;
+          margin: 0 0 12px;
+          line-height: 1.3;
+        }
+        .hw-meta {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+        .hw-meta-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          background: #f4f4f5;
+          border-radius: 20px;
+          padding: 4px 12px;
+          font-size: 0.8rem;
+          color: #555;
+        }
+        .hw-meta-chip i { color: #888; font-size: 0.75rem; }
 
-                <div t-field="homework.description"/>
+        /* ── Status banner ── */
+        .hw-status {
+          border-radius: 14px;
+          padding: 16px 20px;
+          margin-bottom: 20px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-size: 0.95rem;
+        }
+        .hw-status-icon { font-size: 1.4rem; flex-shrink: 0; }
+        .hw-status-text { flex: 1; }
+        .hw-status-text strong { font-size: 1rem; }
+        .hw-status-mark {
+          font-size: 1.4rem;
+          font-weight: 800;
+          flex-shrink: 0;
+        }
+        .hw-status.passed { background: #f0fdf4; border: 1px solid #bbf7d0; }
+        .hw-status.passed .hw-status-icon,
+        .hw-status.passed .hw-status-mark { color: #16a34a; }
+        .hw-status.failed  { background: #fff1f2; border: 1px solid #fecdd3; }
+        .hw-status.failed .hw-status-icon,
+        .hw-status.failed .hw-status-mark { color: #dc2626; }
+        .hw-status.pending { background: #fffbeb; border: 1px solid #fde68a; }
+        .hw-status.pending .hw-status-icon { color: #d97706; }
 
-                <t t-if="homework.attachment_ids">
-                  <h5 class="mt-4">Teacher Attachments</h5>
-                  <ul class="list-unstyled">
-                    <t t-foreach="homework.attachment_ids" t-as="a">
-                      <li class="mb-1">
-                        <i class="fa fa-paperclip me-1"/>
-                        <a t-att-href="'/web/content/%s?download=true' % a.id"
-                           t-esc="a.name"/>
-                      </li>
-                    </t>
-                  </ul>
-                </t>
-              </div>
-            </div>
-          </div>
+        /* ── Submit card ── */
+        .hw-submit-card {
+          background: #fff;
+          border: 1px solid #e8e8e8;
+          border-radius: 16px;
+          overflow: hidden;
+          margin-bottom: 20px;
+        }
+        .hw-submit-card-header {
+          padding: 14px 20px;
+          border-bottom: 1px solid #f0f0f0;
+          font-weight: 600;
+          font-size: 0.9rem;
+          color: #333;
+          background: #fafafa;
+        }
+        .hw-submit-card-body { padding: 20px; }
+        .hw-label {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: #888;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          margin-bottom: 6px;
+          display: block;
+        }
+        .hw-textarea {
+          width: 100%;
+          border: 1px solid #e4e4e7;
+          border-radius: 10px;
+          padding: 10px 14px;
+          font-size: 0.9rem;
+          resize: none;
+          outline: none;
+          transition: border-color 0.2s;
+          margin-bottom: 14px;
+          box-sizing: border-box;
+          font-family: inherit;
+        }
+        .hw-textarea:focus { border-color: #6366f1; }
+        .hw-file-input {
+          width: 100%;
+          border: 2px dashed #e4e4e7;
+          border-radius: 10px;
+          padding: 16px;
+          font-size: 0.85rem;
+          color: #666;
+          cursor: pointer;
+          background: #fafafa;
+          margin-bottom: 16px;
+          box-sizing: border-box;
+          transition: border-color 0.2s;
+        }
+        .hw-file-input:hover { border-color: #6366f1; }
+        .hw-btn-submit {
+          width: 100%;
+          background: #111;
+          color: #fff;
+          border: none;
+          border-radius: 10px;
+          padding: 13px;
+          font-size: 0.95rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background 0.2s, transform 0.1s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        }
+        .hw-btn-submit:hover { background: #333; }
+        .hw-btn-submit:active { transform: scale(0.98); }
 
-          <!-- RIGHT: submission form + history -->
-          <div class="col-lg-4">
-            <div class="card mb-4">
-              <div class="card-header fw-bold">
-                Submit your homework
-              </div>
-              <div class="card-body">
+        /* ── Submissions list ── */
+        .hw-subs-card {
+          background: #fff;
+          border: 1px solid #e8e8e8;
+          border-radius: 16px;
+          overflow: hidden;
+        }
+        .hw-subs-header {
+          padding: 14px 20px;
+          font-weight: 600;
+          font-size: 0.9rem;
+          color: #333;
+          background: #fafafa;
+          border-bottom: 1px solid #f0f0f0;
+        }
+        .hw-sub-item {
+          padding: 16px 20px;
+          border-bottom: 1px solid #f4f4f5;
+        }
+        .hw-sub-item:last-child { border-bottom: none; }
+        .hw-sub-date {
+          font-size: 0.78rem;
+          color: #aaa;
+          margin-bottom: 8px;
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
+        .hw-sub-file {
+          font-size: 0.82rem;
+          color: #4f46e5;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          margin-bottom: 8px;
+        }
+        .hw-sub-file:hover { text-decoration: underline; }
+        .hw-sub-badges {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 6px;
+          margin-top: 4px;
+        }
+        .hw-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 3px 10px;
+          border-radius: 20px;
+          font-size: 0.75rem;
+          font-weight: 600;
+        }
+        .hw-badge.passed  { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+        .hw-badge.failed  { background: #fff1f2; color: #dc2626; border: 1px solid #fecdd3; }
+        .hw-badge.pending { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+        .hw-badge.mark    { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+        .hw-badge.pass    { background: #f9fafb; color: #6b7280; border: 1px solid #e5e7eb; }
+        .hw-sub-comment {
+          margin-top: 8px;
+          font-size: 0.82rem;
+          color: #777;
+          font-style: italic;
+        }
+        .hw-teacher-comment {
+          margin-top: 6px;
+          font-size: 0.82rem;
+          color: #555;
+          background: #f9fafb;
+          border-left: 3px solid #d1d5db;
+          padding: 6px 10px;
+          border-radius: 0 6px 6px 0;
+        }
 
-                <t t-if="request.env.user._is_public()">
-                  <p class="text-muted">
-                    Please <a href="/web/login">log in</a> to upload your homework.
-                  </p>
-                </t>
-                <t t-else="">
-                  <form t-att-action="'/homework/%d/submit' % homework.id"
-                        method="post"
-                        enctype="multipart/form-data">
+        /* ── Attachments in left card ── */
+        .hw-attach-link {
+          font-size: 0.85rem;
+          color: #4f46e5;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+        }
+        .hw-attach-link:hover { text-decoration: underline; }
 
-                    <!-- CSRF token -->
-                    <input type="hidden" name="csrf_token"
-                           t-att-value="request.csrf_token()"/>
+        /* ── Login prompt ── */
+        .hw-login-prompt {
+          background: #f9fafb;
+          border: 1px dashed #d1d5db;
+          border-radius: 14px;
+          padding: 24px;
+          text-align: center;
+          color: #777;
+          font-size: 0.9rem;
+          margin-bottom: 20px;
+        }
+        .hw-login-prompt a { color: #4f46e5; font-weight: 600; }
 
-                    <div class="mb-3">
-                      <label class="form-label">Comment (optional)</label>
-                      <textarea name="comment" class="form-control"
-                                rows="3"
-                                placeholder="Write a short note to your teacher..."/>
-                    </div>
+        /* ── Mobile ── */
+        @media (max-width: 576px) {
+          .hw-page { padding: 12px 12px 48px; }
+          .hw-header { padding: 20px 16px 16px; }
+          .hw-title { font-size: 1.25rem; }
+          .hw-submit-card-body { padding: 16px; }
+          .hw-sub-item { padding: 14px 16px; }
+          .hw-status { padding: 14px 16px; }
+          .hw-status-mark { font-size: 1.2rem; }
+        }
+      </style>
 
-                    <div class="mb-3">
-                      <label class="form-label">Files</label>
-                      <input type="file" name="attachments" multiple="multiple"
-                             class="form-control"/>
-                    </div>
+      <div class="hw-page">
 
-                    <button type="submit" class="btn btn-primary w-100">
-                      <i class="fa fa-upload me-1"/> Submit Homework
-                    </button>
-                  </form>
-                </t>
-              </div>
-            </div>
-
-            <!-- submission history for current user -->
-            <t t-if="not request.env.user._is_public()">
-              <t t-set="submissions"
-                 t-value="homework.submission_ids.filtered(lambda s: s.user_id == request.env.user)"/>
-
-              <div class="card">
-                <div class="card-header fw-bold">
-                  Your submissions
-                </div>
-                <div class="card-body">
-                  <t t-if="submissions">
-                    <ul class="list-unstyled mb-0">
-                      <t t-foreach="submissions" t-as="sub">
-                        <li class="mb-3">
-                          <div class="small text-muted">
-                            <i class="fa fa-calendar me-1"/>
-                            <t t-esc="sub.submit_date"/>
-                          </div>
-
-                          <!-- Student comment -->
-                          <div t-if="sub.comment">
-                            <em t-esc="sub.comment"/>
-                          </div>
-
-                          <!-- Files -->
-                          <div t-if="sub.attachment_ids" class="mt-1">
-                            <t t-foreach="sub.attachment_ids" t-as="a">
-                              <div>
-                                <i class="fa fa-paperclip me-1"/>
-                                <a t-att-href="'/web/content/%s?download=true' % a.id"
-                                   t-esc="a.name"/>
-                              </div>
-                            </t>
-                          </div>
-
-                          <!-- Mark + teacher comment (from submission model) -->
-                          <div class="mt-2">
-                            <t t-if="sub.mark">
-                              <span class="badge bg-success">
-                                Mark: <t t-esc="sub.mark"/>
-                              </span>
-                            </t>
-                            <div t-if="sub.teacher_comment" class="text-muted mt-1">
-                              <strong>Teacher:</strong>
-                              <em t-esc="sub.teacher_comment"/>
-                            </div>
-                          </div>
-
-                          <hr/>
-                        </li>
-                      </t>
-                    </ul>
-                  </t>
-                  <t t-else="">
-                    <p class="text-muted mb-0">
-                      You have not submitted anything yet.
-                    </p>
-                  </t>
-                </div>
-              </div>
+        <!-- ── LEFT: Homework info ── -->
+        <div class="hw-header">
+          <h1 class="hw-title" t-esc="homework.name"/>
+          <div class="hw-meta">
+            <t t-if="homework.due_date">
+              <span class="hw-meta-chip">
+                <i class="fa fa-clock-o"/>
+                Due: <t t-esc="homework.due_date"/>
+              </span>
+            </t>
+            <t t-if="homework.teacher_id">
+              <span class="hw-meta-chip">
+                <i class="fa fa-user"/>
+                <t t-esc="homework.teacher_id.name"/>
+              </span>
+            </t>
+            <t t-if="homework.pass_mark is not False and homework.pass_mark is not None">
+              <span class="hw-meta-chip">
+                <i class="fa fa-check-circle"/>
+                Pass: <t t-esc="homework.pass_mark"/>
+              </span>
             </t>
           </div>
+
+          <t t-if="homework.description">
+            <div style="margin-top:16px; font-size:0.9rem; color:#444; line-height:1.6;"
+                 t-field="homework.description"/>
+          </t>
+
+          <t t-if="homework.attachment_ids">
+            <div style="margin-top:16px;">
+              <div style="font-size:0.75rem; font-weight:600; color:#aaa; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">
+                Attachments
+              </div>
+              <t t-foreach="homework.attachment_ids" t-as="a">
+                <div style="margin-bottom:4px;">
+                  <a class="hw-attach-link"
+                     t-att-href="'/web/content/%s?download=true' % a.id">
+                    <i class="fa fa-paperclip"/>
+                    <t t-esc="a.name"/>
+                  </a>
+                </div>
+              </t>
+            </div>
+          </t>
         </div>
+
+        <!-- ── RIGHT: Submit + Submissions ── -->
+
+        <!-- Prepare submissions for logged user -->
+        <t t-if="not request.env.user._is_public()">
+          <t t-set="submissions"
+             t-value="homework.submission_ids.filtered(lambda s: s.user_id == request.env.user)"/>
+          <t t-set="sorted_submissions"
+             t-value="submissions.sorted(lambda s: s.submit_date or s.create_date, reverse=True)"/>
+          <t t-set="last_sub"
+             t-value="sorted_submissions[0] if sorted_submissions else False"/>
+        </t>
+
+        <!-- Public user -->
+        <t t-if="request.env.user._is_public()">
+          <div class="hw-login-prompt">
+            <i class="fa fa-lock" style="font-size:1.5rem; margin-bottom:8px; display:block;"/>
+            Please <a href="/web/login">log in</a> to submit your homework.
+          </div>
+        </t>
+
+        <!-- Logged user -->
+        <t t-else="">
+
+          <!-- Status banner -->
+          <t t-if="last_sub and last_sub.state == 'graded'">
+            <div class="hw-status passed">
+              <div class="hw-status-icon">✅</div>
+              <div class="hw-status-text">
+                <strong>Passed</strong><br/>
+                <span style="font-size:0.82rem; color:#4b7c5b;">Your latest submission was accepted.</span>
+              </div>
+              <t t-if="last_sub.mark is not False and last_sub.mark is not None">
+                <div class="hw-status-mark"><t t-esc="last_sub.mark"/></div>
+              </t>
+            </div>
+          </t>
+
+          <t t-if="last_sub and last_sub.state == 'failed'">
+            <div class="hw-status failed">
+              <div class="hw-status-icon">❌</div>
+              <div class="hw-status-text">
+                <strong>Failed</strong><br/>
+                <span style="font-size:0.82rem; color:#9b4a52;">Please resubmit below.</span>
+              </div>
+              <t t-if="last_sub.mark is not False and last_sub.mark is not None">
+                <div class="hw-status-mark"><t t-esc="last_sub.mark"/></div>
+              </t>
+            </div>
+          </t>
+
+          <t t-if="last_sub and last_sub.state == 'submitted'">
+            <div class="hw-status pending">
+              <div class="hw-status-icon">⏳</div>
+              <div class="hw-status-text">
+                <strong>Submitted</strong><br/>
+                <span style="font-size:0.82rem; color:#92640a;">Waiting for teacher to grade.</span>
+              </div>
+            </div>
+          </t>
+
+          <!-- Submit form — hidden only when passed -->
+          <t t-if="not last_sub or last_sub.state != 'graded'">
+            <div class="hw-submit-card">
+              <div class="hw-submit-card-header">
+                <t t-if="last_sub and last_sub.state == 'failed'">Resubmit Homework</t>
+                <t t-else="">Submit Homework</t>
+              </div>
+              <div class="hw-submit-card-body">
+                <form t-att-action="'/homework/%d/submit' % homework.id"
+                      method="post"
+                      enctype="multipart/form-data">
+
+                  <input type="hidden" name="csrf_token"
+                         t-att-value="request.csrf_token()"/>
+
+                  <label class="hw-label">Comment (optional)</label>
+                  <textarea name="comment" class="hw-textarea" rows="3"
+                            placeholder="Write a short note to your teacher..."/>
+
+                  <label class="hw-label">Files</label>
+                  <input type="file" name="attachments" multiple="multiple"
+                         class="hw-file-input"/>
+
+                  <button type="submit" class="hw-btn-submit">
+                    <i class="fa fa-upload"/>
+                    <t t-if="last_sub and last_sub.state == 'failed'">Resubmit</t>
+                    <t t-else="">Submit</t>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </t>
+
+        </t><!-- end logged user -->
+
+        <!-- Submissions history -->
+        <t t-if="not request.env.user._is_public()">
+          <div class="hw-subs-card">
+            <div class="hw-subs-header">Your Submissions</div>
+
+            <t t-if="sorted_submissions">
+              <t t-foreach="sorted_submissions" t-as="sub">
+                <div class="hw-sub-item">
+
+                  <!-- Date -->
+                  <div class="hw-sub-date">
+                    <i class="fa fa-calendar"/>
+                    <t t-esc="sub.submit_date or sub.create_date"/>
+                  </div>
+
+                  <!-- Files -->
+                  <t t-if="sub.attachment_ids">
+                    <t t-foreach="sub.attachment_ids" t-as="a">
+                      <div>
+                        <a class="hw-sub-file"
+                           t-att-href="'/web/content/%s?download=true' % a.id">
+                          <i class="fa fa-paperclip"/>
+                          <t t-esc="a.name"/>
+                        </a>
+                      </div>
+                    </t>
+                  </t>
+
+                  <!-- Badges -->
+                  <div class="hw-sub-badges">
+                    <t t-if="sub.state == 'graded'">
+                      <span class="hw-badge passed">✅ Passed</span>
+                    </t>
+                    <t t-elif="sub.state == 'failed'">
+                      <span class="hw-badge failed">❌ Failed</span>
+                    </t>
+                    <t t-else="">
+                      <span class="hw-badge pending">⏳ Submitted</span>
+                    </t>
+
+                    <t t-if="sub.mark is not False and sub.mark is not None">
+                      <span class="hw-badge mark">Mark: <t t-esc="sub.mark"/></span>
+                    </t>
+
+                    <t t-if="homework.pass_mark is not False and homework.pass_mark is not None">
+                      <span class="hw-badge pass">Pass: <t t-esc="homework.pass_mark"/></span>
+                    </t>
+                  </div>
+
+                  <!-- Student comment -->
+                  <t t-if="sub.comment">
+                    <div class="hw-sub-comment">"<t t-esc="sub.comment"/>"</div>
+                  </t>
+
+                  <!-- Teacher comment -->
+                  <t t-if="sub.teacher_comment">
+                    <div class="hw-teacher-comment">
+                      <strong>Teacher:</strong> <t t-esc="sub.teacher_comment"/>
+                    </div>
+                  </t>
+
+                </div>
+              </t>
+            </t>
+
+            <t t-else="">
+              <div style="padding:24px 20px; text-align:center; color:#aaa; font-size:0.875rem;">
+                No submissions yet.
+              </div>
+            </t>
+
+          </div>
+        </t>
 
       </div>
     </t>
   </template>
 
   <!-- ========================
-       Mark on every lesson card
+       Status + Mark on every lesson card
        ======================== -->
   <template id="ustudy_slide_card_mark"
             inherit_id="website_slides.lesson_card">
 
-    <!-- Put the badge inside the card-footer flex row -->
     <xpath expr="//div[contains(@class, 'card-footer')]//div[contains(@class, 'd-flex')]" position="inside">
-      <t t-set="my_mark" t-value="slide.get_my_homework_mark()"/>
-      <t t-if="my_mark">
-        <span class="badge bg-info ms-2">
-          Mark: <t t-esc="my_mark"/>
-        </span>
+
+      <t t-set="my_state" t-value="slide.get_my_homework_status()"/>
+      <t t-set="my_mark"  t-value="slide.get_my_homework_mark()"/>
+
+      <t t-if="my_state == 'graded'">
+        <span class="badge bg-success ms-2">✅ Passed</span>
       </t>
+      <t t-elif="my_state == 'failed'">
+        <span class="badge bg-danger ms-2">❌ Failed</span>
+      </t>
+      <t t-elif="my_state == 'submitted'">
+        <span class="badge bg-secondary ms-2">⏳ Submitted</span>
+      </t>
+
+      <t t-if="my_mark is not False and my_mark is not None">
+        <span class="badge bg-info ms-2">Mark: <t t-esc="my_mark"/></span>
+      </t>
+
     </xpath>
   </template>
 

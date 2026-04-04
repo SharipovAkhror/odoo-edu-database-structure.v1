@@ -4,7 +4,7 @@
     <!-- Main menu -->
     <menuitem id="menu_onlinepbx_root"
               name="OnlinePBX"
-              web_icon="onlinepbx_calls,static/icon.png"
+              web_icon="onlinepbx_calls,static/qonh.svg"
               sequence="10"/>
 
     <!-- Calls -->

@@ -1,0 +1,53 @@
+.o_kanban_dashboard {
+    padding: 0;
+}
+
+.o_kanban_dashboard_item {
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    text-align: center;
+}
+
+.o_kanban_dashboard_item_primary {
+    background: #e7f3ff;
+    border-color: #b3d9ff;
+}
+
+.o_kanban_dashboard_item_primary .o_kanban_dashboard_item_value {
+    color: #0066cc;
+}
+
+.o_kanban_dashboard_item_success {
+    background: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.o_kanban_dashboard_item_success .o_kanban_dashboard_item_value {
+    color: #28a745;
+}
+
+.o_kanban_dashboard_item_danger {
+    background: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.o_kanban_dashboard_item_danger .o_kanban_dashboard_item_value {
+    color: #dc3545;
+}
+
+.o_kanban_dashboard_item_title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6c757d;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.o_kanban_dashboard_item_value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+}

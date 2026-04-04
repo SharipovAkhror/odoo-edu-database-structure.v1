@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_edu_module_payment_wizard,access.edu.module.payment.wizard,model_edu_module_payment_wizard,base.group_user,1,1,1,0

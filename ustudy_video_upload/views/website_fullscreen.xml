@@ -1,0 +1,39 @@
+<odoo>
+
+  <!-- FULLSCREEN: patch the content fragment used by JS navigation -->
+  <template id="ustudy_video_fullscreen_content_inherit"
+            inherit_id="website_slides.slide_fullscreen"
+            name="UStudy Fullscreen Content (Uploaded Video)">
+
+    <!-- Replace where embed_code is printed inside fullscreen content -->
+    <xpath expr="//t[@t-out='slide.embed_code'] | //t[@t-raw='slide.embed_code']" position="replace">
+      <t t-if="slide.use_uploaded_video and slide.video_file_url">
+        <div class="ratio ratio-16x9 w-100">
+          <video class="w-100 h-100 ustudy-no-download-video"
+                 controls="controls"
+                 preload="metadata"
+                 playsinline="playsinline"
+                 controlsList="nodownload"
+                 oncontextmenu="return false;"
+                 t-att-src="slide.video_file_url"
+                 style="background:#000; object-fit:contain;">
+          </video>
+        </div>
+      </t>
+      <t t-else="">
+        <t t-out="slide.embed_code"/>
+      </t>
+    </xpath>
+
+  </template>
+
+
+    <template id="ustudy_hide_fs_share"
+            inherit_id="website_slides.slide_fullscreen"
+            name="UStudy: Hide Fullscreen Share">
+
+        <xpath expr="//a[contains(concat(' ', normalize-space(@class), ' '), ' o_wslides_fs_share ')]"
+            position="replace"/>
+    </template>
+
+</odoo>

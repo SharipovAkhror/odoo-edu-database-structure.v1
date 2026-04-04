@@ -1,0 +1,10 @@
+<!-- views/menu.xml -->
+<odoo>
+  <menuitem id="edu_notebook_root" name="Notebook" sequence="10" web_icon="ustudy_notebook_mgmt,static/icon.png"/>
+
+  <menuitem id="edu_notebook_menu_notebooks" name="Notebook"
+            parent="edu_notebook_root" sequence="10" action="action_edu_notebook"/>
+
+  <menuitem id="edu_notebook_menu_borrows" name="Ijaralar"
+            parent="edu_notebook_root" sequence="20" action="action_edu_notebook_borrow"/>
+</odoo>

@@ -28,11 +28,14 @@
                 <sheet>
                     <group>
                         <field name="name"/>
-                        <field name="slide_id" options="{'no_create': True}"/>
-                        <!-- <field name="channel_id"/> -->
-                        <field name="teacher_id"/>
+                        <field name="channel_id"/>
+                        <field name="slide_id"
+                            options="{'no_create': True}"
+                            domain="[('channel_id', '=', channel_id)]"/>
+                        <!-- <field name="teacher_id"/> -->
                         <field name="due_date"/>
                         <field name="is_published"/>
+                        <field name="pass_mark"/>
                     </group>
 
                     <notebook>
@@ -43,7 +46,7 @@
                         </page>
 
                         <!-- Submissions with inline mark + comment -->
-                        <page string="Submissions">
+                        <page string="Submissions" groups="base.group_system">
                             <group>
                                 <field name="submission_count" readonly="1"/>
                             </group>
@@ -52,7 +55,12 @@
                                     <field name="student_id" readonly="1"/>
                                     <field name="user_id" readonly="1"/>
                                     <field name="submit_date" readonly="1"/>
-                                    <field name="state"/>
+                                    <field name="state" readonly="1"
+                                        widget="badge"
+                                        decoration-info="state == 'submitted'"
+                                        decoration-success="state == 'graded'"
+                                        decoration-danger="state == 'failed'"/>
+
                                     <field name="comment" readonly="1" string="Student Comment"/>
                                     <field name="mark"/>
                                     <field name="teacher_comment"/>
@@ -61,7 +69,7 @@
                         </page>
 
                         <!-- Marks summary -->
-                        <page string="Marks">
+                        <page string="Marks" groups="base.group_system">
                             <group>
                                 <div class="o_form_group">
                                     <field name="mark_count" readonly="1"/>
@@ -71,6 +79,7 @@
                         </page>
                     </notebook>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>
@@ -120,17 +129,23 @@
         <field name="name">edu.homework.submission.list</field>
         <field name="model">edu.homework.submission</field>
         <field name="arch" type="xml">
-            <list string="Submissions">
+            <list string="Submissions" editable="bottom">
                 <field name="homework_id"/>
                 <field name="student_id"/>
                 <field name="user_id"/>
                 <field name="submit_date"/>
-                <field name="state"/>
+                <field name="state"
+                   widget="badge"
+                   decoration-info="state == 'submitted'"
+                   decoration-success="state == 'graded'"
+                   decoration-danger="state == 'failed'"/>
+
                 <field name="mark"/>
                 <field name="teacher_comment"/>
             </list>
         </field>
     </record>
+
 
     <!-- Search view (filters + default ones used by the action) -->
     <record id="view_edu_homework_submission_search" model="ir.ui.view">

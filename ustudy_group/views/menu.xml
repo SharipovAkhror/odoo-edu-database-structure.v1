@@ -16,13 +16,14 @@
         <field name="context">{'default_is_student': True}</field>
     </record>
 
+
     <!-- MENUS -->
 
     <!-- Root menu for Education -->
     <menuitem id="menu_edu_root"
             name="Guruhlar"
             sequence="10"
-            web_icon="ustudy_group,static/group.png"/>
+            web_icon="ustudy_group,static/icon.png"/>
 
     <!-- Groups menu -->
     <menuitem id="menu_edu_groups"
@@ -35,4 +36,28 @@
               name="Talabalar"
               parent="menu_edu_root"
               action="action_student_list"/>
+
+    <!-- Room menu -->
+    <menuitem id="menu_edu_room"
+              name="Xonalar"
+              parent="menu_edu_root"
+              action="action_edu_room"
+              sequence="30"/>
+    
+    <!-- MENU ITEM -->
+    <menuitem id="menu_edu_timetable"
+              name="Dars Jadvali"
+              parent="menu_edu_root"
+              action="action_edu_timetable"
+              sequence="15"/>
+
+
+    <!-- MODULES MENU (ADMIN ONLY) -->
+    <menuitem id="menu_edu_module"
+              name="Modullar"
+              parent="menu_edu_root"
+              action="action_edu_module"
+              sequence="90"
+              groups="base.group_system"/>
+
 </odoo>

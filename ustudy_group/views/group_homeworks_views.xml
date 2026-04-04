@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Timetable list for group homeworks -->
+    <record id="view_edu_timetable_list_group_homeworks" model="ir.ui.view">
+        <field name="name">edu.timetable.list.group.homeworks</field>
+        <field name="model">edu.timetable</field>
+        <field name="arch" type="xml">
+            <list string="Topshiriqlar" create="false" edit="false" delete="false">
+            <field name="name"/>
+            <field name="group_id"/>
+            <field name="teacher_id" widget="many2one_avatar_user"/>
+            <field name="room_id"/>
+            <field name="start_datetime"/>
+            <field name="end_datetime"/>
+            <field name="slide_id"/>
+            <field name="submission_ratio"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_edu_timetable_search_group_homeworks" model="ir.ui.view">
+        <field name="name">edu.timetable.search.group.homeworks</field>
+        <field name="model">edu.timetable</field>
+        <field name="arch" type="xml">
+            <search>
+            <field name="group_id"/>
+            <field name="slide_id"/>
+            <filter name="has_homework" string="Has Homework"
+                    domain="[]" context="{'has_homework_filter': 1}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Timetable form: add homework + submissions -->
+    <record id="view_edu_timetable_form_group_homeworks" model="ir.ui.view">
+        <field name="name">edu.timetable.form.group.homeworks</field>
+        <field name="model">edu.timetable</field>
+        <field name="inherit_id" ref="ustudy_group.view_edu_timetable_form"/>
+        <field name="arch" type="xml">
+
+        <xpath expr="//div[@name='button_box']" position="inside">
+            <button name="action_view_group_homework_submissions"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-tasks"
+                    invisible="not homework_id">
+            <field name="submission_ratio" widget="statinfo" string="Submissions"/>
+            </button>
+        </xpath>
+
+        <xpath expr="//sheet//group" position="inside">
+            <field name="homework_id" readonly="1"/>
+            <field name="submission_ratio" readonly="1"/>
+        </xpath>
+
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Student view for homeworks -->
+    <record id="view_edu_homework_tree_student" model="ir.ui.view">
+        <field name="name">edu.homework.list.student</field>
+        <field name="model">edu.homework</field>
+        <field name="priority">5</field>
+        <field name="arch" type="xml">
+            <list string="My Homeworks" create="false" edit="false" delete="false">
+                <field name="name"/>
+                <field name="channel_id"/>
+                <field name="due_date"/>
+                <field name="current_user_status"
+                       widget="badge"
+                       decoration-muted="current_user_status == 'not_submitted'"
+                       decoration-info="current_user_status == 'submitted'"
+                       decoration-success="current_user_status == 'graded'"
+                       decoration-danger="current_user_status == 'failed'"/>
+                <field name="current_user_mark"/>
+                <field name="pass_mark"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Add Homework smart button -->
+    <record id="view_student_partner_form_add_vazifalar_button" model="ir.ui.view">
+        <field name="name">res.partner.form.student.add.vazifalar.button</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="ustudy_student.view_student_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_student_lessons_report"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-calendar-check-o">
+                    <field name="lesson_homework_count" widget="statinfo" string="Vazifalar"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

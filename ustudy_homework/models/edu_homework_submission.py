@@ -5,7 +5,9 @@ from odoo.exceptions import AccessError
 class EduHomeworkSubmission(models.Model):
     _name = "edu.homework.submission"
     _description = "Homework Submission"
-    _order = "state, submit_date desc"
+
+    # submitted first, then graded, then failed; newest first
+    _order = "state_seq asc, submit_date desc, id desc"
 
     homework_id = fields.Many2one(
         "edu.homework", string="Homework", required=True, ondelete="cascade"
@@ -17,10 +19,9 @@ class EduHomeworkSubmission(models.Model):
         domain=[("is_student", "=", True)],
     )
     user_id = fields.Many2one("res.users", string="User", required=True)
-    submit_date = fields.Datetime(
-        string="Submitted On", default=fields.Datetime.now, required=True
-    )
+    submit_date = fields.Datetime(string="Submitted On", default=fields.Datetime.now, required=True)
     comment = fields.Text(string="Student Comment")
+
     attachment_ids = fields.Many2many(
         "ir.attachment",
         "edu_homework_submission_ir_attachment_rel",
@@ -28,46 +29,99 @@ class EduHomeworkSubmission(models.Model):
         "attachment_id",
         string="Files",
     )
+
     state = fields.Selection(
-        [("submitted", "Submitted"), ("graded", "Graded")],
+        [
+            ("submitted", "Submitted"),
+            ("graded", "Passed"),
+            ("failed", "Failed"),
+        ],
         default="submitted",
         string="Status",
+        tracking=True,
     )
 
-    # 🔹 teacher grading directly on submission
+    # used for correct ordering (submitted -> graded -> failed)
+    state_seq = fields.Integer(
+        string="State Seq",
+        compute="_compute_state_seq",
+        store=True,
+        index=True,
+    )
+
+    @api.depends("state")
+    def _compute_state_seq(self):
+        mapping = {
+            "submitted": 0,
+            "graded": 1,
+            "failed": 2,
+        }
+        for rec in self:
+            rec.state_seq = mapping.get(rec.state or "submitted", 99)
+
     mark = fields.Float(string="Mark")
     teacher_comment = fields.Text(string="Teacher Comment")
 
-    # optional legacy relation – can be unused
-    mark_id = fields.Many2one("edu.homework.mark", string="Mark Record")
+    pass_mark = fields.Float(related="homework_id.pass_mark", store=True, readonly=True)
 
+    # -------------------------
+    # Access
+    # -------------------------
     def _check_student_access(self):
         user = self.env.user
         if user._is_admin():
             return
         if any(s.user_id != user for s in self):
             raise AccessError(_("You can only see your own submissions."))
-        
-        
-    # --- AUTO-UPDATE STATE WHEN MARK CHANGES ---------------------------------
 
+    # -------------------------
+    # Helpers
+    # -------------------------
+    def _state_from_mark(self, mark, pass_mark):
+        """Calculate state based on mark and pass_mark"""
+        if mark is False or mark is None:
+            return "submitted"
+        if pass_mark is False or pass_mark is None:
+            return "graded"
+        return "graded" if mark >= pass_mark else "failed"
+
+    # -------------------------
+    # Create / Write
+    # -------------------------
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if 'mark' in vals:
-                # if mark is provided (even 0.0), consider it graded
-                if vals['mark'] is not False and vals['mark'] is not None:
-                    vals.setdefault('state', 'graded')
+            if "mark" in vals:
+                homework = self.env["edu.homework"].browse(vals.get("homework_id"))
+                pass_mark = homework.pass_mark if homework else False
+                vals["state"] = self._state_from_mark(vals.get("mark"), pass_mark)
         return super().create(vals_list)
 
     def write(self, vals):
-        vals = dict(vals)  # copy, Odoo may reuse dict
-        if 'mark' in vals:
-            # 0.0 is a valid grade → graded
-            if vals['mark'] is not False and vals['mark'] is not None:
-                vals['state'] = 'graded'
-            else:
-                vals['state'] = 'submitted'
-        return super().write(vals)
+        if "mark" in vals:
+            for rec in self:
+                mark = vals.get("mark")
+                pass_mark = rec.homework_id.pass_mark
+                new_state = self._state_from_mark(mark, pass_mark)
+                update_vals = dict(vals, state=new_state)
+                super(EduHomeworkSubmission, rec).write(update_vals)
 
-    # -------------------------------------------------------------------------
+                # Auto-complete slide when homework passed
+                if new_state == "graded" and rec.homework_id.slide_id:
+                    slide = rec.homework_id.slide_id
+                    partner = rec.student_id
+                    channel_partner = self.env['slide.channel.partner'].sudo().search([
+                        ('channel_id', '=', slide.channel_id.id),
+                        ('partner_id', '=', partner.id),
+                    ], limit=1)
+                    if channel_partner:
+                        self.env['slide.slide.partner'].sudo().search([
+                            ('slide_id', '=', slide.id),
+                            ('partner_id', '=', partner.id),
+                        ]).write({'completed': True}) or self.env['slide.slide.partner'].sudo().create({
+                            'slide_id': slide.id,
+                            'partner_id': partner.id,
+                            'completed': True,
+                        })
+            return True
+        return super().write(vals)

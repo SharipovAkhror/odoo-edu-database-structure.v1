@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit slide form to add video upload -->
+    <record id="view_slide_slide_form_video_upload" model="ir.ui.view">
+        <field name="name">slide.slide.form.video.upload</field>
+        <field name="model">slide.slide</field>
+        <field name="inherit_id" ref="website_slides.view_slide_slide_form"/>
+        <field name="arch" type="xml">
+
+            <!-- ✅ Make video_url optional and hide it when a file is uploaded -->
+            <!-- <xpath expr="//field[@name='video_url']" position="attributes">
+                <attribute name="required">0</attribute>
+                <attribute name="invisible">video_file</attribute>
+                <attribute name="placeholder">Paste YouTube/Vimeo link OR upload video below</attribute>
+            </xpath> -->
+
+            <!-- ✅ Upload block -->
+            <xpath expr="//field[@name='video_url']" position="after">
+
+                <separator string="Yoki uzingizning videongizni yuklang."
+                           invisible="slide_category != 'video'"/>
+
+                <!-- Upload -->
+                <group invisible="slide_category != 'video'" col="2">
+                    <field name="video_file"
+                           filename="video_filename"
+                           widget="binary"
+                           string="Upload Video"/>
+                    <field name="video_filename" invisible="1"/>
+
+                    <field name="video_file_size"
+                           readonly="1"
+                           string="File O'lchami (MB)"
+                           invisible="not video_file"/>
+
+                    <!-- optional: show generated stream url preview -->
+                    <field name="video_file_url_preview"
+                           readonly="1"
+                           string="Video Stream URL"
+                           invisible="not video_file"/>
+                </group>
+
+                <!-- Hidden helpers -->
+                <field name="video_file_url" invisible="1"/>
+                <field name="use_uploaded_video" invisible="1"/>
+
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Tree view: show if uploaded video exists -->
+    <record id="view_slide_slide_tree_video" model="ir.ui.view">
+        <field name="name">slide.slide.tree.video</field>
+        <field name="model">slide.slide</field>
+        <field name="inherit_id" ref="website_slides.view_slide_slide_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="use_uploaded_video"
+                       optional="hide"
+                       widget="boolean_toggle"
+                       string="Uploaded Video"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

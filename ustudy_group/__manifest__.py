@@ -5,14 +5,32 @@
     "depends": [
         "ustudy_student",   
         "website_slides",   
-        "mail",            
+        "mail",     
+        'web_timeline',     
+        # 'edu_finance',
     ],
     "data": [
         "security/ir.model.access.csv",
+        "data/edu_rooms.xml",
+        "views/edu_attendance_views.xml",
+        "views/week_days.xml",
         "views/edu_group_views.xml",
         "views/student_views.xml",
+        "views/edu_timetable_views.xml",
+        "views/edu_config_views.xml",
+        "views/edu_modul_views.xml",
+        # 'views/cc_finance_student_payment_views.xml',
         "views/menu.xml",
+        "views/camera_wizard_views.xml",
+        'views/camera_end_wizard_views.xml',
         "views/res_partner_groups_button.xml",
     ],
+    'assets': {
+        'web.assets_backend': [
+            'ustudy_group/static/src/js/camera_wizard.js',
+            "ustudy_group/static/src/js/group_dashboard.js",
+            "ustudy_group/static/src/scss/group_dashboard.scss",
+        ],
+    },
     "application": True,
 }

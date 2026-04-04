@@ -1,11 +1,18 @@
 <odoo>
 
+
     <record id="action_student_contacts" model="ir.actions.act_window">
         <field name="name">Talabalar</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,list,form</field>
-        <field name="domain">[("is_student", "=", True)]</field>
-        <field name="context">{'default_is_student': True}</field>
+        <field name="domain">[('is_student','=',True)]</field>
+        <field name="context">{'default_is_student': True, 'search_default_is_student': 1}</field>
+
+        <field name="views" eval="[
+            (ref('ustudy_student.view_student_partner_list'), 'list'),
+            (ref('ustudy_student.view_student_partner_kanban'), 'kanban'),
+            (ref('ustudy_student.view_student_partner_form'), 'form')
+        ]"/>
     </record>
 
     <!-- Root menu -->
@@ -16,7 +23,7 @@
 
     <!-- Students list menu -->
     <menuitem id="ustudy_student_menu_students"
-              name="Talabalar"
+              name="Talabalar ro'yxati"
               parent="ustudy_student_menu_root"
               action="action_student_contacts"
               sequence="10"/>

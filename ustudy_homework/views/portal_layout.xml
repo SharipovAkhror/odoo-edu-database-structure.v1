@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_layout_lessons"
+              inherit_id="portal.portal_layout"
+              name="Portal Layout Lessons Counter">
+
+        <xpath expr="//t[@t-set='portal_my_details']" position="before">
+            <t t-set="lesson_report_count" t-value="values.get('lesson_report_count')"/>
+        </xpath>
+
+    </template>
+
+</odoo>

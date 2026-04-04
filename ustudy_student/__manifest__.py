@@ -11,9 +11,10 @@
         "wizards/student_password_wizard_view.xml",
         "security/ir.model.access.csv",
 
-        "views/student_menu.xml",        # root + student list menu
-        "views/cc_region_views.xml",     # region views + action + region menu
-        "views/student_partner_form.xml",
+        "views/student_partner_list_kanban.xml",     # 1) tree + kanban
+        "views/student_partner_form.xml",      # 2) form inherit
+        "views/student_menu.xml",              # 3) action/menu (ref ishlatadi)
+        "views/cc_region_views.xml",
     ],
     'assets': {
         'web.assets_backend': [

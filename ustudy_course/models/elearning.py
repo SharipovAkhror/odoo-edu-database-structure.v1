@@ -11,10 +11,20 @@ class SlideChannel(models.Model):
     ustudy_module_count = fields.Integer(
         string="Modules", compute="_compute_ustudy_module_count"
     )
+    homework_pass_mark = fields.Float(string="Pass ball", default=75.0)
 
     def _compute_ustudy_module_count(self):
         for channel in self:
             channel.ustudy_module_count = len(channel.ustudy_module_ids)
+
+    def unlink(self):
+        # Delete related enrollments before deleting the course
+        enrollments = self.env['edu.enrollment'].search([
+            ('course_id', 'in', self.ids)
+        ])
+        if enrollments:
+            enrollments.unlink()
+        return super(SlideChannel, self).unlink()
 
 class UstudyCourseModule(models.Model):
     _name = "ustudy.course.module"

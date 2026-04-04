@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_edu_module_payment_wizard_form" model="ir.ui.view">
+        <field name="name">edu.module.payment.wizard.form</field>
+        <field name="model">edu.module.payment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Register Module Payment">
+                <sheet>
+
+                    <div class="oe_title">
+                        <h1>Register Module Payment</h1>
+                    </div>
+
+                    <group>
+                        <group string="Student Information">
+                            <field name="student_line_id" invisible="1"/>
+                            <field name="student_name" readonly="1"/>
+                            <field name="group_name" readonly="1"/>
+
+                            <label for="module_number"/>
+                            <div class="o_row">
+                                <span class="badge badge-info" style="font-size: 1.2em;">
+                                    Module <field name="module_number" readonly="1" nolabel="1" class="oe_inline"/>
+                                </span>
+                            </div>
+                        </group>
+
+                        <group string="Payment Summary">
+                            <label for="current_paid" string="Payment Progress"/>
+                            <div class="o_row">
+                                <field name="current_paid" widget="monetary" readonly="1"/>
+                                <span class="mx-2">/</span>
+                                <field name="module_price" widget="monetary" readonly="1"/>
+                            </div>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Payment Details">
+                            <field name="payment_date" required="1"/>
+                            <field name="payment_method_id"
+                                   options="{'no_create': True, 'no_create_edit': True}"
+                                   required="1"/>
+                            <field name="amount" widget="monetary" required="1"/>
+                            <field name="is_full_payment" widget="boolean_toggle"/>
+                        </group>
+
+                        <group string="Additional Notes">
+                            <field name="notes" nolabel="1"
+                                   placeholder="Add any notes about this payment..."/>
+                        </group>
+                    </group>
+
+                    <!-- ✅ MODULE UPDATE -->
+                    <group string="Module Update">
+                        <field name="update_module" widget="boolean_toggle"/>
+                        <field name="new_module_id"
+                               invisible="not update_module"
+                               required="update_module"
+                               options="{'no_create': True, 'no_create_edit': True}"/>
+                    </group>
+
+                    <div class="alert alert-info" role="alert" invisible="is_full_payment">
+                        <i class="fa fa-info-circle"/>
+                        This is a partial payment. The student will need to pay the remaining amount to complete this module.
+                    </div>
+
+                    <div class="alert alert-success" role="alert" invisible="not is_full_payment">
+                        <i class="fa fa-check-circle"/>
+                        This will mark the module as fully paid and unfreeze the student if frozen.
+                    </div>
+
+                </sheet>
+
+                <footer>
+                    <button name="action_register_payment"
+                            string="Register Payment"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+
+            </form>
+        </field>
+    </record>
+
+</odoo>

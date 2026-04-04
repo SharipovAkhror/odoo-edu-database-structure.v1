@@ -1,0 +1,32 @@
+/* Only on slide lesson pages */
+body:has(.o_wslides_lesson_main),
+.o_wslides_lesson_main {
+
+  /* Hide the right sidebar column (usually empty) */
+  .row > [class*="col-"]:has(.o_wslides_sidebar),
+  .o_wslides_sidebar {
+    display: none !important;
+  }
+
+  /* Make the main content column take full width */
+  .row > [class*="col-"] {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Make container stretch full width */
+  .container {
+    max-width: 100% !important;
+  }
+
+  /* Position Tugatildi button to the right of navigation buttons */
+  /* .o_wslides_lesson_header {
+    position: absolute !important;
+    top: 265px !important;
+    right: 20px !important;
+    z-index: 100 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  } */
+}

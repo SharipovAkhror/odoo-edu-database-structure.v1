@@ -5,7 +5,6 @@ from odoo import api, fields, models
 class SlideChannelPartner(models.Model):
     _inherit = "slide.channel.partner"
 
-    # Attendee = student bo'lsin, faqat is_student=True kontaktlar ko'rinsin
     partner_id = fields.Many2one(
         "res.partner",
         string="Student",
@@ -15,7 +14,7 @@ class SlideChannelPartner(models.Model):
     edu_enrollment_id = fields.Many2one(
         "edu.enrollment",
         string="Education Enrollment",
-        ondelete="set null",
+        ondelete="cascade",  # Changed from "set null"
     )
 
     @api.model
@@ -37,11 +36,9 @@ class SlideChannelPartner(models.Model):
             if not rec.partner_id or not rec.channel_id:
                 continue
 
-            # Agar contact student bo'lmasa - student qilib qo'yamiz
             if not rec.partner_id.is_student:
                 rec.partner_id.is_student = True
 
-            # slide.channel dan edu.course ni topish / yaratish
             course = EduCourse.get_or_create_from_channel(rec.channel_id)
 
             vals = {

@@ -1,0 +1,18 @@
+<!-- data/sequence.xml -->
+<odoo>
+    <record id="seq_edu_notebook_serial" model="ir.sequence">
+        <field name="name">Notebook Serial</field>
+        <field name="code">edu.notebook.serial</field>
+        <field name="prefix">NB-%(year)s-</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_edu_notebook_borrow" model="ir.sequence">
+        <field name="name">Borrow Ref</field>
+        <field name="code">edu.notebook.borrow</field>
+        <field name="prefix">BRW-%(year)s-</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

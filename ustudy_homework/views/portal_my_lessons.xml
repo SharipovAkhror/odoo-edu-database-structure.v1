@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ========================= -->
+    <!-- TABLE VIEW: /my/lessons   -->
+    <!-- ========================= -->
+    <template id="portal_my_lessons" name="My Lessons Report">
+        <t t-call="portal.portal_layout">
+
+            <t t-set="breadcrumbs"
+               t-value="[(('/my/home'), 'Mening hisobim'), (('/my/lessons'), 'Mening Vazifalarim')]"/>
+
+            <div class="container mt-4">
+
+                <!-- Title + Calendar Button -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-0">Mening Vazifalarim</h3>
+
+                    <a href="/my/lessons/calendar" class="btn btn-primary btn-sm">
+                        Kalendar ko‘rinishi
+                    </a>
+                </div>
+
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Dars vaqti</th>
+                            <th>Dars nomi</th>
+                            <th>Guruh</th>
+                            <th>Mavzu</th>
+                            <th>Dars holati</th>
+                            <th>Davomat</th>
+                            <th>Vazifa holati</th>
+                            <th>Ball</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <t t-foreach="records" t-as="rec">
+                            <tr>
+                                <td><span t-esc="rec.start_datetime"/></td>
+                                <td><span t-esc="rec.timetable_name"/></td>
+                                <td><span t-esc="rec.group_id.name"/></td>
+                                <td><span t-esc="rec.slide_id.name"/></td>
+
+                                <td>
+                                    <span t-if="rec.timetable_state == 'scheduled'" class="badge bg-info">
+                                        Scheduled
+                                    </span>
+                                    <span t-if="rec.timetable_state == 'in_progress'" class="badge bg-warning">
+                                        In Progress
+                                    </span>
+                                    <span t-if="rec.timetable_state == 'completed'" class="badge bg-success">
+                                        Completed
+                                    </span>
+                                    <span t-if="rec.timetable_state == 'cancelled'" class="badge bg-danger">
+                                        Cancelled
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span t-if="rec.attendance_status == 'present'" class="badge bg-success">
+                                        Keldi
+                                    </span>
+                                    <span t-if="rec.attendance_status == 'absent'" class="badge bg-danger">
+                                        Kelmadi
+                                    </span>
+                                    <span t-if="not rec.attendance_status" class="badge bg-secondary">
+                                        -
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span t-if="rec.homework_state == 'not_submitted'" class="badge bg-secondary">
+                                        Not Submitted
+                                    </span>
+                                    <span t-if="rec.homework_state == 'submitted'" class="badge bg-info">
+                                        Submitted
+                                    </span>
+                                    <span t-if="rec.homework_state == 'graded'" class="badge bg-success">
+                                        Passed
+                                    </span>
+                                    <span t-if="rec.homework_state == 'failed'" class="badge bg-danger">
+                                        Failed
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <t t-if="rec.mark">
+                                        <span t-esc="rec.mark"/>
+                                    </t>
+                                    <t t-else="">
+                                        -
+                                    </t>
+                                </td>
+
+                            </tr>
+                        </t>
+
+                        <t t-if="not records">
+                            <tr>
+                                <td colspan="8" class="text-center text-muted">
+                                    Hozircha darslar mavjud emas.
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <!-- Pager -->
+                <t t-call="portal.pager"/>
+
+            </div>
+        </t>
+    </template>
+
+
+    <!-- =============================== -->
+    <!-- CALENDAR VIEW: /my/lessons/calendar -->
+    <!-- =============================== -->
+    <template id="portal_my_lessons_calendar" name="My Lessons Calendar">
+        <t t-call="portal.portal_layout">
+
+            <t t-set="breadcrumbs"
+               t-value="[(('/my/home'), 'Mening hisobim'), (('/my/lessons'), 'Mening Vazifalarim'), (('/my/lessons/calendar'), 'Kalendar')]"/>
+
+            <div class="container mt-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-0">Kalendar (Darslar)</h3>
+
+                    <a href="/my/lessons" class="btn btn-secondary btn-sm">
+                        Jadval ko‘rinishi
+                    </a>
+                </div>
+
+                <div id="lesson_calendar"
+                    class="border rounded p-3 bg-white"
+                    t-att-data-events="records and records.read(['timetable_name','start_datetime','end_datetime']) or []">
+
+                    <p class="text-muted mb-0">
+                        Kalendar yuklanmoqda...
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Put all lessons into JS variable -->
+            <script type="text/javascript">
+                window.lessonCalendarEvents = [
+                    <t t-foreach="records" t-as="rec">
+                        {
+                            title: "<t t-esc="rec.timetable_name"/>",
+                            start: "<t t-esc="rec.start_datetime"/>",
+                            end: "<t t-esc="rec.end_datetime"/>",
+                        },
+                    </t>
+                ];
+            </script>
+
+        </t>
+    </template>
+
+</odoo>
