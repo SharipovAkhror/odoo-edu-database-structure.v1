@@ -1,0 +1,33 @@
+<odoo>
+    <record id="view_edu_group_add_student_wizard_form" model="ir.ui.view">
+        <field name="name">edu.group.add.student.wizard.form</field>
+        <field name="model">edu.group.add.student.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Guruhga O'quvchi Qo'shish">
+                <group>
+                    <group string="O'quvchi ma'lumotlari">
+                        <field name="group_id" readonly="1"/>
+                        <field name="student_id"
+                               options="{'no_create': True}"
+                               placeholder="O'quvchini tanlang..."/>
+                        <field name="enrollment_date"/>
+                    </group>
+                    <group string="Modul hisobi (avtomatik)">
+                        <field name="lessons_before_join" readonly="1"/>
+                        <field name="starting_module_id" readonly="1"/>
+                        <field name="module_lesson_offset" readonly="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_confirm"
+                            string="Guruhga qo'shish"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Bekor qilish"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

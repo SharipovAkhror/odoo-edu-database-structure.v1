@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Under CRM main menu -->
+    <menuitem id="menu_fb_root"
+              name="Facebook Lead Ads"
+              parent="crm.crm_menu_root"
+              sequence="50"/>
+
+    <menuitem id="menu_fb_pages"
+              name="Pages"
+              parent="menu_fb_root"
+              action="action_fb_pages"
+              sequence="10"/>
+
+    <menuitem id="menu_fb_forms"
+              name="Lead Forms"
+              parent="menu_fb_root"
+              action="action_fb_lead_forms"
+              sequence="20"/>
+
+</odoo>

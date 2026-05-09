@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fb_page_manager,fb.page manager,model_fb_page,base.group_system,1,1,1,1
+access_fb_page_user,fb.page user,model_fb_page,base.group_user,1,0,0,0
+access_fb_lead_form_manager,fb.lead.form manager,model_fb_lead_form,base.group_system,1,1,1,1
+access_fb_lead_form_user,fb.lead.form user,model_fb_lead_form,base.group_user,1,0,0,0
+access_fb_field_mapping_manager,fb.field.mapping manager,model_fb_field_mapping,base.group_system,1,1,1,1
+access_fb_field_mapping_user,fb.field.mapping user,model_fb_field_mapping,base.group_user,1,0,0,0

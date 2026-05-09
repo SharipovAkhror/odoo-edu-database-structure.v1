@@ -1,5 +1,6 @@
 
 from . import edu_group
+from . import add_student_wizard
 from . import slide_channel_partner
 from . import res_partner
 from .  import edu_week_days

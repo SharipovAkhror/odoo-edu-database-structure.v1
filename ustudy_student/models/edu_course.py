@@ -7,6 +7,20 @@ class EduCourse(models.Model):
     _description = "Course"
 
     name = fields.Char(string="Course Name", required=True, translate=True)
+
+    active = fields.Boolean(
+        compute='_compute_active',
+        store=True,
+        default=True,
+    )
+
+    @api.depends('slide_channel_id', 'slide_channel_id.active')
+    def _compute_active(self):
+        for rec in self:
+            if rec.slide_channel_id:
+                rec.active = rec.slide_channel_id.active
+            else:
+                rec.active = True
     code = fields.Char(string="Code")
     description = fields.Text(string="Description", translate=True)
 

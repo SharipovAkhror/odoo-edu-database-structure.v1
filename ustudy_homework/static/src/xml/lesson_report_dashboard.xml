@@ -3,8 +3,38 @@
 
     <t t-name="web.ListView" t-inherit="web.ListView" t-inherit-mode="extension">
         <xpath expr="//t[@t-component='props.Renderer']" position="before">
-            <div t-if="props.resModel === 'edu.student.lesson.report' and this.dashboardData" 
+
+            <!-- Attendance (Davomatlar) dashboard -->
+            <div t-if="props.resModel === 'edu.student.lesson.report' and this.dashboardData and this.dashboardData.isAttendance"
                 class="o_kanban_dashboard d-flex gap-2 mb-3 px-3">
+
+                <div class="o_kanban_dashboard_item o_kanban_dashboard_item_success flex-fill">
+                    <div class="o_kanban_dashboard_item_title">Keldi</div>
+                    <div class="o_kanban_dashboard_item_value">
+                        <t t-esc="this.dashboardData.present"/>
+                    </div>
+                </div>
+
+                <div class="o_kanban_dashboard_item o_kanban_dashboard_item_danger flex-fill">
+                    <div class="o_kanban_dashboard_item_title">Kelmadi</div>
+                    <div class="o_kanban_dashboard_item_value">
+                        <t t-esc="this.dashboardData.absent"/>
+                    </div>
+                </div>
+
+                <div class="o_kanban_dashboard_item o_kanban_dashboard_item_warning flex-fill">
+                    <div class="o_kanban_dashboard_item_title">Davomat foizi</div>
+                    <div class="o_kanban_dashboard_item_value">
+                        <t t-esc="this.dashboardData.davomat_foizi"/>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Vazifalar dashboard -->
+            <div t-if="props.resModel === 'edu.student.lesson.report' and this.dashboardData and !this.dashboardData.isAttendance"
+                class="o_kanban_dashboard d-flex gap-2 mb-3 px-3">
+
                 <div class="o_kanban_dashboard_item o_kanban_dashboard_item_primary flex-fill">
                     <div class="o_kanban_dashboard_item_title">Jami Darslar</div>
                     <div class="o_kanban_dashboard_item_value">
@@ -25,7 +55,9 @@
                         <t t-esc="this.dashboardData.obs"/>
                     </div>
                 </div>
+
             </div>
+
         </xpath>
     </t>
 

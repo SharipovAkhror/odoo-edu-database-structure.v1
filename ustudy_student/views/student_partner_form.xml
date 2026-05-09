@@ -25,6 +25,9 @@
                         <field name="name" placeholder="Full name"/>
                         <field name="birth_date" string="Tug'ulgan kuni" placeholder="Sanani belgilang"/>
                         <field name="is_student" string="Talaba"/>
+                        <field name="is_online_education" string="Online Ta'lim"
+                              widget="boolean_toggle"
+                              invisible="not is_student"/>
                         <field name="email"/>
                         <!-- <field name="phone"/> -->
                     </group>
@@ -58,14 +61,6 @@
 
             <xpath expr="//form/sheet" position="before">
                 <header>
-                    <button name="action_grant_portal_access"
-                            type="object"
-                            class="oe_stat_button my_green_button">
-                        <div class="o_stat_info">
-                            <span class="o_stat_text">⚡ Foydalanuvchi huquqi</span>
-                        </div>
-                    </button>
-
                     <button name="%(student_password_wizard_action)d"
                             type="action"
                             class="oe_stat_button">

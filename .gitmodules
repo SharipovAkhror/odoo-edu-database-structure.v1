@@ -4,3 +4,6 @@
 [submodule "web"]
 	path = web
 	url = https://github.com/OCA/web.git
+[submodule "dark_backend_theme"]
+	path = dark_backend_theme
+	url = https://github.com/shokhsmee/dark_backend_theme

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="tpl_oauth_error" name="Facebook OAuth Error">
+        <t t-call="web.layout">
+            <t t-set="head_website"/>
+            <div class="container mt32">
+                <div class="alert alert-danger">
+                    <h4>Facebook Connection Error</h4>
+                    <p><t t-esc="error"/></p>
+                    <a href="/odoo/settings?searchTerms=Facebook" class="btn btn-primary mt8">
+                        Back to Settings
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

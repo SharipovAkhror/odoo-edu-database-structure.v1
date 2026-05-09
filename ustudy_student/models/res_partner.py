@@ -76,6 +76,11 @@ class ResPartner(models.Model):
     extra_doc_filename = fields.Char(string="Extra Document File Name")
 
 
+    is_online_education = fields.Boolean(
+        string="Online Ta'lim",
+        default=False,
+    )
+
     group_names = fields.Char(
         string="Groups",
         compute="_compute_group_names",
@@ -113,7 +118,111 @@ class ResPartner(models.Model):
             partner.avg_mark = 0.0  # placeholder
 
     # ---------------------------------------------------------------------
-    # STUDENT PORTAL ACCESS (your existing method, untouched)
+    # PORTAL USER LIFECYCLE
+    # ---------------------------------------------------------------------
+    def _ensure_portal_user(self):
+        """Create or update a portal user for this student partner.
+        The user's active state is driven by is_online_education."""
+        self.ensure_one()
+        if not self.email:
+            return None
+
+        Users = self.env["res.users"].sudo()
+        user_fields = Users._fields
+
+        groups_field = next(
+            (f for f in ("groups_id", "group_ids") if f in user_fields), None
+        )
+        if not groups_field:
+            return None
+
+        group_portal = self.env.ref("base.group_portal")
+        group_user = self.env.ref("base.group_user")
+
+        existing_linked = Users.with_context(active_test=False).search(
+            [("partner_id", "=", self.id)], limit=1
+        )
+        if existing_linked:
+            # Never modify internal (non-share) users
+            if not existing_linked.share:
+                return existing_linked
+            existing_linked.write({
+                "share": True,
+                "active": self.is_online_education,
+                groups_field: [(4, group_portal.id), (3, group_user.id)],
+            })
+            return existing_linked
+
+        existing_login = Users.with_context(active_test=False).search(
+            [("login", "=", self.email)], limit=1
+        )
+        if existing_login:
+            # Never modify internal (non-share) users
+            if not existing_login.share:
+                return existing_login
+            existing_login.write({
+                "partner_id": self.id,
+                "share": True,
+                "active": self.is_online_education,
+                groups_field: [(4, group_portal.id), (3, group_user.id)],
+            })
+            return existing_login
+
+        vals = {
+            "name": self.name or self.display_name,
+            "login": self.email,
+            "email": self.email,
+            "partner_id": self.id,
+            "share": True,
+            "active": self.is_online_education,
+            groups_field: [(6, 0, [group_portal.id])],
+        }
+        for fname, fval in [
+            ("edu_role_portal", True), ("edu_role_user", False),
+            ("edu_role_admin", False), ("edu_student", True),
+        ]:
+            if fname in user_fields:
+                vals[fname] = fval
+
+        user = Users.with_context(no_reset_password=True).create(vals)
+        user.write({groups_field: [(3, group_user.id)]})
+        return user
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record in records:
+            if record.is_student and record.email:
+                record._ensure_portal_user()
+        return records
+
+    def write(self, vals):
+        is_student_toggling = "is_student" in vals
+        is_online_toggling = "is_online_education" in vals
+
+        pre_student = {}
+        if is_student_toggling:
+            pre_student = {r.id: r.is_student for r in self}
+
+        result = super().write(vals)
+
+        for record in self:
+            if is_student_toggling and not pre_student.get(record.id) and record.is_student and record.email:
+                record._ensure_portal_user()
+
+            if is_online_toggling:
+                user = self.env["res.users"].sudo().with_context(active_test=False).search(
+                    [("partner_id", "=", record.id)], limit=1
+                )
+                if user and user.share:
+                    user.write({"active": record.is_online_education})
+                elif not user and record.is_student and record.email:
+                    record._ensure_portal_user()
+
+        return result
+
+    # ---------------------------------------------------------------------
+    # STUDENT PORTAL ACCESS (kept for backward compatibility)
     # ---------------------------------------------------------------------
     def action_grant_portal_access(self):
         self.ensure_one()
@@ -155,6 +264,12 @@ class ResPartner(models.Model):
         # If another user already uses this login, don't try to create a new one
         existing_user = Users.search([("login", "=", self.email)], limit=1)
         if existing_user:
+            # Never downgrade internal users to portal
+            if not existing_user.share:
+                raise UserError(
+                    _("'%s' ichki foydalanuvchi (internal user). Portal accessga o'tkazib bo'lmaydi.")
+                    % existing_user.name
+                )
             # Option A: attach that user to this partner (recommended)
             existing_user.write({
                 "partner_id": self.id,

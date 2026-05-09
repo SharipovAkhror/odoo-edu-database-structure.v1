@@ -98,7 +98,7 @@
                         <group>
                             <field name="timetable_id" readonly="1"/>
                             <field name="group_id" readonly="1"/>
-                            <field name="teacher_id" readonly="1"/>
+                            <field name="teacher_id"/>
                             <field name="attendance_date" readonly="1"/>
                         </group>
                         <group>
@@ -220,11 +220,11 @@
         <field name="inherit_id" ref="ustudy_group.view_edu_timetable_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button name="action_start_attendance" 
-                        string="Start Attendance" 
-                        type="object" 
+                <button name="action_start_attendance"
+                        string="Start Attendance"
+                        type="object"
                         class="btn-primary"
-                        invisible="has_attendance or state in ['scheduled','completed', 'cancelled']"/>
+                        invisible="has_attendance or state in ['scheduled','completed', 'cancelled'] or not is_today"/>
                 <button name="action_view_attendance" 
                         string="View Attendance" 
                         type="object" 
@@ -238,6 +238,7 @@
                 <field name="attendance_count" invisible="1"/>
                 <field name="has_confirmed_attendance" invisible="1"/>
                 <field name="confirmed_attendance_line_ids" invisible="1"/>
+                <field name="is_today" invisible="1"/>
             </xpath>
 
             <!-- Add attendance group at the end of sheet -->

@@ -93,25 +93,23 @@ class EduStudentLessonReport(models.Model):
 
     @api.model
     def get_attendance_dashboard(self, student_id=False):
-        domain = [
-            ("timetable_state", "in", ["in_progress", "completed"])
-        ]
-
+        done_domain = [("timetable_state", "in", ["in_progress", "completed"])]
         if student_id:
-            domain.append(("student_id", "=", student_id))
+            done_domain.append(("student_id", "=", student_id))
 
-        total = self.search_count(domain)
-        present = self.search_count(domain + [("attendance_status", "=", "present")])
+        total = self.search_count(done_domain)
+        present = self.search_count(done_domain + [("attendance_status", "=", "present")])
+        absent = total - present
+        percent = round((present / total * 100)) if total > 0 else 0
 
-        # Calculate average mark (OBS) from graded submissions
-        graded_records = self.search(domain + [("mark", ">", 0)])
-        if graded_records:
-            obs = sum(graded_records.mapped("mark")) / len(graded_records)
-        else:
-            obs = 0.0
+        all_domain = [("student_id", "=", student_id)] if student_id else []
+        graded_records = self.search(all_domain + [("mark", ">", 0)])
+        obs = round(sum(graded_records.mapped("mark")) / len(graded_records), 1) if graded_records else 0.0
 
         return {
             "total": total,
             "present": present,
-            "obs": round(obs, 1),
+            "absent": absent,
+            "davomat_foizi": f"{percent}%",
+            "obs": obs,
         }

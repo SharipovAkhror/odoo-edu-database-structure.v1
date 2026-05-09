@@ -1,0 +1,78 @@
+/*
+ * web_save_button — Odoo 19
+ *
+ * TARGET 1: web.FormView.Buttons template
+ *   <button class="btn btn-primary o_form_button_save" data-hotkey="s">Save</button>
+ *   Rendered inside .o_control_panel_actions (bottom of control panel)
+ *
+ * TARGET 2: web.FormStatusIndicator template
+ *   <button class="o_form_button_save btn btn-light border-0 px-1 py-0 lh-sm">
+ *     <i class="fa fa-cloud-upload fa-fw" />
+ *   </button>
+ *   Rendered inside .o_form_status_indicator (breadcrumb area, icon-only)
+ */
+
+/* ─────────────────────────────────────────────
+   TARGET 1 — Main Save button (control panel)
+   btn btn-primary → already blue, we just make it bigger
+   ───────────────────────────────────────────── */
+.o_control_panel .o_form_button_save {
+    padding: 8px 28px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    min-width: 110px !important;
+    letter-spacing: 0.2px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.4) !important;
+    transition: box-shadow 0.15s ease, transform 0.15s ease !important;
+}
+
+.o_control_panel .o_form_button_save:hover {
+    box-shadow: 0 4px 14px rgba(13, 110, 253, 0.55) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Discard — slightly bigger too but stays secondary */
+.o_control_panel .o_form_button_cancel {
+    padding: 8px 20px !important;
+    font-size: 14px !important;
+    border-radius: 6px !important;
+}
+
+/* ─────────────────────────────────────────────
+   TARGET 2 — Status Indicator Save (breadcrumb)
+   icon-only cloud-upload button, currently btn-light invisible
+   Make it a visible colored icon button
+   ───────────────────────────────────────────── */
+.o_form_status_indicator .o_form_button_save {
+    background-color: #0d6efd !important;
+    border: 1px solid #0d6efd !important;
+    color: #fff !important;
+    border-radius: 5px !important;
+    padding: 4px 10px !important;
+    font-size: 14px !important;
+    box-shadow: 0 1px 4px rgba(13, 110, 253, 0.35) !important;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.o_form_status_indicator .o_form_button_save:hover {
+    background-color: #0b5ed7 !important;
+    border-color: #0b5ed7 !important;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.5) !important;
+}
+
+.o_form_status_indicator .o_form_button_save i.fa-cloud-upload {
+    font-size: 14px !important;
+}
+
+/* Status indicator Discard — keep subtle */
+.o_form_status_indicator .o_form_button_cancel {
+    border-radius: 5px !important;
+    padding: 4px 8px !important;
+    opacity: 0.75 !important;
+    transition: opacity 0.15s ease !important;
+}
+
+.o_form_status_indicator .o_form_button_cancel:hover {
+    opacity: 1 !important;
+}

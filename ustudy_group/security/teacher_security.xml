@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         GROUP: Teacher
+         This group is assigned to the "Teacher" role in base_user_role.
+         Teachers get limited read/write access with record-level rules below.
+    ============================================================ -->
+    <record id="group_teacher" model="res.groups">
+        <field name="name">Teacher</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+
+    <!-- ============================================================
+         RECORD RULES
+         Each rule has:
+           - model_id   → which model to filter
+           - domain_force → the filter (in domain syntax)
+           - groups     → ONLY applies to users in group_teacher
+         Rule logic: teacher sees rows where teacher_id.user_id == me
+    ============================================================ -->
+
+    <!-- 1. edu.group — only groups where I am the teacher -->
+    <record id="rule_edu_group_teacher" model="ir.rule">
+        <field name="name">Teacher: own groups only</field>
+        <field name="model_id" ref="model_edu_group"/>
+        <field name="domain_force">[('teacher_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('ustudy_group.group_teacher'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- 2. edu.group.student — only students in my groups -->
+    <record id="rule_edu_group_student_teacher" model="ir.rule">
+        <field name="name">Teacher: students in own groups only</field>
+        <field name="model_id" ref="model_edu_group_student"/>
+        <field name="domain_force">[('group_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('ustudy_group.group_teacher'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- 3. edu.timetable — only timetable of my groups -->
+    <record id="rule_edu_timetable_teacher" model="ir.rule">
+        <field name="name">Teacher: own timetable only</field>
+        <field name="model_id" ref="model_edu_timetable"/>
+        <field name="domain_force">[('teacher_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('ustudy_group.group_teacher'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- 4. edu.attendance — only attendance records of my groups -->
+    <record id="rule_edu_attendance_teacher" model="ir.rule">
+        <field name="name">Teacher: own attendance only</field>
+        <field name="model_id" ref="model_edu_attendance"/>
+        <field name="domain_force">[('teacher_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('ustudy_group.group_teacher'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- 5. hr.employee — teacher sees only themselves -->
+    <record id="rule_hr_employee_teacher" model="ir.rule">
+        <field name="name">Teacher: own employee record only</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('ustudy_group.group_teacher'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- 6. project.task — only tasks assigned to me -->
+    <record id="rule_project_task_teacher" model="ir.rule">
+        <field name="name">Teacher: assigned tasks only</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="domain_force">[('user_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('ustudy_group.group_teacher'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+</odoo>

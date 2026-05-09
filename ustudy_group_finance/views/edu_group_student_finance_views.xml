@@ -63,11 +63,11 @@
                         type="object"
                         class="oe_stat_button"
                         icon="fa-money"
-                        invisible="not is_student or finance_count == 0">
+                        invisible="not is_student">
 
-                    <field name="finance_count"
+                    <field name="finance_lessons_ratio"
                            widget="statinfo"
-                           string="Payments"/>
+                           string="Moliya"/>
                 </button>
 
             </xpath>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_edu_student_lesson_payment_list" model="ir.ui.view">
+        <field name="name">edu.student.lesson.payment.report.list</field>
+        <field name="model">edu.student.lesson.payment.report</field>
+        <field name="arch" type="xml">
+            <list string="Dars To'lovlari" create="0" edit="0" delete="0"
+                js_class="lesson_payment_dashboard_list">
+
+                <field name="start_datetime" string="Boshlash vaqti"/>
+                <field name="timetable_name" string="Dars nomi"/>
+                <field name="group_id" string="Guruh"/>
+                <field name="lesson_rank" string="Dars #"/>
+
+                <field name="timetable_state"
+                    string="Dars holati"
+                    widget="badge"
+                    decoration-info="timetable_state == 'scheduled'"
+                    decoration-warning="timetable_state == 'in_progress'"
+                    decoration-success="timetable_state == 'completed'"
+                    decoration-danger="timetable_state == 'cancelled'"/>
+
+                <field name="payment_status"
+                    string="To'lov holati"
+                    widget="badge"
+                    decoration-success="payment_status == 'paid'"
+                    decoration-warning="payment_status == 'partial'"
+                    decoration-danger="payment_status == 'not_paid'"/>
+
+            </list>
+        </field>
+    </record>
+
+</odoo>

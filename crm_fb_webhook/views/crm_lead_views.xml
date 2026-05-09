@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add Facebook fields to CRM Lead form -->
+    <record id="view_crm_lead_facebook_fields" model="ir.ui.view">
+        <field name="name">crm.lead.form.facebook</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//chatter" position="before">
+                <group string="Facebook Lead Ads"
+                       invisible="not fb_leadgen_id"
+                       col="3">
+                    <field name="fb_leadgen_id" readonly="1"/>
+                    <field name="fb_page_id" readonly="1"/>
+                    <field name="fb_form_id" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- LIST -->
+    <record id="view_fb_lead_form_list" model="ir.ui.view">
+        <field name="name">fb.lead.form.list</field>
+        <field name="model">fb.lead.form</field>
+        <field name="arch" type="xml">
+            <list string="Lead Forms" decoration-muted="status == 'archived'">
+                <field name="name"/>
+                <field name="page_id"/>
+                <field name="fb_form_id"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'active'"
+                       decoration-warning="status == 'archived'"/>
+                <field name="team_id" optional="show"/>
+                <field name="user_id" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM -->
+    <record id="view_fb_lead_form_form" model="ir.ui.view">
+        <field name="name">fb.lead.form.form</field>
+        <field name="model">fb.lead.form</field>
+        <field name="arch" type="xml">
+            <form string="Lead Form">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                        <div class="text-muted">Form ID: <field name="fb_form_id" readonly="1"/></div>
+                    </div>
+
+                    <group>
+                        <group string="Facebook">
+                            <field name="page_id" readonly="1"/>
+                            <field name="status" widget="badge"/>
+                        </group>
+                        <group string="Lead Routing (overrides page defaults)">
+                            <field name="team_id"/>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Field Mappings">
+                            <div class="alert alert-info" role="alert">
+                                Map Facebook form field names to Odoo CRM fields.
+                                Common fields are mapped automatically (full_name, email, phone_number, etc.).
+                                Add custom mappings here for any additional or custom fields.
+                            </div>
+                            <field name="mapping_ids" nolabel="1">
+                                <list editable="bottom">
+                                    <field name="fb_field"
+                                           placeholder="e.g. custom_field_abc"/>
+                                    <field name="odoo_field"
+                                           placeholder="e.g. description"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_fb_lead_forms" model="ir.actions.act_window">
+        <field name="name">Lead Forms</field>
+        <field name="res_model">fb.lead.form</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

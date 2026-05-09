@@ -44,8 +44,19 @@ class EduTimetable(models.Model):
     teacher_id = fields.Many2one(
         "hr.employee",
         string="Teacher",
-        related="group_id.teacher_id",
-        store=True,
+        index=True,
+    )
+
+    @api.onchange("group_id")
+    def _onchange_group_teacher(self):
+        for rec in self:
+            if rec.group_id and not rec.teacher_id:
+                rec.teacher_id = rec.group_id.teacher_id
+
+    is_today = fields.Boolean(
+        string="Is Today",
+        compute="_compute_is_today",
+        store=False,
     )
 
     weekday_id = fields.Many2one(
@@ -138,6 +149,12 @@ class EduTimetable(models.Model):
             rec.start_date = rec.start_datetime.date() if rec.start_datetime else False
             rec.end_date = rec.end_datetime.date() if rec.end_datetime else False
 
+    @api.depends("start_date")
+    def _compute_is_today(self):
+        today = fields.Date.today()
+        for rec in self:
+            rec.is_today = rec.start_date == today
+
     @api.depends("group_id.name", "weekday_id.name", "start_datetime")
     def _compute_name(self):
         for record in self:
@@ -156,16 +173,18 @@ class EduTimetable(models.Model):
             else:
                 record.duration = 0.0
 
-    @api.depends("group_id", "start_datetime")
+    @api.depends("group_id", "group_id.start_lesson_number", "start_datetime")
     def _compute_lesson_sequence(self):
         group_ids = list({rec.group_id.id for rec in self if rec.group_id})
         seq_map = {}
         for gid in group_ids:
+            group = self.env["edu.group"].browse(gid)
+            start = max(group.start_lesson_number or 1, 1)
             ordered = self.env["edu.timetable"].search(
                 [("group_id", "=", gid)],
                 order="start_datetime asc",
             )
-            for i, r in enumerate(ordered, 1):
+            for i, r in enumerate(ordered, start):
                 seq_map[r.id] = i
         for rec in self:
             rec.lesson_sequence = seq_map.get(rec.id, 0)
@@ -266,6 +285,9 @@ class EduTimetable(models.Model):
         self.write({"state": "completed"})
 
     def action_mark_in_progress(self):
+        if not self.slide_id:
+            raise UserError(_("Darsni boshlash uchun dars mavzusini belgilang"))
+        
         self.write({"state": "in_progress"})
 
     def action_cancel(self):
@@ -470,7 +492,8 @@ class EduGroup(models.Model):
             ],
             order="start_datetime asc",
         )
-        lesson_index = len(past_entries.filtered(lambda r: r.slide_id))
+        slide_start = max((self.start_lesson_number or 1) - 1, 0)
+        lesson_index = slide_start + len(past_entries.filtered(lambda r: r.slide_id))
 
         timetable_entries = []
         current_date = regen_from_date
@@ -497,6 +520,7 @@ class EduGroup(models.Model):
                     "end_datetime": end_dt_utc,
                     "slide_id": slide_id,
                     "state": "scheduled",
+                    "teacher_id": self.teacher_id.id if self.teacher_id else False,
                 }
                 timetable_entries.append((0, 0, vals))
 
@@ -549,7 +573,7 @@ class EduGroup(models.Model):
 
         timetable_entries = []
         current_date = self.start_date
-        lesson_index = 0
+        lesson_index = max((self.start_lesson_number or 1) - 1, 0)
         remaining = self.lesson_count if (self.use_lesson_count and self.lesson_count) else None
 
         while current_date <= self.end_date and (remaining is None or remaining > 0):
@@ -573,6 +597,7 @@ class EduGroup(models.Model):
                     "end_datetime": end_dt_utc,
                     "slide_id": slide_id,
                     "state": "scheduled",
+                    "teacher_id": self.teacher_id.id if self.teacher_id else False,
                 }
                 timetable_entries.append((0, 0, vals))
 

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ListView" t-inherit="web.ListView" t-inherit-mode="extension">
+        <xpath expr="//t[@t-component='props.Renderer']" position="before">
+
+            <div t-if="props.resModel === 'edu.student.lesson.payment.report' and this.dashboardData"
+                class="o_kanban_dashboard d-flex gap-2 mb-3 px-3">
+
+                <div class="o_kanban_dashboard_item o_kanban_dashboard_item_primary flex-fill">
+                    <div class="o_kanban_dashboard_item_title">Umumiy balanse</div>
+                    <div class="o_kanban_dashboard_item_value" style="font-size:1.4rem">
+                        <t t-esc="this.dashboardData.total_paid"/> so'm
+                    </div>
+                </div>
+
+                <div class="o_kanban_dashboard_item o_kanban_dashboard_item_success flex-fill">
+                    <div class="o_kanban_dashboard_item_title">To'langan darslar</div>
+                    <div class="o_kanban_dashboard_item_value">
+                        <t t-esc="this.dashboardData.paid_lessons"/>
+                    </div>
+                </div>
+
+                <div class="o_kanban_dashboard_item o_kanban_dashboard_item_danger flex-fill">
+                    <div class="o_kanban_dashboard_item_title">Qarzdor darslar</div>
+                    <div class="o_kanban_dashboard_item_value">
+                        <t t-esc="this.dashboardData.debt_lessons"/>
+                    </div>
+                </div>
+
+                <div class="o_kanban_dashboard_item o_kanban_dashboard_item_warning flex-fill">
+                    <div class="o_kanban_dashboard_item_title">To'lov foizi</div>
+                    <div class="o_kanban_dashboard_item_value">
+                        <t t-esc="this.dashboardData.payment_foizi"/>
+                    </div>
+                </div>
+
+            </div>
+
+        </xpath>
+    </t>
+
+</templates>

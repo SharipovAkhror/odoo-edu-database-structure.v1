@@ -1,0 +1,445 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ustudy_group_finance
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-16 20:11+0000\n"
+"PO-Revision-Date: 2026-04-16 20:11+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_group_student_module.py:0
+msgid " | Carry-forward: %s"
+msgstr " | Ko'chirib o'tkazilgan: %s"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_modul_payment_wizard.py:0
+msgid "%s payment - %s"
+msgstr "%s to'lov - %s"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid ""
+"<i class=\"fa fa-check-circle\"/>\n"
+"                        This will mark the module as fully paid and unfreeze the student if frozen."
+msgstr ""
+"<i class=\"fa fa-check-circle\"/>\n"
+"                        Bu modulni to'liq to'langan deb belgilaydi va talaba muzlatilgan bo'lsa, muzlatishni olib tashlaydi."
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_cc_finance_form_module_section
+msgid ""
+"<i class=\"fa fa-info-circle me-1\"/>\n"
+"                    This payment exceeds the remaining balance for this module.\n"
+"                    The excess will carry forward to the next module automatically when the student advances."
+msgstr ""
+"<i class=\"fa fa-info-circle me-1\"/>\n"
+"                    Bu to'lov ushbu modul uchun qolgan balansdan oshib ketadi.\n"
+"                    Ortiqcha summa talaba keyingi modulga o'tganda avtomatik ravishda o'tkaziladi."
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                        This is a partial payment. The student will need to pay the remaining amount to complete this module."
+msgstr ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                        Bu qisman to'lov. Talaba ushbu modulni yakunlash uchun qolgan miqdorni to'lashi kerak."
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_cc_finance_form_module_section
+msgid "<span class=\"mx-1 text-muted\">/</span>"
+msgstr "<span class=\"mx-1 text-muted\">/</span>"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid "<span class=\"mx-2\">/</span>"
+msgstr "<span class=\"mx-2\">/</span>"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid "Add any notes about this payment..."
+msgstr "Bu to'lov haqida izoh qo'shing..."
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid "Additional Notes"
+msgstr "Qo'shimcha izohlar"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__module_already_paid
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__current_paid
+msgid "Already Paid"
+msgstr "Allaqachon to'langan"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__amount
+msgid "Amount"
+msgstr "Miqdor"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_modul_payment_wizard.py:0
+msgid "Amount: %s"
+msgstr "Miqdor: %s"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid "Cancel"
+msgstr "Bekor qilish"
+
+#. module: ustudy_group_finance
+#: model:ir.model,name:ustudy_group_finance.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: ustudy_group_finance
+#: model:ir.model,website_form_label:ustudy_group_finance.model_res_partner
+msgid "Create a Customer"
+msgstr "Mijoz yaratish"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__create_uid
+msgid "Created by"
+msgstr "Yaratuvchi"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__create_date
+msgid "Created on"
+msgstr "Yaratilgan sana"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__display_name
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_group_student__display_name
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__display_name
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Ko'rsatiladigan nom"
+
+#. module: ustudy_group_finance
+#: model:ir.model,name:ustudy_group_finance.model_cc_finance
+msgid "Finance Record (Income/Expense)"
+msgstr "Moliyaviy yozuv (Daromad/Xarajat)"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,help:ustudy_group_finance.field_edu_module_payment_wizard__is_full_payment
+msgid ""
+"Force mark module as fully paid even if amount is less than module price"
+msgstr ""
+"Modul narxidan kam bo'lsa ham, modulni to'liq to'langan deb majburiy "
+"belgilash"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields.selection,name:ustudy_group_finance.selection__cc_finance__module_payment_status__paid
+msgid "Fully Paid"
+msgstr "To'liq to'langan"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__group_id
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__group_name
+msgid "Group"
+msgstr "Guruh"
+
+#. module: ustudy_group_finance
+#: model:ir.model,name:ustudy_group_finance.model_edu_group_student
+msgid "Group Student"
+msgstr "Guruh talabalari"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__id
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_group_student__id
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__id
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_res_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Oxirgi yangilovchi"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__write_date
+msgid "Last Updated on"
+msgstr "Oxirgi yangilangan sana"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_cc_finance_form_module_section
+msgid "Lessons Covered"
+msgstr "Qoplangan darslar"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__is_full_payment
+msgid "Mark as Fully Paid (Override)"
+msgstr "To'liq to'langan deb belgilash (majburiy)"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__module_id
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__module_id
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid "Module"
+msgstr "Modul"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__module_number
+msgid "Module Number"
+msgstr "Modul raqami"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_cc_finance_form_module_section
+msgid "Module Payment Details"
+msgstr "Modul to'lov tafsilotlari"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__module_price
+msgid "Module Price"
+msgstr "Modul narxi"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__module_payment_status
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_cc_finance_form_module_section
+msgid "Module Status"
+msgstr "Modul holati"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid "Module Update"
+msgstr "Modulni yangilash"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_modul_payment_wizard.py:0
+msgid "Module is not selected."
+msgstr "Modul tanlanmagan."
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_modul_payment_wizard.py:0
+msgid "Module: %s"
+msgstr "Modul: %s"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__new_module_id
+msgid "New Module"
+msgstr "Yangi modul"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_group_student_module.py:0
+msgid "Next module not found. Please create it."
+msgstr "Keyingi modul topilmadi. Iltimos, yarating."
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_group_student_module.py:0
+msgid "No modules found. Please create modules first."
+msgstr "Modullar topilmadi. Iltimos, avval modullar yarating."
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields.selection,name:ustudy_group_finance.selection__cc_finance__module_payment_status__not_started
+msgid "Not Started"
+msgstr "Boshlanmagan"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__notes
+msgid "Notes"
+msgstr "Eslatmalar"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__module_paid_lessons
+msgid "Paid Lessons"
+msgstr "To'langan darslar"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields.selection,name:ustudy_group_finance.selection__cc_finance__module_payment_status__partial
+msgid "Partial"
+msgstr "Qisman"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__payment_date
+msgid "Payment Date"
+msgstr "To'lov sanasi"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid "Payment Details"
+msgstr "To'lov tafsilotlari"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__payment_method_id
+msgid "Payment Method"
+msgstr "To'lov usuli"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid "Payment Progress"
+msgstr "To'lov jarayoni"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_cc_finance_form_module_section
+msgid "Payment Progress (before this payment)"
+msgstr "To'lov jarayoni (bu to'lovdan oldin)"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__payment_status
+msgid "Payment Status"
+msgstr "To'lov holati"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid "Payment Summary"
+msgstr "To'lov xulosasi"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__payment_type_category
+msgid "Payment Type Category"
+msgstr "To'lov turi toifasi"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__payment_type_code
+msgid "Payment Type Code"
+msgstr "To'lov turi kodi"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_res_partner__finance_count
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_res_users__finance_count
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_partner_form_finance_button
+msgid "Payments"
+msgstr "Moliyaviy yozuvlar soni"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_modul_payment_wizard.py:0
+msgid "Please select New Module."
+msgstr "Iltimos, yangi modulni tanlang."
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,help:ustudy_group_finance.field_edu_module_payment_wizard__module_price
+msgid "Price from configuration"
+msgstr "Sozlamalardan narx"
+
+#. module: ustudy_group_finance
+#: model:ir.model,name:ustudy_group_finance.model_edu_module_payment_wizard
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid "Register Module Payment"
+msgstr "Modul to'lovini ro'yxatdan o'tkazish"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid "Register Payment"
+msgstr "To'lovni ro'yxatdan o'tkazish"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__module_remaining
+msgid "Remaining"
+msgstr "Qolgan"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__student_line_id
+msgid "Student"
+msgstr "Talaba"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_group_student_module.py:0
+msgid "Student %s completed %s, moved to %s%s"
+msgstr "Talaba %s %s ni tugatdi, %s ga ko'chirildi%s"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_cc_finance_form_module_section
+msgid "Student &amp; Module"
+msgstr "Talaba va Modul"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__student_line_id
+msgid "Student Group Line"
+msgstr "Talaba guruh qatori"
+
+#. module: ustudy_group_finance
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_edu_module_payment_wizard_form
+msgid "Student Information"
+msgstr "Talaba ma'lumotlari"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_group_student.py:0
+msgid "Student Module Payments"
+msgstr "Talaba modul to'lovlari"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__student_name
+msgid "Student Name"
+msgstr "Talaba ismi"
+
+#. module: ustudy_group_finance
+#: model:ir.actions.act_window,name:ustudy_group_finance.action_cc_finance_student_module_payments
+#: model_terms:ir.ui.view,arch_db:ustudy_group_finance.view_cc_finance_student_module_list
+msgid "Student Payments"
+msgstr "Talaba to'lovlari"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__student_status
+msgid "Student Status"
+msgstr "Talaba holati"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_modul_payment_wizard.py:0
+msgid "Student: %s"
+msgstr "Talaba: %s"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_cc_finance__module_lessons_total
+msgid "Total Lessons"
+msgstr "Jami darslar"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_modul_payment_wizard.py:0
+msgid "Total Paid: %s / %s"
+msgstr "Jami to'langan: %s / %s"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,help:ustudy_group_finance.field_edu_module_payment_wizard__current_paid
+msgid "Total amount paid for the current module"
+msgstr "Joriy modul uchun to'langan jami summa"
+
+#. module: ustudy_group_finance
+#: model:ir.model.fields,field_description:ustudy_group_finance.field_edu_module_payment_wizard__update_module
+msgid "Update Student Module"
+msgstr "Talaba modulini yangilash"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_modul_payment_wizard.py:0
+msgid "✅ Module fully paid"
+msgstr "✅ Modul to'liq to'langan"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_modul_payment_wizard.py:0
+msgid "💰 Module Payment Registered"
+msgstr "💰 Modul to'lovi ro'yxatdan o'tkazildi"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_modul_payment_wizard.py:0
+msgid "🔄 Module changed to: %s"
+msgstr "🔄 Modul o'zgartirildi: %s"
+
+#. module: ustudy_group_finance
+#. odoo-python
+#: code:addons/ustudy_group_finance/models/edu_modul_payment_wizard.py:0
+msgid "🔓 Student unfrozen"
+msgstr "🔓 Talaba muzlatilishi bekor qilindi"

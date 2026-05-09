@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Extend the base cc.finance form view to show a "Module Payment Details"
+        section when payment_type_id.code == 'student_module'.
+    -->
+    <record id="view_cc_finance_form_module_section" model="ir.ui.view">
+        <field name="name">cc.finance.form.module.section</field>
+        <field name="model">cc.finance</field>
+        <field name="inherit_id" ref="edu_finance.view_cc_finance_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Load payment_type_code and payment_type_category for invisible conditions -->
+            <xpath expr="//field[@name='payment_type_id']" position="after">
+                <field name="payment_type_code" invisible="1"/>
+                <field name="payment_type_category" invisible="1"/>
+            </xpath>
+
+            <!-- Show partner only for student payment types -->
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="invisible">payment_type_category not in ['student', False]</attribute>
+            </xpath>
+
+            <!-- Show employee only for teacher / employee payment types -->
+            <xpath expr="//field[@name='employee_id']" position="attributes">
+                <attribute name="invisible">payment_type_category not in ['teacher', 'employee']</attribute>
+            </xpath>
+
+            <!-- Module Payment Details section — visible only for student_module -->
+            <xpath expr="//group[@name='related_to_group']" position="after">
+
+                <group string="Module Payment Details"
+                       invisible="payment_type_code != 'student_module'">
+
+                    <group string="Student &amp; Module">
+                        <field name="student_line_id"
+                               domain="partner_id and [('student_id', '=', partner_id), ('state', '!=', 'cancelled')] or []"
+                               options="{'no_create': True, 'no_create_edit': True}"
+                               readonly="state != 'draft'"/>
+                        <field name="group_id" readonly="1"/>
+                        <field name="module_id"
+                               domain="[('active', '=', True)]"
+                               options="{'no_create': True, 'no_create_edit': True}"
+                               readonly="state != 'draft'"/>
+                    </group>
+
+                    <group string="Payment Progress (before this payment)">
+                        <label for="module_paid_lessons" string="Lessons Covered"/>
+                        <div class="o_row">
+                            <field name="module_paid_lessons"
+                                   readonly="1"
+                                   nolabel="1"
+                                   class="oe_inline"
+                                   decoration-warning="module_payment_status == 'partial'"
+                                   decoration-success="module_payment_status == 'paid'"
+                                   widget="integer"/>
+                            <span class="mx-1 text-muted">/</span>
+                            <field name="module_lessons_total"
+                                   readonly="1"
+                                   nolabel="1"
+                                   class="oe_inline"
+                                   widget="integer"/>
+                        </div>
+                        <field name="module_already_paid"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"
+                               readonly="1"/>
+                        <field name="module_remaining"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"
+                               readonly="1"/>
+                        <label for="module_payment_status" string="Module Status"/>
+                        <div>
+                            <field name="module_payment_status"
+                                   widget="badge"
+                                   nolabel="1"
+                                   decoration-success="module_payment_status == 'paid'"
+                                   decoration-warning="module_payment_status == 'partial'"
+                                   decoration-info="module_payment_status == 'not_started'"/>
+                        </div>
+                    </group>
+
+                </group>
+
+                <!-- Carry-forward info alert -->
+                <div class="alert alert-info mb-2"
+                     role="alert"
+                     invisible="payment_type_code != 'student_module' or not module_id or module_remaining &lt;= 0 or amount &lt;= module_remaining">
+                    <i class="fa fa-info-circle me-1"/>
+                    This payment exceeds the remaining balance for this module.
+                    The excess will carry forward to the next module automatically when the student advances.
+                </div>
+
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

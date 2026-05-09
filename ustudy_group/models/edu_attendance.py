@@ -32,6 +32,7 @@ class EduAttendance(models.Model):
         string="Teacher",
         related="timetable_id.teacher_id",
         store=True,
+        readonly=False,
     )
     
     attendance_date = fields.Date(
@@ -541,10 +542,13 @@ class EduTimetable(models.Model):
     def action_start_attendance(self):
         """Start attendance - capture teacher start photo"""
         self.ensure_one()
-        
+
+        if not self.slide_id:
+            raise UserError(_("Darsni boshlash uchun dars mavzusini belgilang"))
+
         if self.attendance_ids:
             raise UserError(_("Attendance already exists for this lesson."))
-        
+
         if not self.group_id.student_line_ids:
             raise UserError(_("No students in this group."))
         

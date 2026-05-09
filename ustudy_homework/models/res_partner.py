@@ -75,6 +75,40 @@ class ResPartner(models.Model):
                 ("student_id", "=", partner.id)
             ])
 
+    ops_passed_count = fields.Integer(
+        string="Passed Homeworks",
+        compute="_compute_ops_stats",
+        store=False,
+    )
+
+    ops_total_count = fields.Integer(
+        string="Total Homeworks",
+        compute="_compute_ops_stats",
+        store=False,
+    )
+
+    ops_ratio = fields.Char(
+        string="Vazifalar",
+        compute="_compute_ops_stats",
+        store=False,
+    )
+
+    def _compute_ops_stats(self):
+        Report = self.env["edu.student.lesson.report"]
+
+        for partner in self:
+            total = Report.search_count([
+                ("student_id", "=", partner.id),
+                ("homework_id", "!=", False),
+            ])
+            passed = Report.search_count([
+                ("student_id", "=", partner.id),
+                ("homework_state", "=", "graded"),
+            ])
+            partner.ops_total_count = total
+            partner.ops_passed_count = passed
+            partner.ops_ratio = f"{passed}/{total}"
+
     def action_open_student_lessons_report(self):
         self.ensure_one()
 
@@ -148,7 +182,7 @@ class ResPartner(models.Model):
         self.ensure_one()
 
         list_view = self.env.ref(
-            "ustudy_homework.view_edu_student_lesson_report_list",
+            "ustudy_homework.view_edu_student_attendance_report_list",
             raise_if_not_found=False
         )
 
@@ -156,10 +190,7 @@ class ResPartner(models.Model):
             "name": _("Attendance"),
             "type": "ir.actions.act_window",
             "res_model": "edu.student.lesson.report",
-            "domain": [
-                ("student_id", "=", self.id),
-                ("timetable_state", "in", ["in_progress", "completed"]),
-            ],
+            "domain": [("student_id", "=", self.id)],
             "context": {"default_student_id": self.id},
             "view_mode": "list",
         }

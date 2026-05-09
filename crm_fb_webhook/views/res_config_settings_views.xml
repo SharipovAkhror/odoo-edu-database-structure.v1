@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_facebook" model="ir.ui.view">
+        <field name="name">res.config.settings.view.facebook</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+
+                <app string="Facebook Lead Ads" name="crm_fb_webhook"
+                     data-string="Facebook Lead Ads"
+                     logo="/crm_fb_webhook/static/description/icon.png">
+
+                    <!-- Connection status -->
+                    <block title="Account Connection">
+                        <setting string="Facebook Account" help="Connect your Facebook account to import Lead Ad forms and receive real-time leads.">
+                            <div class="content-group">
+                                <div invisible="fb_is_connected" class="alert alert-warning mb8" role="alert">
+                                    Not connected. Fill in App ID + App Secret below, then click
+                                    <strong>Connect Facebook Account</strong>.
+                                </div>
+                                <div invisible="not fb_is_connected" class="alert alert-success mb8" role="alert">
+                                    Connected as <strong><field name="fb_user_name" readonly="1" nolabel="1"/></strong>
+                                    — <a href="/fb/oauth/disconnect">Disconnect</a>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="fb_app_id" class="fw-bold">App ID</label>
+                                        <field name="fb_app_id" placeholder="e.g. 1234567890123456"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="fb_app_secret" class="fw-bold">App Secret</label>
+                                        <field name="fb_app_secret" password="True" placeholder="Paste App Secret"/>
+                                    </div>
+                                </div>
+                                <div class="text-muted mt4 mb8">
+                                    Get from
+                                    <a href="https://developers.facebook.com/apps" target="_blank">developers.facebook.com/apps</a>
+                                    → Your App → Settings → Basic.
+                                </div>
+                                <button name="action_connect_facebook" type="object"
+                                        string="Connect Facebook Account"
+                                        class="btn btn-primary"
+                                        invisible="fb_is_connected"/>
+                                <button name="action_sync_pages" type="object"
+                                        string="Refresh Pages &amp; Forms"
+                                        class="btn btn-secondary ms-2"
+                                        invisible="not fb_is_connected"/>
+                            </div>
+                        </setting>
+                    </block>
+
+                    <!-- Webhook setup -->
+                    <block title="Webhook Configuration">
+                        <setting string="Webhook URL" help="Paste this URL in Facebook App Dashboard → Webhooks → Callback URL.">
+                            <div class="content-group">
+                                <field name="fb_webhook_url" readonly="1"
+                                       class="o_field_text font-monospace"/>
+                            </div>
+                        </setting>
+                        <setting string="Verify Token" help="Paste this token in Facebook App Dashboard → Webhooks → Verify Token.">
+                            <div class="content-group">
+                                <div class="input-group" style="max-width:500px">
+                                    <field name="fb_verify_token"
+                                           class="form-control font-monospace"
+                                           placeholder="(click Generate to create one)"/>
+                                    <button name="action_generate_verify_token"
+                                            type="object"
+                                            string="Generate"
+                                            class="btn btn-outline-secondary"/>
+                                </div>
+                                <div class="alert alert-info mt8" role="alert">
+                                    After setting Callback URL and Verify Token in your Facebook App,
+                                    go to <strong>CRM → Facebook Lead Ads → Pages</strong>,
+                                    open each page and click <strong>Subscribe Webhook</strong>.
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+
+                </app>
+
+            </xpath>
+        </field>
+    </record>
+</odoo>

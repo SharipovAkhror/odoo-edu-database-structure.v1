@@ -3,13 +3,16 @@
     "version": "1.0",
     "author": "Ustudy",
     "depends": [
-        "ustudy_student",   
-        "website_slides",   
-        "mail",     
-        'web_timeline',     
+        "ustudy_student",
+        "website_slides",
+        "mail",
+        'web_timeline',
+        "hr",
+        "project",
         # 'edu_finance',
     ],
     "data": [
+        "security/teacher_security.xml",
         "security/ir.model.access.csv",
         "data/edu_rooms.xml",
         "views/edu_attendance_views.xml",
@@ -24,6 +27,7 @@
         "views/camera_wizard_views.xml",
         'views/camera_end_wizard_views.xml',
         "views/res_partner_groups_button.xml",
+        "views/add_student_wizard_views.xml",
     ],
     'assets': {
         'web.assets_backend': [

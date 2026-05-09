@@ -1,6 +1,6 @@
 <!-- ustudy_group/data/edu_weekday_data.xml -->
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
         <!-- Weekdays with sequence matching Python's weekday() method -->
         <!-- Monday = 0, Sunday = 6 in Python, but we use 1-7 for user-friendly display -->
         

@@ -33,6 +33,7 @@
     "assets": {
         "web.assets_backend": [
             "ustudy_homework/static/src/js/lesson_report_dashboard.js",
+            "ustudy_homework/static/src/js/attendance_report_list.js",
             "ustudy_homework/static/src/xml/lesson_report_dashboard.xml",
             "ustudy_homework/static/src/css/lesson_report_dashboard.css",
         ],

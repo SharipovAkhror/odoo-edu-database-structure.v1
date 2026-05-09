@@ -252,18 +252,40 @@ class CCFinance(models.Model):
                 and record.payment_type_id.code == 'student_module'
             ):
                 line = record.student_line_id
-                new_paid = line.current_module_payment_amount + record.amount
+                target_module = record.module_id or line.current_module_id
 
-                vals = {"current_module_payment_amount": new_paid}
+                if not target_module:
+                    record.state = 'confirmed'
+                    record.message_post(body=_("Finance record confirmed. Amount: %s") % record.amount)
+                    continue
 
-                if new_paid >= config.module_price:
-                    vals["current_module_paid"] = True
+                # Recompute total paid for the target module from all confirmed records
+                # (current record is still 'draft' at this point)
+                prior_payments = self.search([
+                    ('partner_id', '=', record.partner_id.id),
+                    ('module_id', '=', target_module.id),
+                    ('payment_type_id', '=', record.payment_type_id.id),
+                    ('state', '=', 'confirmed'),
+                    ('transaction_type', '=', 'income'),
+                    ('id', '!=', record.id),
+                ])
+                prior_total = sum(prior_payments.mapped('amount'))
+                new_total = prior_total + record.amount
+                # Cap stored amount at module_price (excess carries to next module)
+                stored_amount = min(new_total, config.module_price)
 
-                    # if frozen -> unfreeze
-                    if line.state == "frozen":
-                        vals["state"] = "active"
+                # Only update student line tracking when paying for the current module
+                if target_module == line.current_module_id:
+                    vals = {"current_module_payment_amount": stored_amount}
 
-                line.write(vals)
+                    if new_total >= config.module_price:
+                        vals["current_module_paid"] = True
+                        if line.state == "frozen":
+                            vals["state"] = "active"
+
+                    line.write(vals)
+                # else: payment is a prepayment for a future module;
+                # carry-forward is applied in increment_lesson_count when module advances
 
             record.state = 'confirmed'
             record.message_post(body=_("Finance record confirmed. Amount: %s") % record.amount)

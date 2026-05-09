@@ -37,10 +37,11 @@
                 decoration-muted="state == 'cancelled'">
                 
                 <field name="student_id" widget="many2one_avatar"/>
-                
+
                 <field name="group_id" optional="hide"/>
-                
-                <field name="state" 
+                <field name="enrollment_date" optional="show"/>
+
+                <field name="state"
                     widget="badge"
                     decoration-success="state == 'active'" 
                     decoration-info="state == 'completed'" 
@@ -115,6 +116,13 @@
                             invisible="state != 'running'"
                             groups="base.group_user"/>
                     
+                    <button name="action_add_student_midgroup"
+                            string="Guruhga o'quvchi qo'shish"
+                            type="object"
+                            class="btn-success"
+                            invisible="state != 'running'"
+                            groups="base.group_user"/>
+
                     <button name="action_generate_or_regenerate_timetable"
                             string="Generate Timetable"
                             type="object"
@@ -198,11 +206,14 @@
                             <div class="o_row">
                                 <field name="start_date" class="oe_inline" nolabel="1" required="1"/>
                                 <span class="mx-2">•</span>
+                                <span class="mx-1 oe_edit_only text-muted">Boshlangan dars</span>
+                                <field name="start_lesson_number" class="oe_inline" nolabel="1" style="width:60px"/>
+                                <span class="mx-2">•</span>
                                 <field name="lesson_count" class="oe_inline" nolabel="1" placeholder="Lessons"/>
                                 <span class="mx-2 oe_read_only">→</span>
                                 <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
                                 <field name="end_date" class="oe_inline" nolabel="1" readonly="1"/>
-                            </div> 
+                            </div>
                             
                             <label for="lesson_start" string="Lesson Time"/>
                             <div class="o_row">
@@ -238,11 +249,13 @@
                                       decoration-danger="state == 'frozen'"
                                       decoration-muted="state == 'cancelled'">
                                     
-                                    <field name="student_id" 
+                                    <field name="student_id"
                                            widget="many2one_avatar"
                                            domain="[('is_student', '=', True)]"/>
-                                    
-                                    <field name="state" 
+
+                                    <field name="enrollment_date" optional="show"/>
+
+                                    <field name="state"
                                            widget="badge"
                                            decoration-success="state == 'active'" 
                                            decoration-info="state == 'completed'" 
@@ -326,11 +339,12 @@
                     </div>
                     <group>
                         <group string="Student Information">
-                            <field name="student_id" 
+                            <field name="student_id"
                                    options="{'no_create': True}"/>
                             <field name="student_name" readonly="1"/>
-                            <field name="group_id" 
+                            <field name="group_id"
                                    options="{'no_create': True}"/>
+                            <field name="enrollment_date"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group string="Module Progress">

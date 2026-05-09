@@ -82,6 +82,12 @@ class EduGroup(models.Model):
     lesson_end = fields.Float(string="Lesson end", tracking=True)
     lesson_count = fields.Integer(string="Lesson Count", default=0, tracking=True)
     use_lesson_count = fields.Boolean(string="Use lesson count", default=True)
+    start_lesson_number = fields.Integer(
+        string="Start from Lesson",
+        default=1,
+        tracking=True,
+        help="Lesson number this group starts from (e.g. 40 means the group begins at slide 40 of the course)",
+    )
     
     state = fields.Selection(
         [
@@ -227,6 +233,20 @@ class EduGroup(models.Model):
                 }
             }
 
+    def action_add_student_midgroup(self):
+        """Open wizard to add a student to this running group from a specific date"""
+        self.ensure_one()
+        return {
+            'name': _("Guruhga O'quvchi Qo'shish"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'edu.group.add.student.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_group_id': self.id,
+            },
+        }
+
     def action_start(self):
         """Change state to running"""
         self.write({'state': 'running'})
@@ -370,6 +390,12 @@ class EduGroupStudent(models.Model):
         ],
         default="active",
     )
+
+    enrollment_date = fields.Date(
+        string="Enrollment Date",
+        default=fields.Date.today,
+        help="Date when student joined this group. Used to calculate attendance and module from that day.",
+    )
     
     
     paid_amount_total = fields.Float(
@@ -432,13 +458,15 @@ class EduGroupStudent(models.Model):
         AttendanceLine = self.env["edu.attendance.line"]
 
         for rec in self:
-            attended = AttendanceLine.search_count([
+            domain = [
                 ("student_id", "=", rec.student_id.id),
                 ("attendance_id.group_id", "=", rec.group_id.id),
                 ("attendance_id.state", "=", "confirmed"),
                 ("status", "=", "present"),
-            ])
-            rec.attended_lessons_count = attended
+            ]
+            if rec.enrollment_date:
+                domain.append(("attendance_id.attendance_date", ">=", rec.enrollment_date))
+            rec.attended_lessons_count = AttendanceLine.search_count(domain)
 
     
     finance_count = fields.Integer(
@@ -508,17 +536,31 @@ class EduGroupStudent(models.Model):
     
     @api.model_create_multi
     def create(self, vals_list):
-        first_module = None
         for vals in vals_list:
-            if 'group_id' in vals and vals.get('company_id') is None:
-                group = self.env['edu.group'].browse(vals['group_id'])
+            group = self.env['edu.group'].browse(vals['group_id']) if 'group_id' in vals else False
+
+            if group and vals.get('company_id') is None:
                 vals['company_id'] = group.company_id.id
 
             if not vals.get("current_module_id"):
-                if first_module is None:
-                    first_module = self.env["edu.module"].search([], order="sequence asc", limit=1)
-                if first_module:
-                    vals["current_module_id"] = first_module.id
+                start_lesson = (group.start_lesson_number or 1) if group else 1
+                config = self.env['edu.config'].get_config()
+                lpm = config.lessons_per_module or 12
+
+                # 0-based offset into the full course lesson list
+                course_offset = start_lesson - 1
+                module_seq = course_offset // lpm + 1          # 1-based module sequence
+                position_in_module = course_offset % lpm       # lessons already "done" in that module
+
+                module = self.env["edu.module"].search([("sequence", "=", module_seq)], limit=1)
+                if not module:
+                    module = self.env["edu.module"].search([], order="sequence asc", limit=1)
+
+                if module:
+                    vals["current_module_id"] = module.id
+                    # only pre-set position when group explicitly starts mid-course
+                    if start_lesson > 1 and "lessons_in_current_module" not in vals:
+                        vals["lessons_in_current_module"] = position_in_module
 
         return super().create(vals_list)
 
