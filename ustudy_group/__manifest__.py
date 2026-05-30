@@ -19,6 +19,7 @@
         "views/edu_attendance_views.xml",
         "views/week_days.xml",
         "views/edu_group_views.xml",
+        "views/edu_group_schedule_views.xml",
         "views/student_views.xml",
         "views/edu_timetable_views.xml",
         "views/edu_config_views.xml",
