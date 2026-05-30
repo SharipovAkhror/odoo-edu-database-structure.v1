@@ -29,6 +29,12 @@ Education Ecosystem — Block C: FaceID & Telegram MVP
         # Data
         'data/config_data.xml',
         'data/cron_data.xml',
+        # Views
+        'views/edu_faceid_event_views.xml',
+        'views/telegram_message_queue_views.xml',
+        'views/telegram_bot_config_views.xml',
+        'views/res_partner_views.xml',
+        'views/menu_views.xml',
     ],
     'installable': True,
     'application': False,
