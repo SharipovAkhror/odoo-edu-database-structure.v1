@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_edu_faceid_event_user,edu.faceid.event.user,model_edu_faceid_event,base.group_user,1,0,0,0
+access_edu_faceid_event_admin,edu.faceid.event.admin,model_edu_faceid_event,edu_ecosystem.group_ecosystem_admin,1,1,1,1
+access_telegram_message_queue_user,telegram.message.queue.user,model_telegram_message_queue,base.group_user,1,0,0,0
+access_telegram_message_queue_admin,telegram.message.queue.admin,model_telegram_message_queue,edu_ecosystem.group_ecosystem_admin,1,1,1,1
+access_telegram_bot_config_admin,telegram.bot.config.admin,model_telegram_bot_config,edu_ecosystem.group_ecosystem_admin,1,1,1,1
