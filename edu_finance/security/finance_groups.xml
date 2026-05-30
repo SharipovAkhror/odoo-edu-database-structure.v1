@@ -10,7 +10,6 @@
         ============================================================ -->
         <record id="group_finance_ledger_admin" model="res.groups">
             <field name="name">Finance: Ledger Admin (Soft Lock Override)</field>
-            <field name="category_id" ref="base.module_category_accounting_and_finance"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="comment">
                 Can delete validated (posted) education finance ledger entries.
@@ -31,7 +30,6 @@
         ============================================================ -->
         <record id="group_refund_approver" model="res.groups">
             <field name="name">Finance: Refund Approver</field>
-            <field name="category_id" ref="base.module_category_accounting_and_finance"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="comment">
                 Can approve or reject refund requests. Refund validation
