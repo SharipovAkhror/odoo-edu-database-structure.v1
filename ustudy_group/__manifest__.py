@@ -13,6 +13,7 @@
     ],
     "data": [
         "security/teacher_security.xml",
+        "security/capacity_security.xml",
         "security/ir.model.access.csv",
         "data/edu_rooms.xml",
         "views/edu_attendance_views.xml",
