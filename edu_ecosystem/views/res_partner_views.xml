@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         RES.PARTNER: Inherit student form to add Ecosystem fields
+    ============================================================ -->
+    <record id="view_partner_form_ecosystem" model="ir.ui.view">
+        <field name="name">res.partner.form.ecosystem</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="ustudy_student.view_student_partner_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add Notifications section inside the notebook -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Notifications" name="notifications"
+                      invisible="not is_student">
+                    <group>
+                        <group string="Telegram">
+                            <field name="parent_telegram_chat_id"
+                                   placeholder="e.g. 123456789"/>
+                            <field name="telegram_notifications_enabled"
+                                   widget="boolean_toggle"/>
+                        </group>
+                        <group string="FaceID">
+                            <field name="barcode" string="Turnstile Code"/>
+                            <field name="faceid_event_count" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

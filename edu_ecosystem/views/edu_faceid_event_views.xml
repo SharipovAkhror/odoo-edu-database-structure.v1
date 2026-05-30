@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         FACEID EVENT: FORM VIEW
+    ============================================================ -->
+    <record id="view_edu_faceid_event_form" model="ir.ui.view">
+        <field name="name">edu.faceid.event.form</field>
+        <field name="model">edu.faceid.event</field>
+        <field name="arch" type="xml">
+            <form string="FaceID Event" create="0" edit="0">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="student_name" readonly="1"/>
+                        </h1>
+                        <field name="student_code" readonly="1"/>
+                    </div>
+
+                    <group>
+                        <group string="Event">
+                            <field name="student_id"/>
+                            <field name="device_id"/>
+                            <field name="direction" widget="badge"
+                                   decoration-success="direction == 'in'"
+                                   decoration-info="direction == 'out'"/>
+                            <field name="event_datetime"/>
+                            <field name="state" widget="badge"
+                                   decoration-success="state == 'processed'"
+                                   decoration-info="state == 'logged'"
+                                   decoration-muted="state == 'ignored'"
+                                   decoration-danger="state == 'unmatched'"/>
+                        </group>
+                        <group string="Context">
+                            <field name="has_class_now"/>
+                            <field name="timetable_id"/>
+                            <field name="group_id"/>
+                            <field name="balance_ok"/>
+                            <field name="finance_balance_snapshot"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Notification">
+                            <field name="notification_sent"/>
+                            <field name="telegram_queue_id"/>
+                        </group>
+                        <group string="Performance">
+                            <field name="processing_time_ms"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Raw Data" name="raw_data">
+                            <group>
+                                <field name="raw_payload" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="response_payload" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         FACEID EVENT: LIST VIEW
+    ============================================================ -->
+    <record id="view_edu_faceid_event_list" model="ir.ui.view">
+        <field name="name">edu.faceid.event.list</field>
+        <field name="model">edu.faceid.event</field>
+        <field name="arch" type="xml">
+            <list string="FaceID Events" create="0" edit="0"
+                  decoration-success="state == 'processed'"
+                  decoration-muted="state == 'ignored'"
+                  decoration-danger="state == 'unmatched'">
+                <field name="event_datetime"/>
+                <field name="student_name" decoration-bf="1"/>
+                <field name="student_code"/>
+                <field name="device_id" optional="show"/>
+                <field name="direction" widget="badge"
+                       decoration-success="direction == 'in'"
+                       decoration-info="direction == 'out'"/>
+                <field name="has_class_now"/>
+                <field name="group_id" optional="show"/>
+                <field name="balance_ok"/>
+                <field name="processing_time_ms" string="ms" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'processed'"
+                       decoration-info="state == 'logged'"
+                       decoration-muted="state == 'ignored'"
+                       decoration-danger="state == 'unmatched'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         FACEID EVENT: SEARCH VIEW
+    ============================================================ -->
+    <record id="view_edu_faceid_event_search" model="ir.ui.view">
+        <field name="name">edu.faceid.event.search</field>
+        <field name="model">edu.faceid.event</field>
+        <field name="arch" type="xml">
+            <search string="Search Events">
+                <field name="student_name"/>
+                <field name="student_code"/>
+                <field name="device_id"/>
+                <field name="group_id"/>
+                <separator/>
+                <filter string="Entry" name="filter_in"
+                        domain="[('direction', '=', 'in')]"/>
+                <filter string="Exit" name="filter_out"
+                        domain="[('direction', '=', 'out')]"/>
+                <separator/>
+                <filter string="Has Class" name="filter_has_class"
+                        domain="[('has_class_now', '=', True)]"/>
+                <filter string="No Class" name="filter_no_class"
+                        domain="[('has_class_now', '=', False)]"/>
+                <separator/>
+                <filter string="Logged" name="filter_logged"
+                        domain="[('state', '=', 'logged')]"/>
+                <filter string="Unmatched" name="filter_unmatched"
+                        domain="[('state', '=', 'unmatched')]"/>
+                <separator/>
+                <filter string="Today" name="filter_today"
+                        domain="[('event_datetime', '&gt;=', (context_today()).strftime('%Y-%m-%d 00:00:00'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         FACEID EVENT: ACTION
+    ============================================================ -->
+    <record id="action_edu_faceid_event" model="ir.actions.act_window">
+        <field name="name">FaceID Events</field>
+        <field name="res_model">edu.faceid.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_edu_faceid_event_search"/>
+        <field name="context">{'search_default_filter_today': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No turnstile events recorded yet
+            </p>
+            <p>
+                Events appear here automatically when the FaceID turnstile
+                identifies a student at the entrance.
+            </p>
+        </field>
+    </record>
+
+</odoo>

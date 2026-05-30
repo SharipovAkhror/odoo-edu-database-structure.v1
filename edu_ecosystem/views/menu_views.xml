@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Root Menu -->
+    <menuitem id="menu_ecosystem_root"
+              name="Ecosystem"
+              sequence="70"
+              groups="edu_ecosystem.group_ecosystem_admin"/>
+
+    <!-- ============================================================
+         MONITORING
+    ============================================================ -->
+    <menuitem id="menu_ecosystem_monitoring"
+              name="Monitoring"
+              parent="menu_ecosystem_root"
+              sequence="10"/>
+
+    <menuitem id="menu_faceid_events"
+              name="FaceID Events"
+              parent="menu_ecosystem_monitoring"
+              action="action_edu_faceid_event"
+              sequence="10"/>
+
+    <menuitem id="menu_telegram_queue"
+              name="Telegram Queue"
+              parent="menu_ecosystem_monitoring"
+              action="action_telegram_message_queue"
+              sequence="20"/>
+
+    <!-- ============================================================
+         CONFIGURATION
+    ============================================================ -->
+    <menuitem id="menu_ecosystem_configuration"
+              name="Configuration"
+              parent="menu_ecosystem_root"
+              sequence="100"/>
+
+    <menuitem id="menu_telegram_config"
+              name="Telegram Bot"
+              parent="menu_ecosystem_configuration"
+              action="action_telegram_bot_config"
+              sequence="10"/>
+
+</odoo>
