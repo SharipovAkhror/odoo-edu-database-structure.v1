@@ -34,8 +34,11 @@ Education Finance Management — Block B: Financial Core
         'data/payment_method_data.xml',
         'data/payment_type_data.xml',
 
-        # Views (UI step is deferred — these are existing legacy views)
+        # Views
         'views/cc_finance_views.xml',
+        'views/cc_finance_refund_views.xml',
+        'views/payment_gateway_views.xml',
+        'views/edu_config_accounting_views.xml',
         'views/payment_method_views.xml',
         'views/payment_type_views.xml',
         'views/res_partner_views.xml',
